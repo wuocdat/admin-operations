@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/dashboard/view/dashboard_page.dart';
+import 'package:tctt_mobile/mail/view/mail_page.dart';
+import 'package:tctt_mobile/target/view/target_page.dart';
+import 'package:tctt_mobile/task/view/task_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   static Route<void> route() {
@@ -12,28 +14,63 @@ class HomePage extends StatelessWidget {
   }
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int currentPageIndex = 0;
+
+  static const List<Widget> _widgetOptions = [
+    DashBoardPage(),
+    TaskPage(),
+    TargetPage(),
+    MailPage()
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      currentPageIndex = index;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Builder(
-              builder: (context) {
-                final userId = context
-                    .select((AuthenticationBloc bloc) => bloc.state.user.id);
-                return Text('User id ${userId}');
-              },
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: _onItemTapped,
+        indicatorColor: Theme.of(context).primaryColor,
+        selectedIndex: currentPageIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.dashboard),
+            icon: Icon(Icons.dashboard_outlined),
+            label: 'Trang chủ',
+          ),
+          NavigationDestination(
+            selectedIcon: Badge(child: Icon(Icons.task)),
+            icon: Badge(child: Icon(Icons.task_outlined)),
+            label: 'Nhiệm vụ',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.supervised_user_circle),
+            icon: Icon(Icons.supervised_user_circle_outlined),
+            label: 'Đối tượng',
+          ),
+          NavigationDestination(
+            selectedIcon: Badge(
+              label: Text('2'),
+              child: Icon(Icons.mail),
             ),
-            ElevatedButton(
-                onPressed: () {
-                  context
-                      .read<AuthenticationBloc>()
-                      .add(AuthenticationLogoutRequested());
-                },
-                child: const Text("Logout")),
-          ],
-        ),
+            icon: Badge(
+              label: Text('2'),
+              child: Icon(Icons.mail_outline),
+            ),
+            label: 'Hòm thư',
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: _widgetOptions.elementAt(currentPageIndex),
       ),
     );
   }
