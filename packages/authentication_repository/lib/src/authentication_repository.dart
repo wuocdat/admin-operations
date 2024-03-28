@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:api_client/api_client.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
@@ -10,10 +11,16 @@ class AuthenticationRepository {
 
   final AuthApiClient _authApiClient;
   final _controller = StreamController<AuthenticationStatus>();
+  final _storage = const FlutterSecureStorage();
 
   Stream<AuthenticationStatus> get status async* {
     await Future<void>.delayed(const Duration(seconds: 1));
-    yield AuthenticationStatus.unauthenticated;
+    final token = await _storage.read(key: "access_token");
+    if (token != null) {
+      yield AuthenticationStatus.authenticated;
+    } else {
+      yield AuthenticationStatus.unauthenticated;
+    }
     yield* _controller.stream;
   }
 
@@ -26,6 +33,7 @@ class AuthenticationRepository {
   }
 
   void logout() async {
+    await _storage.delete(key: "access_token");
     _controller.add(AuthenticationStatus.unauthenticated);
   }
 
