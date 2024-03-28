@@ -1,0 +1,1 @@
+- in main parameter box, gridview height is fixed

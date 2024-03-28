@@ -36,7 +36,26 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+          "Hệ thống MTTN",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.account_circle_outlined),
+              iconSize: 30,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
+      ),
       bottomNavigationBar: NavigationBar(
+        // backgroundColor: Colors.white,
         onDestinationSelected: _onItemTapped,
         indicatorColor: Theme.of(context).primaryColor,
         selectedIndex: currentPageIndex,
