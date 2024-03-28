@@ -13,10 +13,10 @@ User _$UserFromJson(Map<String, dynamic> json) => $checkedCreate(
       json,
       ($checkedConvert) {
         final val = User(
-          id: $checkedConvert('id', (v) => v as int),
-          fullname: $checkedConvert('fullname', (v) => v as String),
+          id: $checkedConvert('_id', (v) => v as String),
           username: $checkedConvert('username', (v) => v as String),
         );
         return val;
       },
+      fieldKeyMap: const {'id': '_id'},
     );

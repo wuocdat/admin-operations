@@ -22,6 +22,10 @@ class UserApiClient {
 
     final data = userResponse.data as Map<String, dynamic>;
 
-    return User.fromJson(data);
+    if (!data.containsKey("data")) throw UserNotFoundFailure();
+
+    final userResult = data['data'] as Map<String, dynamic>;
+
+    return User.fromJson(userResult);
   }
 }

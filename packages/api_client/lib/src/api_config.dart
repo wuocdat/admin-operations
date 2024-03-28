@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final class ApiConfig {
-  static final options = BaseOptions(baseUrl: 'http://10.0.2.2:4100');
+  static final options = BaseOptions(baseUrl: 'http://10.0.2.2:3200');
 }
 
 class ApiInterceptors extends Interceptor {
@@ -12,7 +12,7 @@ class ApiInterceptors extends Interceptor {
     const storage = FlutterSecureStorage();
     final accessToken = await storage.read(key: "access_token");
     if (accessToken != null) {
-      options.headers['Authorization'] = 'Bearer $accessToken';
+      options.headers['cookie'] = 'token=$accessToken';
     }
     super.onRequest(options, handler);
   }

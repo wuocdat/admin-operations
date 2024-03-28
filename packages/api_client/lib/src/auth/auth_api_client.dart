@@ -21,20 +21,26 @@ class AuthApiClient {
     final response = await _dio.post(loginUrl, data: {
       "username": username,
       "password": password,
+      "autoLogin": true,
     });
 
     if (response.statusCode != 201) {
       throw LoginRequestFailure();
     }
 
-    final bodyJson = response.data as Map<String, dynamic>;
+    final rawCookie = response.headers['set-cookie'];
 
-    if (!bodyJson.containsKey("access_token")) throw TokenNotFoundFailure();
+    if (rawCookie != null) {
+      for (var cookie in rawCookie) {
+        final regex = RegExp(r'token=([^;]+)');
+        final match = regex.firstMatch(cookie);
+        if (match != null && match.group(1) != null) {
+          await _storage.write(key: "access_token", value: match.group(1));
+          return;
+        }
+      }
+    }
 
-    final accessToken = bodyJson['access_token'] as String;
-
-    print(response.headers["set-cookie"]);
-
-    // await _storage.write(key: "access_token", value: accessToken);
+    throw TokenNotFoundFailure();
   }
 }

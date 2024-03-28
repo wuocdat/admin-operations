@@ -7,7 +7,7 @@ part 'user.g.dart';
 class User extends Equatable {
   const User({required this.id, this.username});
 
-  final int id;
+  final String id;
   final String? username;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -17,5 +17,5 @@ class User extends Equatable {
   @override
   List<Object?> get props => [id, username];
 
-  static const empty = User(id: -1);
+  static const empty = User(id: "--");
 }

@@ -6,13 +6,12 @@ part 'user.g.dart';
 class User {
   const User({
     required this.id,
-    required this.fullname,
     required this.username,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  final int id;
+  @JsonKey(name: "_id")
+  final String id;
   final String username;
-  final String fullname;
 }
