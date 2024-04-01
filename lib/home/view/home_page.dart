@@ -28,12 +28,12 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeCubit(),
       child: BlocBuilder<HomeCubit, int>(
-        builder: (context, state) {
+        builder: (context, selectedIndex) {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
               title: Text(
-                state.title,
+                selectedIndex.title,
                 style: theme.textTheme.headlineMedium,
               ),
               actions: [
@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
                   child: IconButton(
                     onPressed: () {},
-                    icon: state.isHome
+                    icon: selectedIndex.isHome
                         ? const Icon(Icons.account_circle_outlined)
                         : const Icon(Icons.settings_outlined),
                     iconSize: 30,
@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
                 context.read<HomeCubit>().changeIndex(index);
               },
               indicatorColor: theme.primaryColor,
-              selectedIndex: state,
+              selectedIndex: selectedIndex,
               destinations: const <Widget>[
                 NavigationDestination(
                   selectedIcon: Icon(Icons.dashboard),
@@ -87,7 +87,7 @@ class HomePage extends StatelessWidget {
               ],
             ),
             body: SafeArea(
-              child: _widgetOptions.elementAt(state),
+              child: _widgetOptions.elementAt(selectedIndex),
             ),
           );
         },

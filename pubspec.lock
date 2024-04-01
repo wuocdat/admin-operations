@@ -779,6 +779,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0+1"
+  task_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/task_repository"
+      relative: true
+    source: path
+    version: "0.0.1"
   term_glyph:
     dependency: transitive
     description:

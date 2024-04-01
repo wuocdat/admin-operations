@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/dashboard/bloc/dashboard_bloc.dart';
 import 'package:tctt_mobile/dashboard/widget/parameter_item.dart';
 
 class MainParameter extends StatelessWidget {
@@ -30,10 +32,13 @@ class MainParameter extends StatelessWidget {
               crossAxisSpacing: 12,
               mainAxisSpacing: 8,
               children: [
-                const ParameterItem(
-                  parameterValue: 16,
-                  title: "Nhiệm vụ",
-                ),
+                Builder(builder: (context) {
+                  return ParameterItem(
+                    parameterValue: context
+                        .select((DashboardBloc bloc) => bloc.state.task.all),
+                    title: "Nhiệm vụ",
+                  );
+                }),
                 ParameterItem(
                   parameterValue: 5,
                   title: "Hòm thư",
