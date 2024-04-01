@@ -89,9 +89,14 @@ class _HeadBarState<T> extends State<HeadBar<T>> {
                       )),
                     ],
                   ),
-                  IconButton(
-                    onPressed: onToggleMode,
-                    icon: const Icon(Icons.search),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: onToggleMode,
+                        icon: const Icon(Icons.search),
+                      ),
+                      widget.action ?? Container()
+                    ],
                   )
                 ],
               ),

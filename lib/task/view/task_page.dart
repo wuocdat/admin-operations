@@ -9,34 +9,41 @@ class TaskPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => TaskBloc(),
-        child: BlocBuilder<TaskBloc, TaskState>(
-          builder: (context, state) {
-            return Column(
-              children: [
-                HeadBar<TaskOptions>(
-                  searchValue: state.searchValue,
-                  selectedOption: state.mode,
-                  options: TaskOptions.values
-                      .map<DropdownMenuItem<TaskOptions>>((TaskOptions value) {
-                    return DropdownMenuItem<TaskOptions>(
-                      value: value,
-                      child: Text(value.title),
-                    );
-                  }).toList(),
-                  onPickedOption: (TaskOptions? value) {
-                    context.read<TaskBloc>().add(ChangeModeEvent(
-                        mode: value ?? TaskOptions.receivedTask));
-                  },
-                  onSearchChanged: (value) => context
-                      .read<TaskBloc>()
-                      .add(ChangeSearchInputEvent(value)),
-                ),
-                Text(context.select((TaskBloc bloc) => bloc.state.searchValue))
-              ],
-            );
-          },
-        ));
+      create: (_) => TaskBloc(),
+      child: BlocBuilder<TaskBloc, TaskState>(
+        builder: (context, state) {
+          return Column(
+            children: [
+              HeadBar<TaskOptions>(
+                searchValue: state.searchValue,
+                selectedOption: state.mode,
+                options: TaskOptions.values
+                    .map<DropdownMenuItem<TaskOptions>>((TaskOptions value) {
+                  return DropdownMenuItem<TaskOptions>(
+                    value: value,
+                    child: Text(value.title),
+                  );
+                }).toList(),
+                onPickedOption: (TaskOptions? value) {
+                  context.read<TaskBloc>().add(
+                      ChangeModeEvent(mode: value ?? TaskOptions.receivedTask));
+                },
+                onSearchChanged: (value) =>
+                    context.read<TaskBloc>().add(ChangeSearchInputEvent(value)),
+                action: !state.mode.isReceiverMode
+                    ? IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.add),
+                        color: Theme.of(context).primaryColor,
+                      )
+                    : null,
+              ),
+              Text(context.select((TaskBloc bloc) => bloc.state.searchValue))
+            ],
+          );
+        },
+      ),
+    );
   }
 }
 
@@ -48,4 +55,6 @@ extension on TaskOptions {
       return "Giao nhiệm vụ";
     }
   }
+
+  bool get isReceiverMode => this == TaskOptions.receivedTask;
 }
