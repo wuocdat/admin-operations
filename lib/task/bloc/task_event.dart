@@ -16,8 +16,6 @@ final class ChangeModeEvent extends TaskEvent {
   List<Object> get props => [mode];
 }
 
-final class ToggleSearchModeEvent extends TaskEvent {}
-
 final class ChangeSearchInputEvent extends TaskEvent {
   const ChangeSearchInputEvent(this.searchValue);
 

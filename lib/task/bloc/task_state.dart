@@ -6,7 +6,6 @@ final class TaskState extends Equatable {
   const TaskState._({
     this.mode = TaskOptions.receivedTask,
     this.searchValue = "",
-    this.isSearchMode = false,
   });
 
   const TaskState.receiver() : this._();
@@ -15,7 +14,6 @@ final class TaskState extends Equatable {
 
   final TaskOptions mode;
   final String searchValue;
-  final bool isSearchMode;
 
   TaskState copyWith({
     TaskOptions? mode,
@@ -25,10 +23,9 @@ final class TaskState extends Equatable {
     return TaskState._(
       mode: mode ?? this.mode,
       searchValue: searchValue ?? this.searchValue,
-      isSearchMode: isSearchMode ?? this.isSearchMode,
     );
   }
 
   @override
-  List<Object> get props => [mode, searchValue, isSearchMode];
+  List<Object> get props => [mode, searchValue];
 }

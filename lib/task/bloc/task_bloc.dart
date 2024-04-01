@@ -7,7 +7,6 @@ part 'task_state.dart';
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   TaskBloc() : super(const TaskState.receiver()) {
     on<ChangeModeEvent>(_onChangeMode);
-    on<ToggleSearchModeEvent>(_onToggleSearchMode);
     on<ChangeSearchInputEvent>(_onSearchInputChange);
   }
 
@@ -15,13 +14,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     emit(event.mode.isReceiverMode
         ? const TaskState.receiver()
         : const TaskState.sender());
-  }
-
-  void _onToggleSearchMode(
-      ToggleSearchModeEvent event, Emitter<TaskState> emit) {
-    emit(state.copyWith(
-      isSearchMode: !state.isSearchMode,
-    ));
   }
 
   void _onSearchInputChange(
