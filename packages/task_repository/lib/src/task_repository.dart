@@ -1,4 +1,4 @@
-import 'package:api_client/api_client.dart';
+import 'package:api_client/api_client.dart' hide Overall;
 import 'package:task_repository/src/models/models.dart';
 
 class TaskRepository {
@@ -16,5 +16,11 @@ class TaskRepository {
       unfinished: overall.unfinished,
       unread: overall.unread,
     );
+  }
+
+  Future<List<Task>> getReceivedTasks() async {
+    final tasks = await _taskApiClient.getReceivedTasks();
+
+    return tasks;
   }
 }

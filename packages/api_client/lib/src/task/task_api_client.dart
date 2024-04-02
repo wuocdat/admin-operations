@@ -20,12 +20,27 @@ class TaskApiClient {
       'task': true,
     });
 
-    final result = Handler.parseResponse(response);
+    final result = Handler.parseResponse(response) as Map<String, dynamic>;
 
     if (!result.containsKey('task')) throw TaskNotFoundFailure();
 
     final taskOverall = result['task'] as Map<String, dynamic>;
 
     return Overall.fromJson(taskOverall);
+  }
+
+  Future<List<Task>> getReceivedTasks() async {
+    final response = await _dio.get(TaskUrl.received, queryParameters: {
+      "pageSize": 50,
+      "currentPage": 1,
+      "taskProgressStatus": "all",
+    });
+
+    final result = Handler.parseResponse(response) as List;
+
+    return result.map((dynamic json) {
+      final map = json as Map<String, dynamic>;
+      return Task.fromJson(map);
+    }).toList();
   }
 }
