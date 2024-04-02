@@ -46,15 +46,3 @@ class TaskPage extends StatelessWidget {
     );
   }
 }
-
-extension on TaskOptions {
-  String get title {
-    if (this == TaskOptions.receivedTask) {
-      return "Nhận nhiệm vụ";
-    } else {
-      return "Giao nhiệm vụ";
-    }
-  }
-
-  bool get isReceiverMode => this == TaskOptions.receivedTask;
-}
