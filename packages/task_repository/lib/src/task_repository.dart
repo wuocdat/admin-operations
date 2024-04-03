@@ -18,8 +18,8 @@ class TaskRepository {
     );
   }
 
-  Future<List<Task>> getReceivedTasks() async {
-    final tasks = await _taskApiClient.getReceivedTasks();
+  Future<List<Task>> getReceivedTasks(String progressStatus) async {
+    final tasks = await _taskApiClient.getReceivedTasks(progressStatus);
 
     return tasks
         .map(
