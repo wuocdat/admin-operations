@@ -38,10 +38,11 @@ class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
       final tasks = await _taskRepository.fetchReceivedTasks(
           state.progressStatus.query, state.tasks.length);
 
-      tasks.isEmpty
+      tasks.length < taskLimit
           ? emit(state.copyWith(
               hasReachedMax: true,
               status: ReceiverStatus.success,
+              tasks: List.of(state.tasks)..addAll(tasks),
             ))
           : emit(state.copyWith(
               status: ReceiverStatus.success,
@@ -63,7 +64,9 @@ class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
       final tasks =
           await _taskRepository.fetchReceivedTasks(event.status.query);
       emit(state.copyWith(
-          status: ReceiverStatus.success, tasks: tasks, hasReachedMax: false));
+          status: ReceiverStatus.success,
+          tasks: tasks,
+          hasReachedMax: tasks.length < taskLimit));
     } catch (_) {
       emit(state.copyWith(
           status: ReceiverStatus.failure, tasks: List<Task>.empty()));
