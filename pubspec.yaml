@@ -50,6 +50,8 @@ dependencies:
     path: packages/task_repository
   json_theme: ^6.4.1
   getwidget: ^4.0.0
+  bloc_concurrency: ^0.2.5
+  stream_transform: ^2.1.0
 
 dev_dependencies:
   flutter_test:

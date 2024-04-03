@@ -7,8 +7,8 @@ sealed class ReceiverEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class ReceiverStartedEvent extends ReceiverEvent {
-  const ReceiverStartedEvent();
+final class ReceiverFetchedEvent extends ReceiverEvent {
+  const ReceiverFetchedEvent();
 
   @override
   List<Object> get props => [];

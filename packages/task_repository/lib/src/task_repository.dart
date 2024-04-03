@@ -1,6 +1,8 @@
 import 'package:api_client/api_client.dart';
 import 'package:task_repository/src/models/models.dart';
 
+const _taskLimit = 5;
+
 class TaskRepository {
   TaskRepository({TaskApiClient? taskApiClient})
       : _taskApiClient = taskApiClient ?? TaskApiClient();
@@ -18,8 +20,10 @@ class TaskRepository {
     );
   }
 
-  Future<List<Task>> getReceivedTasks(String progressStatus) async {
-    final tasks = await _taskApiClient.getReceivedTasks(progressStatus);
+  Future<List<Task>> fetchReceivedTasks(String progressStatus,
+      [int taskLength = 0]) async {
+    final tasks = await _taskApiClient.getReceivedTasks(
+        progressStatus, _taskLimit, (taskLength / _taskLimit).ceil() + 1);
 
     return tasks
         .map(

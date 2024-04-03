@@ -22,24 +22,28 @@ class ReceiverState extends Equatable {
     this.status = ReceiverStatus.initial,
     this.tasks = const <Task>[],
     this.progressStatus = TaskProgressStatus.all,
+    this.hasReachedMax = false,
   });
 
   final TaskProgressStatus progressStatus;
   final ReceiverStatus status;
   final List<Task> tasks;
+  final bool hasReachedMax;
 
   ReceiverState copyWith({
     ReceiverStatus? status,
     List<Task>? tasks,
     TaskProgressStatus? progressStatus,
+    bool? hasReachedMax,
   }) {
     return ReceiverState(
       status: status ?? this.status,
       tasks: tasks ?? this.tasks,
       progressStatus: progressStatus ?? this.progressStatus,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
   }
 
   @override
-  List<Object> get props => [status, tasks, progressStatus];
+  List<Object> get props => [status, tasks, progressStatus, hasReachedMax];
 }

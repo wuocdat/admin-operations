@@ -29,10 +29,11 @@ class TaskApiClient {
     return Overall.fromJson(taskOverall);
   }
 
-  Future<List<Task>> getReceivedTasks(String progressStatus) async {
+  Future<List<Task>> getReceivedTasks(String progressStatus, int limit,
+      [int currentPage = 1]) async {
     final response = await _dio.get(TaskUrl.received, queryParameters: {
-      "pageSize": 50,
-      "currentPage": 1,
+      "pageSize": limit,
+      "currentPage": currentPage,
       "taskProgressStatus": progressStatus,
     });
 

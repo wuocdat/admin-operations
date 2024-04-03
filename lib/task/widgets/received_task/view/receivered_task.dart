@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/task/widgets/received_task/bloc/receiver_bloc.dart';
+import 'package:tctt_mobile/widgets/bottom_loader.dart';
 import 'package:tctt_mobile/widgets/empty_list_message.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/msg_item.dart';
 import 'package:tctt_mobile/widgets/toggle_options.dart';
 
 class ReceivedTasks extends StatelessWidget {
-  const ReceivedTasks({super.key});
+  const ReceivedTasks({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ReceiverBloc(
           repository: RepositoryProvider.of<TaskRepository>(context))
-        ..add(const ReceiverStartedEvent()),
+        ..add(const ReceiverFetchedEvent()),
       child: BlocListener<ReceiverBloc, ReceiverState>(
         listener: (context, state) {
           if (state.status.isFailure) {
@@ -56,31 +59,18 @@ class ReceivedTasks extends StatelessWidget {
               child: BlocBuilder<ReceiverBloc, ReceiverState>(
                 builder: (context, state) {
                   switch (state.status) {
-                    case ReceiverStatus.loading:
+                    case ReceiverStatus.initial:
                       return const Loader();
                     default:
+                      if (state.status.isLoading && state.tasks.isEmpty) {
+                        return const Loader();
+                      }
                       if (state.tasks.isEmpty) {
                         return const EmptyListMessage(
                           message: "Không có nhiệm vụ nào",
                         );
                       }
-
-                      return ListView.builder(
-                        itemBuilder: (context, index) {
-                          final task = state.tasks[index];
-                          return index > state.tasks.length
-                              ? const CircularProgressIndicator()
-                              : MessageItem(
-                                  time: task.createdAt,
-                                  title: task.unitSent.name,
-                                  content: task.content,
-                                );
-                        },
-                        itemCount: state.tasks.length,
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: 12,
-                        ),
-                      );
+                      return const TasksView();
                   }
                 },
               ),
@@ -92,6 +82,74 @@ class ReceivedTasks extends StatelessWidget {
   }
 }
 
+class TasksView extends StatefulWidget {
+  const TasksView({
+    super.key,
+  });
+
+  @override
+  State<TasksView> createState() => _TasksViewState();
+}
+
+class _TasksViewState extends State<TasksView> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_isBottom) {
+      context.read<ReceiverBloc>().add(const ReceiverFetchedEvent());
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ReceiverBloc, ReceiverState>(
+      builder: (context, state) {
+        return ListView.builder(
+          itemBuilder: (context, index) {
+            return index >= state.tasks.length
+                ? const BottomLoader()
+                : MessageItem(
+                    time: state.tasks[index].createdAt,
+                    title: state.tasks[index].unitSent.name,
+                    content: state.tasks[index].content,
+                  );
+          },
+          itemCount:
+              state.hasReachedMax ? state.tasks.length : state.tasks.length + 1,
+          controller: _scrollController,
+          padding: const EdgeInsetsDirectional.only(
+            start: 12,
+            end: 12,
+            bottom: 8,
+          ),
+        );
+      },
+    );
+  }
+}
+
 extension on ReceiverStatus {
   bool get isFailure => this == ReceiverStatus.failure;
+  bool get isLoading => this == ReceiverStatus.loading;
 }
