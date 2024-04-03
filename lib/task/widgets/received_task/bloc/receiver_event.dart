@@ -13,3 +13,12 @@ final class ReceiverStartedEvent extends ReceiverEvent {
   @override
   List<Object> get props => [];
 }
+
+final class ProgressStatusChangedEvent extends ReceiverEvent {
+  const ProgressStatusChangedEvent(this.status);
+
+  final TaskProgressStatus status;
+
+  @override
+  List<Object> get props => [];
+}

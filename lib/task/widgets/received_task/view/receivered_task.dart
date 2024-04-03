@@ -4,6 +4,7 @@ import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/task/widgets/received_task/bloc/receiver_bloc.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/msg_item.dart';
+import 'package:tctt_mobile/widgets/toggle_options.dart';
 
 class ReceivedTasks extends StatelessWidget {
   const ReceivedTasks({super.key});
@@ -28,7 +29,28 @@ class ReceivedTasks extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.max,
           children: [
-            const Text("options"),
+            BlocBuilder<ReceiverBloc, ReceiverState>(
+              buildWhen: (previous, current) =>
+                  previous.progressStatus != current.progressStatus,
+              builder: (context, state) {
+                return Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Center(
+                    child: ToggleOptions(
+                      selectedIndex: state.progressStatus.index,
+                      items: TaskProgressStatus.values
+                          .map((e) => Text(e.title))
+                          .toList(),
+                      onPressed: (int index) {
+                        context.read<ReceiverBloc>().add(
+                            ProgressStatusChangedEvent(
+                                TaskProgressStatus.values[index]));
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
             Expanded(
               child: BlocBuilder<ReceiverBloc, ReceiverState>(
                 builder: (context, state) {

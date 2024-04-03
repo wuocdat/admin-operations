@@ -13,6 +13,7 @@ class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
       : _taskRepository = repository,
         super(const ReceiverState()) {
     on<ReceiverStartedEvent>(_onReceiverStated);
+    on<ProgressStatusChangedEvent>(_onProgressStatusChanged);
   }
 
   final TaskRepository _taskRepository;
@@ -29,5 +30,10 @@ class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
       debugPrint('task error ${e.toString()}');
       emit(state.copyWith(status: ReceiverStatus.failure));
     }
+  }
+
+  void _onProgressStatusChanged(
+      ProgressStatusChangedEvent event, Emitter<ReceiverState> emit) {
+    emit(state.copyWith(progressStatus: event.status));
   }
 }
