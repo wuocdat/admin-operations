@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/task/bloc/task_bloc.dart';
+import 'package:tctt_mobile/task/widgets/received_task/view/receivered_task.dart';
+import 'package:tctt_mobile/task/widgets/sent_task/view/sent_task.dart';
 import 'package:tctt_mobile/widgets/head_bar.dart';
 
 class TaskPage extends StatelessWidget {
@@ -38,11 +40,20 @@ class TaskPage extends StatelessWidget {
                       )
                     : null,
               ),
-              Text(context.select((TaskBloc bloc) => bloc.state.searchValue))
+              Expanded(child: getCorrespondingItem(state.mode))
             ],
           );
         },
       ),
     );
+  }
+}
+
+Widget getCorrespondingItem(TaskOptions mode) {
+  switch (mode) {
+    case TaskOptions.receivedTask:
+      return const ReceivedTasks();
+    case TaskOptions.sentTask:
+      return const SentTasks();
   }
 }

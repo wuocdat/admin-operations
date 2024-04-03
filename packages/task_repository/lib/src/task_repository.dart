@@ -1,4 +1,4 @@
-import 'package:api_client/api_client.dart' hide Overall;
+import 'package:api_client/api_client.dart';
 import 'package:task_repository/src/models/models.dart';
 
 class TaskRepository {
@@ -21,6 +21,32 @@ class TaskRepository {
   Future<List<Task>> getReceivedTasks() async {
     final tasks = await _taskApiClient.getReceivedTasks();
 
-    return tasks;
+    return tasks
+        .map(
+          (task) => Task(
+            id: task.id,
+            isActive: task.isActive,
+            important: task.important,
+            content: task.content,
+            units: task.units,
+            name: task.name,
+            createdBy: task.createdBy,
+            createdAt: task.createdAt,
+            disable: task.disable,
+            unitSent: Unit(
+              id: task.unitSent.id,
+              name: task.unitSent.name,
+              createdBy: task.unitSent.createdBy,
+              createdAt: task.unitSent.createdAt,
+              isActive: task.unitSent.isActive,
+            ),
+            type: TaskType(
+              id: task.type.id,
+              isActive: task.type.isActive,
+              name: task.type.name,
+            ),
+          ),
+        )
+        .toList();
   }
 }

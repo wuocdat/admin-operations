@@ -15,9 +15,9 @@ TaskType _$TaskTypeFromJson(Map<String, dynamic> json) => $checkedCreate(
         final val = TaskType(
           id: $checkedConvert('_id', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
-          isActive: $checkedConvert('is_active', (v) => v as bool),
+          isActive: $checkedConvert('isActive', (v) => v as bool),
         );
         return val;
       },
-      fieldKeyMap: const {'id': '_id', 'isActive': 'is_active'},
+      fieldKeyMap: const {'id': '_id'},
     );
