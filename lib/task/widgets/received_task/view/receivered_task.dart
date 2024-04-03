@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/task/widgets/received_task/bloc/receiver_bloc.dart';
+import 'package:tctt_mobile/widgets/empty_list_message.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/msg_item.dart';
 import 'package:tctt_mobile/widgets/toggle_options.dart';
@@ -58,6 +59,12 @@ class ReceivedTasks extends StatelessWidget {
                     case ReceiverStatus.loading:
                       return const Loader();
                     default:
+                      if (state.tasks.isEmpty) {
+                        return const EmptyListMessage(
+                          message: "Không có nhiệm vụ nào",
+                        );
+                      }
+
                       return ListView.builder(
                         itemBuilder: (context, index) {
                           final task = state.tasks[index];
