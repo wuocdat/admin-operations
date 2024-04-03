@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tctt_mobile/theme/colors.dart';
 
 class Input extends StatefulWidget {
   const Input({
@@ -57,7 +58,7 @@ class _InputState extends State<Input> {
           borderRadius: BorderRadius.circular(12),
         ),
         filled: true,
-        fillColor: const Color(0xFFF1F4F8),
+        fillColor: AppColors.secondaryBackground,
         suffixIcon: widget.isPassword
             ? InkWell(
                 onTap: () => setState(

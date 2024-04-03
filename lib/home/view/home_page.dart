@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/dashboard/view/dashboard_page.dart';
 import 'package:tctt_mobile/home/cubit/home_cubit.dart';
 import 'package:tctt_mobile/mail/view/mail_page.dart';
@@ -40,7 +41,11 @@ class HomePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context
+                          .read<AuthenticationBloc>()
+                          .add(AuthenticationLogoutRequested());
+                    },
                     icon: selectedIndex.isHome
                         ? const Icon(Icons.account_circle_outlined)
                         : const Icon(Icons.settings_outlined),
