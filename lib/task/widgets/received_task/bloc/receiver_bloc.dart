@@ -52,9 +52,10 @@ class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
   Future<void> _onProgressStatusChanged(
       ProgressStatusChangedEvent event, Emitter<ReceiverState> emit) async {
     emit(state.copyWith(
-        progressStatus: event.status,
-        status: ReceiverStatus.loading,
-        tasks: List<Task>.empty()));
+      progressStatus: event.status,
+      status: ReceiverStatus.loading,
+      tasks: List<Task>.empty(),
+    ));
 
     try {
       final tasks = await _taskRepository.fetchReceivedTasks(

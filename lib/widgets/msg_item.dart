@@ -59,6 +59,8 @@ class MessageItem extends StatelessWidget {
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                       child: Text(
                         content,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: textTheme.bodyMedium,
                       ),
                     ),
