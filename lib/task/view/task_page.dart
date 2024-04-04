@@ -32,6 +32,8 @@ class TaskPage extends StatelessWidget {
                 },
                 onSearchChanged: (value) =>
                     context.read<TaskBloc>().add(ChangeSearchInputEvent(value)),
+                onCloseSearchInput: () =>
+                    context.read<TaskBloc>().add(const InputClosedEvent()),
                 action: !state.mode.isReceiverMode
                     ? IconButton(
                         onPressed: () {},
@@ -40,7 +42,7 @@ class TaskPage extends StatelessWidget {
                       )
                     : null,
               ),
-              Expanded(child: getCorrespondingItem(state.mode))
+              Expanded(child: getCorrespondingItem(state.mode)),
             ],
           );
         },

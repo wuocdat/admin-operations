@@ -20,5 +20,14 @@ final class ProgressStatusChangedEvent extends ReceiverEvent {
   final TaskProgressStatus status;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [status];
+}
+
+final class SearchInputChangedEvent extends ReceiverEvent {
+  const SearchInputChangedEvent(this.searchValue);
+
+  final String searchValue;
+
+  @override
+  List<Object> get props => [searchValue];
 }

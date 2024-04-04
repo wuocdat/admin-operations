@@ -10,6 +10,7 @@ class HeadBar<T> extends StatefulWidget {
     this.selectedOption,
     this.options,
     this.onSearchChanged,
+    required this.onCloseSearchInput,
   });
 
   final String searchValue;
@@ -18,6 +19,7 @@ class HeadBar<T> extends StatefulWidget {
   final T? selectedOption;
   final List<DropdownMenuItem<T>>? options;
   final ValueChanged<String>? onSearchChanged;
+  final void Function() onCloseSearchInput;
 
   @override
   State<HeadBar<T>> createState() => _HeadBarState<T>();
@@ -27,6 +29,8 @@ class _HeadBarState<T> extends State<HeadBar<T>> {
   bool isSearchMode = false;
 
   void onToggleMode() {
+    if (isSearchMode) widget.onCloseSearchInput();
+
     setState(() {
       isSearchMode = !isSearchMode;
     });

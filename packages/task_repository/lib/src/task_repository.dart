@@ -20,10 +20,15 @@ class TaskRepository {
     );
   }
 
-  Future<List<Task>> fetchReceivedTasks(String progressStatus,
+  Future<List<Task>> fetchReceivedTasks(
+      String progressStatus, String? searchValue,
       [int taskLength = 0]) async {
     final tasks = await _taskApiClient.getReceivedTasks(
-        progressStatus, taskLimit, (taskLength / taskLimit).ceil() + 1);
+      progressStatus,
+      searchValue,
+      taskLimit,
+      (taskLength / taskLimit).ceil() + 1,
+    );
 
     return tasks
         .map(

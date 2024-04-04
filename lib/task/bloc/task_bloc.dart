@@ -8,6 +8,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   TaskBloc() : super(const TaskState.receiver()) {
     on<ChangeModeEvent>(_onChangeMode);
     on<ChangeSearchInputEvent>(_onSearchInputChange);
+    on<InputClosedEvent>(_onInputClosed);
   }
 
   void _onChangeMode(ChangeModeEvent event, Emitter<TaskState> emit) {
@@ -19,6 +20,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   void _onSearchInputChange(
       ChangeSearchInputEvent event, Emitter<TaskState> emit) {
     emit(state.copyWith(searchValue: event.searchValue));
+  }
+
+  void _onInputClosed(InputClosedEvent event, Emitter<TaskState> emit) {
+    emit(state.copyWith(searchValue: ""));
   }
 }
 

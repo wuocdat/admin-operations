@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
+import 'package:tctt_mobile/task/bloc/task_bloc.dart';
 import 'package:tctt_mobile/task/widgets/received_task/bloc/receiver_bloc.dart';
 import 'package:tctt_mobile/widgets/bottom_loader.dart';
 import 'package:tctt_mobile/widgets/empty_list_message.dart';
@@ -19,16 +20,31 @@ class ReceivedTasks extends StatelessWidget {
       create: (context) => ReceiverBloc(
           repository: RepositoryProvider.of<TaskRepository>(context))
         ..add(const ReceiverFetchedEvent()),
-      child: BlocListener<ReceiverBloc, ReceiverState>(
-        listener: (context, state) {
-          if (state.status.isFailure) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                const SnackBar(content: Text("Đã xảy ra lỗi")),
-              );
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<ReceiverBloc, ReceiverState>(
+            listenWhen: (previous, current) =>
+                previous.status != current.status,
+            listener: (context, state) {
+              if (state.status.isFailure) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    const SnackBar(content: Text("Đã xảy ra lỗi")),
+                  );
+              }
+            },
+          ),
+          BlocListener<TaskBloc, TaskState>(
+            listenWhen: (previous, current) =>
+                previous.searchValue != current.searchValue,
+            listener: (context, state) {
+              context
+                  .read<ReceiverBloc>()
+                  .add(SearchInputChangedEvent(state.searchValue));
+            },
+          ),
+        ],
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.max,
@@ -46,9 +62,11 @@ class ReceivedTasks extends StatelessWidget {
                           .map((e) => Text(e.title))
                           .toList(),
                       onPressed: (int index) {
-                        context.read<ReceiverBloc>().add(
-                            ProgressStatusChangedEvent(
-                                TaskProgressStatus.values[index]));
+                        context
+                            .read<ReceiverBloc>()
+                            .add(ProgressStatusChangedEvent(
+                              TaskProgressStatus.values[index],
+                            ));
                       },
                     ),
                   ),

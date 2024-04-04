@@ -8,11 +8,16 @@ part 'receiver_event.dart';
 part 'receiver_state.dart';
 
 const throttleDuration = Duration(milliseconds: 100);
+const debounceDuration = Duration(milliseconds: 500);
 
 EventTransformer<E> throttleDroppable<E>(Duration duration) {
   return (events, mapper) {
     return droppable<E>().call(events.throttle(duration), mapper);
   };
+}
+
+EventTransformer<T> debounce<T>(Duration duration) {
+  return (events, mapper) => events.debounce(duration).switchMap(mapper);
 }
 
 class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
@@ -24,6 +29,8 @@ class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
       transformer: throttleDroppable(throttleDuration),
     );
     on<ProgressStatusChangedEvent>(_onProgressStatusChanged);
+    on<SearchInputChangedEvent>(_onSearchInputChanged,
+        transformer: debounce(debounceDuration));
   }
 
   final TaskRepository _taskRepository;
@@ -36,7 +43,10 @@ class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
 
     try {
       final tasks = await _taskRepository.fetchReceivedTasks(
-          state.progressStatus.query, state.tasks.length);
+        state.progressStatus.query,
+        state.searchValue,
+        state.tasks.length,
+      );
 
       tasks.length < taskLimit
           ? emit(state.copyWith(
@@ -61,8 +71,8 @@ class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
         tasks: List<Task>.empty()));
 
     try {
-      final tasks =
-          await _taskRepository.fetchReceivedTasks(event.status.query);
+      final tasks = await _taskRepository.fetchReceivedTasks(
+          event.status.query, state.searchValue);
       emit(state.copyWith(
           status: ReceiverStatus.success,
           tasks: tasks,
@@ -70,6 +80,28 @@ class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
     } catch (_) {
       emit(state.copyWith(
           status: ReceiverStatus.failure, tasks: List<Task>.empty()));
+    }
+  }
+
+  Future<void> _onSearchInputChanged(
+      SearchInputChangedEvent event, Emitter<ReceiverState> emit) async {
+    emit(state.copyWith(
+        searchValue: event.searchValue,
+        status: ReceiverStatus.loading,
+        tasks: List<Task>.empty()));
+
+    try {
+      final tasks = await _taskRepository.fetchReceivedTasks(
+          state.progressStatus.query, event.searchValue);
+      emit(state.copyWith(
+          status: ReceiverStatus.success,
+          tasks: tasks,
+          hasReachedMax: tasks.length < taskLimit));
+    } catch (_) {
+      emit(state.copyWith(
+        status: ReceiverStatus.failure,
+        tasks: List<Task>.empty(),
+      ));
     }
   }
 }

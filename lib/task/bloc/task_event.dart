@@ -24,3 +24,10 @@ final class ChangeSearchInputEvent extends TaskEvent {
   @override
   List<Object> get props => [searchValue];
 }
+
+final class InputClosedEvent extends TaskEvent {
+  const InputClosedEvent();
+
+  @override
+  List<Object> get props => [];
+}

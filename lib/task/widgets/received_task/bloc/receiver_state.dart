@@ -23,9 +23,11 @@ class ReceiverState extends Equatable {
     this.tasks = const <Task>[],
     this.progressStatus = TaskProgressStatus.all,
     this.hasReachedMax = false,
+    this.searchValue,
   });
 
   final TaskProgressStatus progressStatus;
+  final String? searchValue;
   final ReceiverStatus status;
   final List<Task> tasks;
   final bool hasReachedMax;
@@ -35,15 +37,23 @@ class ReceiverState extends Equatable {
     List<Task>? tasks,
     TaskProgressStatus? progressStatus,
     bool? hasReachedMax,
+    String? searchValue,
   }) {
     return ReceiverState(
       status: status ?? this.status,
       tasks: tasks ?? this.tasks,
       progressStatus: progressStatus ?? this.progressStatus,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      searchValue: searchValue ?? this.searchValue,
     );
   }
 
   @override
-  List<Object> get props => [status, tasks, progressStatus, hasReachedMax];
+  List<Object?> get props => [
+        status,
+        tasks,
+        progressStatus,
+        hasReachedMax,
+        searchValue,
+      ];
 }
