@@ -1,24 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
-import 'package:stream_transform/stream_transform.dart';
 import 'package:task_repository/task_repository.dart';
+import 'package:tctt_mobile/shared/debounce.dart';
 
 part 'receiver_event.dart';
 part 'receiver_state.dart';
-
-const throttleDuration = Duration(milliseconds: 100);
-const debounceDuration = Duration(milliseconds: 500);
-
-EventTransformer<E> throttleDroppable<E>(Duration duration) {
-  return (events, mapper) {
-    return droppable<E>().call(events.throttle(duration), mapper);
-  };
-}
-
-EventTransformer<T> debounce<T>(Duration duration) {
-  return (events, mapper) => events.debounce(duration).switchMap(mapper);
-}
 
 class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
   ReceiverBloc({required TaskRepository repository})

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:api_client/src/api_config.dart';
 import 'package:api_client/src/common/handlers.dart';
 import 'package:api_client/src/task/models/models.dart';
@@ -44,6 +46,34 @@ class TaskApiClient {
 
     final response = await _dio.get(
       TaskUrl.received,
+      queryParameters: queryParameters,
+    );
+
+    final result = Handler.parseResponse(response) as List;
+
+    return result.map((dynamic json) {
+      final map = json as Map<String, dynamic>;
+      return Task.fromJson(map);
+    }).toList();
+  }
+
+  Future<List<Task>> getSentTasks(String owner, String? text, int limit,
+      [int currentPage = 1]) async {
+    final Map<String, dynamic> queryParameters = {
+      "pageSize": limit,
+      "currentPage": currentPage,
+      "owner": owner,
+      "sortBy": jsonEncode({
+        "createdAt": -1,
+      }),
+    };
+
+    if (text != null && text.isNotEmpty) {
+      queryParameters["text"] = text;
+    }
+
+    final response = await _dio.get(
+      TaskUrl.sent,
       queryParameters: queryParameters,
     );
 

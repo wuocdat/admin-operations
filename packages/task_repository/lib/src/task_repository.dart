@@ -58,4 +58,38 @@ class TaskRepository {
         )
         .toList();
   }
+
+  Future<List<Task>> fetchSentTasks(String owner, String? searchValue,
+      [int taskLength = 0]) async {
+    final tasks = await _taskApiClient.getSentTasks(
+        owner, searchValue, taskLimit, (taskLength / taskLimit).ceil() + 1);
+
+    return tasks
+        .map(
+          (task) => Task(
+            id: task.id,
+            isActive: task.isActive,
+            important: task.important,
+            content: task.content,
+            units: task.units,
+            name: task.name,
+            createdBy: task.createdBy,
+            createdAt: task.createdAt,
+            disable: task.disable,
+            unitSent: Unit(
+              id: task.unitSent.id,
+              name: task.unitSent.name,
+              createdBy: task.unitSent.createdBy,
+              createdAt: task.unitSent.createdAt,
+              isActive: task.unitSent.isActive,
+            ),
+            type: TaskType(
+              id: task.type.id,
+              isActive: task.type.isActive,
+              name: task.type.name,
+            ),
+          ),
+        )
+        .toList();
+  }
 }
