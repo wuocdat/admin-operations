@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/dashboard/view/dashboard_page.dart';
 import 'package:tctt_mobile/home/cubit/home_cubit.dart';
+import 'package:tctt_mobile/home/widgets/notifications_bell.dart';
 import 'package:tctt_mobile/mail/view/mail_page.dart';
 import 'package:tctt_mobile/target/view/target_page.dart';
 import 'package:tctt_mobile/task/view/task_page.dart';
@@ -38,6 +39,10 @@ class HomePage extends StatelessWidget {
                 style: theme.textTheme.headlineMedium,
               ),
               actions: [
+                const Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+                  child: NotificationBell(count: 2),
+                ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
                   child: IconButton(

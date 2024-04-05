@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/new_task/new_task.dart';
 import 'package:tctt_mobile/task/bloc/task_bloc.dart';
 import 'package:tctt_mobile/task/widgets/received_task/view/receivered_task.dart';
 import 'package:tctt_mobile/task/widgets/sent_task/view/sent_task.dart';
@@ -36,7 +37,9 @@ class TaskPage extends StatelessWidget {
                     context.read<TaskBloc>().add(const InputClosedEvent()),
                 action: !state.mode.isReceiverMode
                     ? IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(context, NewTaskPage.route());
+                        },
                         icon: const Icon(Icons.add),
                         color: Theme.of(context).primaryColor,
                       )
