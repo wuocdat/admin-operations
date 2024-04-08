@@ -1,5 +1,5 @@
 import 'package:api_client/src/task/models/task_type.dart';
-import 'package:api_client/src/task/models/unit.dart';
+import 'package:api_client/src/units/models/unit.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
