@@ -18,6 +18,7 @@ class TaskPage extends StatelessWidget {
           return Column(
             children: [
               HeadBar<TaskOptions>(
+                label: "Giao nhận nhiệm vụ",
                 searchValue: state.searchValue,
                 selectedOption: state.mode,
                 options: TaskOptions.values
