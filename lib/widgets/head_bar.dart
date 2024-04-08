@@ -4,6 +4,7 @@ import 'package:tctt_mobile/widgets/input.dart';
 class HeadBar<T> extends StatefulWidget {
   const HeadBar({
     super.key,
+    required this.label,
     this.searchValue = "",
     this.action,
     this.onPickedOption,
@@ -13,6 +14,7 @@ class HeadBar<T> extends StatefulWidget {
     required this.onCloseSearchInput,
   });
 
+  final String label;
   final String searchValue;
   final Widget? action;
   final ValueChanged<T?>? onPickedOption;
@@ -79,7 +81,7 @@ class _HeadBarState<T> extends State<HeadBar<T>> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Giao nhận nhiệm vụ',
+                        widget.label,
                         style: Theme.of(context).textTheme.labelSmall,
                       ),
                       DropdownButtonHideUnderline(
