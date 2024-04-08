@@ -52,6 +52,7 @@ dependencies:
   getwidget: ^4.0.0
   bloc_concurrency: ^0.2.5
   stream_transform: ^2.1.0
+  flutter_tree: ^2.0.3
 
 dev_dependencies:
   flutter_test:
