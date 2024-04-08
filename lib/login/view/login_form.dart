@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:tctt_mobile/login/bloc/login_bloc.dart';
 import 'package:tctt_mobile/widgets/contained_button.dart';
-import 'package:tctt_mobile/widgets/input.dart';
+import 'package:tctt_mobile/widgets/inputs.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({super.key});

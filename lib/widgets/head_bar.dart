@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tctt_mobile/widgets/input.dart';
+import 'package:tctt_mobile/widgets/inputs.dart';
 
 class HeadBar<T> extends StatefulWidget {
   const HeadBar({

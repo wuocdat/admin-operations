@@ -116,35 +116,39 @@ class SearchInput extends StatelessWidget {
 class BorderInput extends StatelessWidget {
   const BorderInput({
     super.key,
-    TextEditingController? controller,
     bool? autoFocus,
     required String labelText,
     int? maxLines,
     int? minLines,
-    String? Function(String?)? validator,
-  })  : _controller = controller,
-        _autoFocus = autoFocus,
+    int? maxLength,
+    String? errorText,
+    ValueChanged<String>? onChanged,
+  })  : _autoFocus = autoFocus,
         _labelText = labelText,
         _maxLines = maxLines,
         _minLines = minLines,
-        _validator = validator;
+        _maxLength = maxLength,
+        _errorText = errorText,
+        _onChanged = onChanged;
 
-  final TextEditingController? _controller;
   final bool? _autoFocus;
   final String _labelText;
+  final String? _errorText;
   final int? _maxLines;
   final int? _minLines;
-  final String? Function(String?)? _validator;
+  final int? _maxLength;
+  final ValueChanged<String>? _onChanged;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return TextFormField(
-      controller: _controller,
+    return TextField(
       autofocus: _autoFocus ?? false,
       obscureText: false,
+      onChanged: _onChanged,
       decoration: InputDecoration(
         labelText: _labelText,
+        errorText: _errorText,
         alignLabelWithHint: true,
         hintStyle: theme.textTheme.labelLarge?.copyWith(
           fontFamily: 'Plus Jakarta Sans',
@@ -186,8 +190,8 @@ class BorderInput extends StatelessWidget {
       ),
       minLines: _minLines,
       maxLines: _maxLines,
+      maxLength: _maxLength,
       cursorColor: theme.primaryColor,
-      validator: _validator,
     );
   }
 }

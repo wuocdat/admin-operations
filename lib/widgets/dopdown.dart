@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:tctt_mobile/theme/colors.dart';
 
-class BorderDropdown extends StatelessWidget {
-  BorderDropdown(
+class BorderDropdown<T> extends StatelessWidget {
+  const BorderDropdown(
       {super.key,
-      required List<String> items,
-      required String initialSelection,
-      void Function(String?)? onSelected})
-      : _dropdownMenuEntries = items
-            .map((item) => DropdownMenuEntry<String>(value: item, label: item))
-            .toList(),
+      required List<DropdownMenuEntry<T>> items,
+      required T initialSelection,
+      void Function(T?)? onSelected})
+      : _dropdownMenuEntries = items,
         _initialSelection = initialSelection,
         _onSelected = onSelected;
 
-  final List<DropdownMenuEntry<String>> _dropdownMenuEntries;
-  final String _initialSelection;
-  final void Function(String?)? _onSelected;
+  final List<DropdownMenuEntry<T>> _dropdownMenuEntries;
+  final T _initialSelection;
+  final void Function(T?)? _onSelected;
 
   @override
   Widget build(BuildContext context) {
