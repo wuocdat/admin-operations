@@ -7,6 +7,13 @@ sealed class NewTaskEvent extends Equatable {
   List<Object> get props => [];
 }
 
+final class NewTaskStarted extends NewTaskEvent {
+  const NewTaskStarted();
+
+  @override
+  List<Object> get props => [];
+}
+
 final class TitleChanged extends NewTaskEvent {
   const TitleChanged(this.title);
 

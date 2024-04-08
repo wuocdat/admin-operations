@@ -12,7 +12,9 @@ class UnitsApiClient {
   final Dio _dio;
 
   Future<List<Unit>> getUnitsByParentId(String parentId) async {
-    final response = await _dio.get(UnitsUrl.byParentId(parentId));
+    final response = await _dio.get(UnitsUrl.getUnits, queryParameters: {
+      'parentUnit': parentId,
+    });
 
     final result = Handler.parseResponse(response) as List;
 

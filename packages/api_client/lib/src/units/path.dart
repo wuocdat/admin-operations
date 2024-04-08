@@ -1,3 +1,3 @@
 final class UnitsUrl {
-  static String byParentId(String parentId) => '/units/$parentId';
+  static String getUnits = '/units';
 }
