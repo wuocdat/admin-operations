@@ -33,12 +33,13 @@ final class ContentChanged extends NewTaskEvent {
 }
 
 final class UnitsChanged extends NewTaskEvent {
-  const UnitsChanged(this.units);
+  const UnitsChanged({required this.unit, required this.checked});
 
-  final List<String> units;
+  final String unit;
+  final bool checked;
 
   @override
-  List<Object> get props => [units];
+  List<Object> get props => [unit, checked];
 }
 
 final class TypeChanged extends NewTaskEvent {

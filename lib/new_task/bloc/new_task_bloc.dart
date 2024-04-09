@@ -47,7 +47,7 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
     final title = Title.dirty(event.title);
     emit(state.copyWith(
       title: title,
-      isValid: Formz.validate([title, state.content]),
+      isValid: Formz.validate([title, state.content]) && state.units.isNotEmpty,
     ));
   }
 
@@ -55,7 +55,7 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
     final content = Content.dirty(event.content);
     emit(state.copyWith(
       content: content,
-      isValid: Formz.validate([state.title, content]),
+      isValid: Formz.validate([state.title, content]) && state.units.isNotEmpty,
     ));
   }
 
@@ -64,7 +64,19 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
   }
 
   void _onUnitsChanged(UnitsChanged event, Emitter<NewTaskState> emit) {
-    emit(state.copyWith(units: event.units));
+    final cloneUnits = List.of(state.units);
+
+    if (event.checked) {
+      cloneUnits.add(event.unit);
+    } else {
+      cloneUnits.remove(event.unit);
+    }
+
+    emit(state.copyWith(
+      units: cloneUnits,
+      isValid:
+          Formz.validate([state.content, state.title]) && cloneUnits.isNotEmpty,
+    ));
   }
 
   void _onImportantToggled(ImportantToggled event, Emitter<NewTaskState> emit) {

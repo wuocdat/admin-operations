@@ -126,8 +126,12 @@ class NewTaskPage extends StatelessWidget {
                                           .read<NewTaskBloc>()
                                           .loadTreeNode(node.extra as String),
                                       onCheck: (checked, node) {
-                                        debugPrint(checked.toString());
-                                        debugPrint(node.extra);
+                                        context
+                                            .read<NewTaskBloc>()
+                                            .add(UnitsChanged(
+                                              unit: node.extra,
+                                              checked: checked,
+                                            ));
                                       },
                                     ),
                         );
@@ -151,24 +155,39 @@ class NewTaskPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    BorderContainer(
-                      child: Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            16, 12, 16, 12),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: Theme.of(context).primaryColor,
+                    BlocBuilder<NewTaskBloc, NewTaskState>(
+                      buildWhen: (previous, current) =>
+                          previous.important != current.important,
+                      builder: (context, state) {
+                        return InkWell(
+                          onTap: () => context
+                              .read<NewTaskBloc>()
+                              .add(const ImportantToggled()),
+                          child: BorderContainer(
+                            child: Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  16, 12, 16, 12),
+                              child: Row(
+                                children: [
+                                  state.important
+                                      ? Icon(
+                                          Icons.star,
+                                          color: Theme.of(context).primaryColor,
+                                        )
+                                      : const Icon(Icons.star_outline),
+                                  const SizedBox(width: 16),
+                                  const Text('Đánh dấu quan trọng'),
+                                ],
+                              ),
                             ),
-                            const SizedBox(width: 16),
-                            const Text('Đánh dấu quan trọng'),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 32),
                     BlocBuilder<NewTaskBloc, NewTaskState>(
+                      buildWhen: (previous, current) =>
+                          previous.isValid != current.isValid,
                       builder: (context, state) => ContainedButton(
                         onPressed: state.isValid
                             ? () {
