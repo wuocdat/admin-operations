@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tree/flutter_tree.dart';
-import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/new_task/bloc/new_task_bloc.dart';
 import 'package:tctt_mobile/new_task/models/content.dart';
 import 'package:tctt_mobile/new_task/models/title.dart';
@@ -9,6 +8,7 @@ import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
 import 'package:tctt_mobile/widgets/contained_button.dart';
 import 'package:tctt_mobile/widgets/dopdown.dart';
+import 'package:tctt_mobile/widgets/file_picker.dart';
 import 'package:tctt_mobile/widgets/inputs.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:units_repository/units_repository.dart';
@@ -141,21 +141,17 @@ class NewTaskPage extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 16),
-                    BorderContainer(
-                      child: Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            16, 12, 16, 12),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.add_a_photo_rounded,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            const SizedBox(width: 16),
-                            const Text('Đính kèm ảnh'),
-                          ],
-                        ),
-                      ),
+                    BlocBuilder<NewTaskBloc, NewTaskState>(
+                      buildWhen: (previous, current) =>
+                          previous.files != current.files,
+                      builder: (context, state) {
+                        return FilePicker(
+                          fileNames: state.files,
+                          onFilesSelected: (files) {
+                            context.read<NewTaskBloc>().add(FilePicked(files));
+                          },
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
                     BlocBuilder<NewTaskBloc, NewTaskState>(

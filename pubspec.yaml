@@ -55,6 +55,7 @@ dependencies:
   bloc_concurrency: ^0.2.5
   stream_transform: ^2.1.0
   flutter_tree: ^2.0.3
+  file_picker: ^8.0.0+1
 
 dev_dependencies:
   flutter_test:

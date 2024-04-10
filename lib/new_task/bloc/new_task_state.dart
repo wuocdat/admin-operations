@@ -28,6 +28,7 @@ class NewTaskState extends Equatable {
     this.status = FormzSubmissionStatus.initial,
     this.isValid = false,
     this.fetchDataStatus = FetchDataStatus.initial,
+    this.files = const [],
   });
 
   final Title title;
@@ -39,6 +40,7 @@ class NewTaskState extends Equatable {
   final FormzSubmissionStatus status;
   final bool isValid;
   final FetchDataStatus fetchDataStatus;
+  final List<PlatformFile> files;
 
   NewTaskState copyWith({
     Title? title,
@@ -50,6 +52,7 @@ class NewTaskState extends Equatable {
     FormzSubmissionStatus? status,
     bool? isValid,
     FetchDataStatus? fetchDataStatus,
+    List<PlatformFile>? files,
   }) {
     return NewTaskState(
       title: title ?? this.title,
@@ -61,6 +64,7 @@ class NewTaskState extends Equatable {
       status: status ?? this.status,
       isValid: isValid ?? this.isValid,
       fetchDataStatus: fetchDataStatus ?? this.fetchDataStatus,
+      files: files ?? this.files,
     );
   }
 
@@ -75,5 +79,6 @@ class NewTaskState extends Equatable {
         isValid,
         childrenUnits,
         fetchDataStatus,
+        files,
       ];
 }

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tree/flutter_tree.dart';
 import 'package:formz/formz.dart';
@@ -22,6 +23,7 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
     on<ImportantToggled>(_onImportantToggled);
     on<NewTaskSubmitted>(_onNewTaskSubmitted);
     on<NewTaskStarted>(_onNewTaskStarted);
+    on<FilePicked>(_onFilesPicked);
   }
 
   final UnitsRepository _unitsRepository;
@@ -46,7 +48,9 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
     final title = Title.dirty(event.title);
     emit(state.copyWith(
       title: title,
-      isValid: Formz.validate([title, state.content]) && state.units.isNotEmpty,
+      isValid: Formz.validate([title, state.content]) &&
+          state.units.isNotEmpty &&
+          state.files.isNotEmpty,
     ));
   }
 
@@ -54,7 +58,9 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
     final content = Content.dirty(event.content);
     emit(state.copyWith(
       content: content,
-      isValid: Formz.validate([state.title, content]) && state.units.isNotEmpty,
+      isValid: Formz.validate([state.title, content]) &&
+          state.units.isNotEmpty &&
+          state.files.isNotEmpty,
     ));
   }
 
@@ -73,8 +79,9 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
 
     emit(state.copyWith(
       units: cloneUnits,
-      isValid:
-          Formz.validate([state.content, state.title]) && cloneUnits.isNotEmpty,
+      isValid: Formz.validate([state.content, state.title]) &&
+          cloneUnits.isNotEmpty &&
+          state.files.isNotEmpty,
     ));
   }
 
@@ -86,6 +93,15 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
     if (state.isValid) {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     }
+  }
+
+  void _onFilesPicked(FilePicked event, Emitter<NewTaskState> emit) {
+    emit(state.copyWith(
+      files: event.files,
+      isValid: Formz.validate([state.content, state.title]) &&
+          state.units.isNotEmpty &&
+          event.files.isNotEmpty,
+    ));
   }
 
   Future<List<TreeNodeData>> loadTreeNode(String parent) async {

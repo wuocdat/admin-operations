@@ -66,3 +66,12 @@ final class NewTaskSubmitted extends NewTaskEvent {
   @override
   List<Object> get props => [];
 }
+
+final class FilePicked extends NewTaskEvent {
+  const FilePicked(this.files);
+
+  final List<PlatformFile> files;
+
+  @override
+  List<Object> get props => [files];
+}
