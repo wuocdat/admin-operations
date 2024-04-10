@@ -21,7 +21,13 @@ class NewTaskPage extends StatelessWidget {
 
   static Route<void> route(String unitId) {
     return MaterialPageRoute<void>(
-      builder: (_) => NewTaskPage(unitId: unitId),
+      builder: (_) => BlocProvider(
+        create: (context) => NewTaskBloc(
+          unitsRepository: RepositoryProvider.of<UnitsRepository>(context),
+          taskRepository: RepositoryProvider.of<TaskRepository>(context),
+        )..add(NewTaskStarted(unitId: unitId)),
+        child: NewTaskPage(unitId: unitId),
+      ),
     );
   }
 
@@ -29,95 +35,89 @@ class NewTaskPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => NewTaskBloc(
-        unitsRepository: RepositoryProvider.of<UnitsRepository>(context),
-        taskRepository: RepositoryProvider.of<TaskRepository>(context),
-      )..add(NewTaskStarted(unitId: unitId)),
-      child: BlocConsumer<NewTaskBloc, NewTaskState>(
-        listenWhen: (previous, current) => previous.status != current.status,
-        listener: (context, state) {
-          switch (state.status) {
-            case FormzSubmissionStatus.success:
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Tạo mới thành công'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              Future.delayed(const Duration(seconds: 1), () {
-                Navigator.pop(context);
-              });
-              break;
-            case FormzSubmissionStatus.failure:
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Tạo mới thất bại'),
-                ),
-              );
-              break;
-            default:
-              break;
-          }
-        },
-        builder: (context, state) {
-          return LoadingOverlay(
-            isLoading: state.status == FormzSubmissionStatus.inProgress,
-            child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.white,
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_rounded,
-                    size: 30,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                title: Text(
-                  'Nhiệm vụ mới',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontFamily: 'Urbanist',
-                        letterSpacing: 0,
-                      ),
-                ),
+    return BlocConsumer<NewTaskBloc, NewTaskState>(
+      listenWhen: (previous, current) => previous.status != current.status,
+      listener: (context, state) {
+        switch (state.status) {
+          case FormzSubmissionStatus.success:
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tạo mới thành công'),
+                backgroundColor: Colors.green,
               ),
-              body: SafeArea(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: const SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Column(
-                        children: [
-                          TaskTile(),
-                          SizedBox(height: 16),
-                          TypeSelector(),
-                          SizedBox(height: 16),
-                          TaskContent(),
-                          SizedBox(height: 16),
-                          UnitTree(),
-                          SizedBox(height: 16),
-                          FileBrowser(),
-                          SizedBox(height: 16),
-                          ImportantChecker(),
-                          SizedBox(height: 32),
-                          SubmitButton(),
-                          SizedBox(height: 32),
-                        ],
-                      ),
+            );
+            Future.delayed(const Duration(seconds: 1), () {
+              Navigator.pop(context);
+            });
+            break;
+          case FormzSubmissionStatus.failure:
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tạo mới thất bại'),
+              ),
+            );
+            break;
+          default:
+            break;
+        }
+      },
+      builder: (context, state) {
+        return LoadingOverlay(
+          isLoading: state.status == FormzSubmissionStatus.inProgress,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_rounded,
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              title: Text(
+                'Nhiệm vụ mới',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontFamily: 'Urbanist',
+                      letterSpacing: 0,
+                    ),
+              ),
+            ),
+            body: SafeArea(
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: const SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 8.0),
+                    child: Column(
+                      children: [
+                        TaskTile(),
+                        SizedBox(height: 16),
+                        TypeSelector(),
+                        SizedBox(height: 16),
+                        TaskContent(),
+                        SizedBox(height: 16),
+                        UnitTree(),
+                        SizedBox(height: 16),
+                        FileBrowser(),
+                        SizedBox(height: 16),
+                        ImportantChecker(),
+                        SizedBox(height: 32),
+                        SubmitButton(),
+                        SizedBox(height: 32),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
