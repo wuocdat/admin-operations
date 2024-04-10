@@ -23,3 +23,11 @@ Unit _$UnitFromJson(Map<String, dynamic> json) => $checkedCreate(
       },
       fieldKeyMap: const {'id': '_id'},
     );
+
+Map<String, dynamic> _$UnitToJson(Unit instance) => <String, dynamic>{
+      '_id': instance.id,
+      'name': instance.name,
+      'createdBy': instance.createdBy,
+      'createdAt': instance.createdAt,
+      'isActive': instance.isActive,
+    };

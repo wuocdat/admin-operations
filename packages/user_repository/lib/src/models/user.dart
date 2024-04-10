@@ -24,6 +24,23 @@ class User extends Equatable {
     required this.permissions,
   });
 
+  static const User empty = User(
+    id: '',
+    username: '',
+    isActive: false,
+    is2FAEnabled: false,
+    fbUids: '',
+    phoneNumber: '',
+    name: '',
+    createdBy: '',
+    updatedBy: '',
+    createdAt: '',
+    updatedAt: '',
+    unit: Unit.empty,
+    parentUnit: null,
+    permissions: const <String, Permission>{},
+  );
+
   @JsonKey(name: "_id")
   final String id;
   final String username;
@@ -41,6 +58,8 @@ class User extends Equatable {
   final Map<String, Permission> permissions;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 
   @override
   List<Object?> get props => [

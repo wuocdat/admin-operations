@@ -8,10 +8,12 @@ sealed class NewTaskEvent extends Equatable {
 }
 
 final class NewTaskStarted extends NewTaskEvent {
-  const NewTaskStarted();
+  const NewTaskStarted({required this.unitId});
+
+  final String unitId;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [unitId];
 }
 
 final class TitleChanged extends NewTaskEvent {

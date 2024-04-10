@@ -18,6 +18,8 @@ class Role extends Equatable {
 
   factory Role.fromJson(Map<String, dynamic> json) => _$RoleFromJson(json);
 
+  Map<String, dynamic> toJson() => _$RoleToJson(this);
+
   @override
   List<Object> get props => [id, name, managed];
 }

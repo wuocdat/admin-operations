@@ -30,8 +30,7 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
       NewTaskStarted event, Emitter<NewTaskState> emit) async {
     emit(state.copyWith(fetchDataStatus: FetchDataStatus.loading));
     try {
-      final units =
-          await _unitsRepository.getUnitsByParentId("6126ee5f7ccaba2143ffda1a");
+      final units = await _unitsRepository.getUnitsByParentId(event.unitId);
 
       emit(state.copyWith(
         fetchDataStatus: FetchDataStatus.success,

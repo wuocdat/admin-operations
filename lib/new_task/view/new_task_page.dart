@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tree/flutter_tree.dart';
+import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/new_task/bloc/new_task_bloc.dart';
 import 'package:tctt_mobile/new_task/models/content.dart';
 import 'package:tctt_mobile/new_task/models/title.dart';
@@ -13,20 +14,22 @@ import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:units_repository/units_repository.dart';
 
 class NewTaskPage extends StatelessWidget {
-  const NewTaskPage({super.key});
+  const NewTaskPage({super.key, required this.unitId});
 
-  static Route<void> route() {
+  static Route<void> route(String unitId) {
     return MaterialPageRoute<void>(
-      builder: (_) => const NewTaskPage(),
+      builder: (_) => NewTaskPage(unitId: unitId),
     );
   }
+
+  final String unitId;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => NewTaskBloc(
         unitsRepository: RepositoryProvider.of<UnitsRepository>(context),
-      )..add(const NewTaskStarted()),
+      )..add(NewTaskStarted(unitId: unitId)),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,

@@ -22,6 +22,16 @@ class Unit extends Equatable {
 
   factory Unit.fromJson(Map<String, dynamic> json) => _$UnitFromJson(json);
 
+  Map<String, dynamic> toJson() => _$UnitToJson(this);
+
+  static const Unit empty = Unit(
+    id: '',
+    name: '',
+    createdBy: '',
+    createdAt: '',
+    isActive: false,
+  );
+
   @override
   List<Object> get props => [id, name, createdAt, createdBy, isActive];
 }

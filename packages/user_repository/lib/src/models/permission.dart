@@ -20,6 +20,8 @@ class Permission extends Equatable {
   factory Permission.fromJson(Map<String, dynamic> json) =>
       _$PermissionFromJson(json);
 
+  Map<String, dynamic> toJson() => _$PermissionToJson(this);
+
   @override
   List<Object> get props => [create, update, delete, read];
 }
