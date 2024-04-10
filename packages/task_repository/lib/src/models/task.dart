@@ -1,7 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:task_repository/src/models/task_type.dart';
-import 'package:task_repository/src/models/unit.dart';
+import 'package:units_repository/units_repository.dart';
 
+part 'task.g.dart';
+
+@JsonSerializable()
 class Task extends Equatable {
   const Task({
     required this.id,
@@ -17,6 +21,7 @@ class Task extends Equatable {
     required this.type,
   });
 
+  @JsonKey(name: "_id")
   final String id;
   final bool isActive;
   final bool important;
@@ -28,6 +33,8 @@ class Task extends Equatable {
   final bool disable;
   final Unit unitSent;
   final TaskType type;
+
+  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 
   @override
   List<Object> get props => [

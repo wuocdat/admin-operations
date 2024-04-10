@@ -1,5 +1,4 @@
 import 'package:api_client/src/api_config.dart';
-import 'package:api_client/src/user/models/user.dart';
 import 'package:dio/dio.dart';
 
 class UserRequestFailure implements Exception {}
@@ -15,7 +14,7 @@ class UserApiClient {
 
   final Dio _dio;
 
-  Future<User> getUser() async {
+  Future<Map<String, dynamic>> getUser() async {
     final userResponse = await _dio.get(userUrl);
 
     if (userResponse.statusCode != 200) throw UserRequestFailure();
@@ -24,8 +23,6 @@ class UserApiClient {
 
     if (!data.containsKey("data")) throw UserNotFoundFailure();
 
-    final userResult = data['data'] as Map<String, dynamic>;
-
-    return User.fromJson(userResult);
+    return data['data'] as Map<String, dynamic>;
   }
 }

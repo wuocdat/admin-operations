@@ -10,13 +10,6 @@ class UnitsRepository {
   Future<List<Unit>> getUnitsByParentId(String parentId) async {
     final units = await _unitsApiClient.getUnitsByParentId(parentId);
 
-    return units
-        .map((unit) => Unit(
-            id: unit.id,
-            name: unit.name,
-            createdBy: unit.createdBy,
-            createdAt: unit.createdAt,
-            isActive: unit.isActive))
-        .toList();
+    return units.map((e) => Unit.fromJson(e)).toList();
   }
 }

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:api_client/src/api_config.dart';
 import 'package:api_client/src/common/handlers.dart';
-import 'package:api_client/src/task/models/models.dart';
 import 'package:api_client/src/task/path.dart';
 import 'package:dio/dio.dart';
 
@@ -17,7 +16,7 @@ class TaskApiClient {
 
   final Dio _dio;
 
-  Future<Overall> getOverall() async {
+  Future<Map<String, dynamic>> getOverall() async {
     final response = await _dio.get(TaskUrl.overall, queryParameters: {
       'task': true,
     });
@@ -26,12 +25,10 @@ class TaskApiClient {
 
     if (!result.containsKey('task')) throw TaskNotFoundFailure();
 
-    final taskOverall = result['task'] as Map<String, dynamic>;
-
-    return Overall.fromJson(taskOverall);
+    return result['task'] as Map<String, dynamic>;
   }
 
-  Future<List<Task>> getReceivedTasks(
+  Future<List<Map<String, dynamic>>> getReceivedTasks(
       String progressStatus, String? text, int limit,
       [int currentPage = 1]) async {
     final Map<String, dynamic> queryParameters = {
@@ -53,11 +50,12 @@ class TaskApiClient {
 
     return result.map((dynamic json) {
       final map = json as Map<String, dynamic>;
-      return Task.fromJson(map);
+      return map;
     }).toList();
   }
 
-  Future<List<Task>> getSentTasks(String owner, String? text, int limit,
+  Future<List<Map<String, dynamic>>> getSentTasks(
+      String owner, String? text, int limit,
       [int currentPage = 1]) async {
     final Map<String, dynamic> queryParameters = {
       "pageSize": limit,
@@ -81,7 +79,7 @@ class TaskApiClient {
 
     return result.map((dynamic json) {
       final map = json as Map<String, dynamic>;
-      return Task.fromJson(map);
+      return map;
     }).toList();
   }
 }

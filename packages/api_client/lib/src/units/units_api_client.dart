@@ -1,6 +1,5 @@
 import 'package:api_client/src/api_config.dart';
 import 'package:api_client/src/common/handlers.dart';
-import 'package:api_client/src/units/models/models.dart';
 import 'package:api_client/src/units/path.dart';
 import 'package:dio/dio.dart';
 
@@ -11,7 +10,7 @@ class UnitsApiClient {
 
   final Dio _dio;
 
-  Future<List<Unit>> getUnitsByParentId(String parentId) async {
+  Future<List<Map<String, dynamic>>> getUnitsByParentId(String parentId) async {
     final response = await _dio.get(UnitsUrl.getUnits, queryParameters: {
       'parentUnit': parentId,
     });
@@ -20,7 +19,7 @@ class UnitsApiClient {
 
     return result.map((dynamic json) {
       final map = json as Map<String, dynamic>;
-      return Unit.fromJson(map);
+      return map;
     }).toList();
   }
 }

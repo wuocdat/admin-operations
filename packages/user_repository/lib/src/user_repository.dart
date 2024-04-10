@@ -10,9 +10,6 @@ class UserRepository {
   Future<User> getUser() async {
     final userData = await _apiClient.getUser();
 
-    return User(
-      id: userData.id,
-      username: userData.username,
-    );
+    return User.fromJson(userData);
   }
 }
