@@ -82,4 +82,39 @@ class TaskApiClient {
       return map;
     }).toList();
   }
+
+  Future<void> createTask(
+    String name,
+    String type,
+    List<String> units,
+    String content,
+    bool important,
+    List<String> filePaths,
+  ) async {
+    final formData = FormData.fromMap({
+      'name': name,
+      'type': type,
+      'content': content,
+      'important': important,
+    });
+
+    formData.fields.addAll(units.map((unit) {
+      return MapEntry('units[]', unit);
+    }));
+
+    if (filePaths.isNotEmpty) {
+      formData.files.addAll(await Future.wait(filePaths.map((path) async {
+        return MapEntry('files', await MultipartFile.fromFile(path));
+      })));
+    }
+
+    final response = await _dio.post(
+      TaskUrl.original,
+      data: formData,
+    );
+
+    if (response.statusCode != 201) {
+      throw TaskRequestFailure();
+    }
+  }
 }

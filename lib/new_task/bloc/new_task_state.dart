@@ -15,6 +15,19 @@ extension TaskTypeX on TaskType {
         return 'Khác';
     }
   }
+
+  String get id {
+    switch (this) {
+      case TaskType.report:
+        return '1';
+      case TaskType.investigate:
+        return '2';
+      case TaskType.monitor:
+        return '3';
+      case TaskType.other:
+        return '0';
+    }
+  }
 }
 
 class NewTaskState extends Equatable {

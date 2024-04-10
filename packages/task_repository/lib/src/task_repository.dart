@@ -35,4 +35,22 @@ class TaskRepository {
 
     return tasks.map((e) => Task.fromJson(e)).toList();
   }
+
+  Future<void> sentTask(
+    String name,
+    String type,
+    List<String> units,
+    String content,
+    bool important,
+    List<String> filePaths,
+  ) async {
+    await _taskApiClient.createTask(
+      name,
+      type,
+      units,
+      content,
+      important,
+      filePaths,
+    );
+  }
 }

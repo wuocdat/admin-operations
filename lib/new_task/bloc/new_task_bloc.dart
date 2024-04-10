@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tree/flutter_tree.dart';
 import 'package:formz/formz.dart';
+import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/new_task/models/models.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:units_repository/units_repository.dart';
@@ -14,7 +15,9 @@ part 'new_task_state.dart';
 class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
   NewTaskBloc({
     required UnitsRepository unitsRepository,
+    required TaskRepository taskRepository,
   })  : _unitsRepository = unitsRepository,
+        _taskRepository = taskRepository,
         super(const NewTaskState()) {
     on<TitleChanged>(_onTitleChanged);
     on<ContentChanged>(_onContentChanged);
@@ -27,6 +30,7 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
   }
 
   final UnitsRepository _unitsRepository;
+  final TaskRepository _taskRepository;
 
   Future<void> _onNewTaskStarted(
       NewTaskStarted event, Emitter<NewTaskState> emit) async {
@@ -48,9 +52,7 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
     final title = Title.dirty(event.title);
     emit(state.copyWith(
       title: title,
-      isValid: Formz.validate([title, state.content]) &&
-          state.units.isNotEmpty &&
-          state.files.isNotEmpty,
+      isValid: Formz.validate([title, state.content]) && state.units.isNotEmpty,
     ));
   }
 
@@ -58,9 +60,7 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
     final content = Content.dirty(event.content);
     emit(state.copyWith(
       content: content,
-      isValid: Formz.validate([state.title, content]) &&
-          state.units.isNotEmpty &&
-          state.files.isNotEmpty,
+      isValid: Formz.validate([state.title, content]) && state.units.isNotEmpty,
     ));
   }
 
@@ -79,9 +79,8 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
 
     emit(state.copyWith(
       units: cloneUnits,
-      isValid: Formz.validate([state.content, state.title]) &&
-          cloneUnits.isNotEmpty &&
-          state.files.isNotEmpty,
+      isValid:
+          Formz.validate([state.content, state.title]) && cloneUnits.isNotEmpty,
     ));
   }
 
@@ -89,19 +88,30 @@ class NewTaskBloc extends Bloc<NewTaskEvent, NewTaskState> {
     emit(state.copyWith(important: !state.important));
   }
 
-  void _onNewTaskSubmitted(NewTaskSubmitted event, Emitter<NewTaskState> emit) {
+  Future<void> _onNewTaskSubmitted(
+      NewTaskSubmitted event, Emitter<NewTaskState> emit) async {
     if (state.isValid) {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+      debugPrint(state.toString());
+
+      try {
+        await _taskRepository.sentTask(
+          state.title.value,
+          state.type.id,
+          state.units,
+          state.content.value,
+          state.important,
+          state.files.map((e) => e.path!).toList(),
+        );
+        emit(state.copyWith(status: FormzSubmissionStatus.success));
+      } catch (_) {
+        emit(state.copyWith(status: FormzSubmissionStatus.failure));
+      }
     }
   }
 
   void _onFilesPicked(FilePicked event, Emitter<NewTaskState> emit) {
-    emit(state.copyWith(
-      files: event.files,
-      isValid: Formz.validate([state.content, state.title]) &&
-          state.units.isNotEmpty &&
-          event.files.isNotEmpty,
-    ));
+    emit(state.copyWith(files: event.files));
   }
 
   Future<List<TreeNodeData>> loadTreeNode(String parent) async {
