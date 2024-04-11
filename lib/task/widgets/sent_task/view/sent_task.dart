@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
+import 'package:tctt_mobile/sent_task_detail/view/sent_task_detail_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/task/bloc/task_bloc.dart';
 import 'package:tctt_mobile/task/widgets/sent_task/bloc/sender_bloc.dart';
@@ -96,6 +97,13 @@ class SentTasks extends StatelessWidget {
                                 time: state.tasks[index].createdAt,
                                 title: state.tasks[index].unitSent.name,
                                 content: state.tasks[index].content,
+                                onTap: () => {
+                                  Navigator.push(
+                                    context,
+                                    SentTaskDetailPage.route(
+                                        state.tasks[index].id),
+                                  )
+                                },
                               ),
                           onReachedEnd: () {
                             context
