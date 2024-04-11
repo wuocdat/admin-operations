@@ -43,6 +43,8 @@ class ContentContainer extends StatelessWidget {
                   children: [
                     Text(
                       title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: textTheme.bodyLarge?.copyWith(
                         fontFamily: 'Plus Jakarta Sans',
                         fontSize: 16,
