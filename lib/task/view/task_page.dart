@@ -45,11 +45,15 @@ class TaskPage extends StatelessWidget {
                         },
                         builder: (context, unitId) {
                           return IconButton(
-                            onPressed: () {
-                              Navigator.push(
+                            onPressed: () async {
+                              await Navigator.push(
                                 context,
                                 NewTaskPage.route(unitId),
                               );
+                              if (!context.mounted) return;
+                              context
+                                  .read<TaskBloc>()
+                                  .add(const ReloadIncreasedEvent());
                             },
                             icon: const Icon(Icons.add),
                             color: Theme.of(context).primaryColor,

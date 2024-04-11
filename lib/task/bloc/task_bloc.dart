@@ -9,6 +9,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<ChangeModeEvent>(_onChangeMode);
     on<ChangeSearchInputEvent>(_onSearchInputChange);
     on<InputClosedEvent>(_onInputClosed);
+    on<ReloadIncreasedEvent>(_onReloadIncreased);
   }
 
   void _onChangeMode(ChangeModeEvent event, Emitter<TaskState> emit) {
@@ -24,6 +25,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
   void _onInputClosed(InputClosedEvent event, Emitter<TaskState> emit) {
     emit(state.copyWith(searchValue: ""));
+  }
+
+  void _onReloadIncreased(ReloadIncreasedEvent event, Emitter<TaskState> emit) {
+    emit(state.copyWith(reloadCount: state.reloadCount + 1));
   }
 }
 

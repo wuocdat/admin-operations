@@ -46,9 +46,7 @@ class NewTaskPage extends StatelessWidget {
                 backgroundColor: Colors.green,
               ),
             );
-            Future.delayed(const Duration(seconds: 1), () {
-              Navigator.pop(context);
-            });
+            Navigator.pop(context);
             break;
           case FormzSubmissionStatus.failure:
             ScaffoldMessenger.of(context).showSnackBar(

@@ -43,6 +43,13 @@ class SentTasks extends StatelessWidget {
                   .add(SearchInputChangedEvent(state.searchValue));
             },
           ),
+          BlocListener<TaskBloc, TaskState>(
+            listenWhen: (previous, current) =>
+                previous.reloadCount != current.reloadCount,
+            listener: (context, state) {
+              context.read<SenderBloc>().add(const SentTaskRefetched());
+            },
+          ),
         ],
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
