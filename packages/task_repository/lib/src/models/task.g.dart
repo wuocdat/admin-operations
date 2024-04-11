@@ -11,7 +11,7 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
       isActive: json['isActive'] as bool,
       important: json['important'] as bool,
       content: json['content'] as String,
-      units: (json['units'] as List<dynamic>).map((e) => e as String).toList(),
+      units: Task._fromJson(json['units'] as List),
       name: json['name'] as String,
       createdBy: json['createdBy'] as String,
       createdAt: json['createdAt'] as String,

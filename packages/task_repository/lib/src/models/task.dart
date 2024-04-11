@@ -26,6 +26,7 @@ class Task extends Equatable {
   final bool isActive;
   final bool important;
   final String content;
+  @JsonKey(fromJson: _fromJson)
   final List<String> units;
   final String name;
   final String createdBy;
@@ -64,4 +65,17 @@ class Task extends Equatable {
         unitSent,
         type
       ];
+
+  static List<String> _fromJson(List<dynamic> value) {
+    if (value.isEmpty) return [];
+
+    if (value.first is String) {
+      return value.map((e) => e as String).toList();
+    } else {
+      return value.map((e) {
+        final unitJson = e as Map<String, dynamic>;
+        return Unit.fromJson(unitJson).id;
+      }).toList();
+    }
+  }
 }
