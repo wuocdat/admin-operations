@@ -53,4 +53,10 @@ class TaskRepository {
       filePaths,
     );
   }
+
+  Future<Task> fetchSentTaskById(String id) async {
+    final taskJson = await _taskApiClient.fetchSentTaskById(id);
+
+    return Task.fromJson(taskJson);
+  }
 }

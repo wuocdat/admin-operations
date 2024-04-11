@@ -10,4 +10,5 @@ final class AppColors {
 
   // text
   static const Color secondaryText = Color(0xFF658593);
+  static const Color labelSmallText = Color(0xFF57636C);
 }

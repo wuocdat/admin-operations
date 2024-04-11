@@ -19,6 +19,8 @@ class TaskType extends Equatable {
   factory TaskType.fromJson(Map<String, dynamic> json) =>
       _$TaskTypeFromJson(json);
 
+  static const TaskType empty = TaskType(id: "", name: "", isActive: false);
+
   @override
   List<Object> get props => [id, name, isActive];
 }

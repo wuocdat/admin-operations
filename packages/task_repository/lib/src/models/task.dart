@@ -36,6 +36,20 @@ class Task extends Equatable {
 
   factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 
+  static const Task empty = Task(
+    id: "",
+    isActive: false,
+    important: false,
+    content: "",
+    units: [],
+    name: "",
+    createdBy: "",
+    createdAt: "",
+    disable: true,
+    unitSent: Unit.empty,
+    type: TaskType.empty,
+  );
+
   @override
   List<Object> get props => [
         id,

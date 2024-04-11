@@ -117,4 +117,12 @@ class TaskApiClient {
       throw TaskRequestFailure();
     }
   }
+
+  Future<Map<String, dynamic>> fetchSentTaskById(String taskId) async {
+    final response = await _dio.get('${TaskUrl.sent}/$taskId');
+
+    final result = Handler.parseResponse(response) as Map<String, dynamic>;
+
+    return result;
+  }
 }
