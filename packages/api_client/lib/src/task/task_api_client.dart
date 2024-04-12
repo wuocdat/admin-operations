@@ -34,6 +34,7 @@ class TaskApiClient {
     final Map<String, dynamic> queryParameters = {
       "pageSize": limit,
       "currentPage": currentPage,
+      "disable": false,
       "taskProgressStatus": progressStatus,
     };
 
@@ -61,6 +62,7 @@ class TaskApiClient {
       "pageSize": limit,
       "currentPage": currentPage,
       "owner": owner,
+      "disable": false,
       "sortBy": jsonEncode({
         "createdAt": -1,
       }),
@@ -124,5 +126,9 @@ class TaskApiClient {
     final result = Handler.parseResponse(response) as Map<String, dynamic>;
 
     return result;
+  }
+
+  Future<void> updateSentTask(String taskId, Map<String, dynamic> data) async {
+    await _dio.patch('${TaskUrl.original}/$taskId', data: data);
   }
 }

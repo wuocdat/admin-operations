@@ -59,4 +59,10 @@ class TaskRepository {
 
     return Task.fromJson(taskJson);
   }
+
+  Future<void> withDrawTask(String taskId) async {
+    await _taskApiClient.updateSentTask(taskId, {
+      "disable": true,
+    });
+  }
 }

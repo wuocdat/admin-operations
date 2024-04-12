@@ -97,12 +97,19 @@ class SentTasks extends StatelessWidget {
                                 time: state.tasks[index].createdAt,
                                 title: state.tasks[index].unitSent.name,
                                 content: state.tasks[index].content,
-                                onTap: () => {
-                                  Navigator.push(
-                                    context,
+                                onTap: () async {
+                                  final needToReload =
+                                      await Navigator.of(context).push(
                                     SentTaskDetailPage.route(
                                         state.tasks[index].id),
-                                  )
+                                  );
+                                  if (!context.mounted ||
+                                      needToReload != true) {
+                                    return;
+                                  }
+                                  context
+                                      .read<SenderBloc>()
+                                      .add(const SentTaskRefetched());
                                 },
                               ),
                           onReachedEnd: () {

@@ -27,4 +27,17 @@ class SentTaskDetailCubit extends Cubit<SentTaskDetailState> {
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }
+
+  Future<void> withDrawTask(String taskId) async {
+    emit(state.copyWith(status: FetchDataStatus.loading));
+
+    try {
+      await _taskRepository.withDrawTask(taskId);
+      emit(state.copyWith(
+          status: FetchDataStatus.success,
+          currentTask: state.currentTask.copyWith(disable: true)));
+    } catch (_) {
+      emit(state.copyWith(status: FetchDataStatus.failure));
+    }
+  }
 }

@@ -37,6 +37,34 @@ class Task extends Equatable {
 
   factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 
+  Task copyWith({
+    String? id,
+    bool? isActive,
+    bool? important,
+    String? content,
+    List<String>? units,
+    String? name,
+    String? createdBy,
+    String? createdAt,
+    bool? disable,
+    Unit? unitSent,
+    TaskType? type,
+  }) {
+    return Task(
+      id: id ?? this.id,
+      isActive: isActive ?? this.isActive,
+      important: important ?? this.important,
+      content: content ?? this.content,
+      units: units ?? this.units,
+      name: name ?? this.name,
+      createdBy: createdBy ?? this.createdBy,
+      createdAt: createdAt ?? this.createdAt,
+      disable: disable ?? this.disable,
+      unitSent: unitSent ?? this.unitSent,
+      type: type ?? this.type,
+    );
+  }
+
   static const Task empty = Task(
     id: "",
     isActive: false,
