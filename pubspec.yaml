@@ -56,6 +56,7 @@ dependencies:
   stream_transform: ^2.1.0
   flutter_tree: ^2.0.3
   file_picker: ^8.0.0+1
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:

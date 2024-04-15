@@ -13,6 +13,7 @@ class Task extends Equatable {
     required this.important,
     required this.content,
     required this.units,
+    required this.files,
     required this.name,
     required this.createdBy,
     required this.createdAt,
@@ -28,6 +29,7 @@ class Task extends Equatable {
   final String content;
   @JsonKey(fromJson: _fromJson)
   final List<String> units;
+  final List<String> files;
   final String name;
   final String createdBy;
   final String createdAt;
@@ -43,6 +45,7 @@ class Task extends Equatable {
     bool? important,
     String? content,
     List<String>? units,
+    List<String>? files,
     String? name,
     String? createdBy,
     String? createdAt,
@@ -56,6 +59,7 @@ class Task extends Equatable {
       important: important ?? this.important,
       content: content ?? this.content,
       units: units ?? this.units,
+      files: files ?? this.files,
       name: name ?? this.name,
       createdBy: createdBy ?? this.createdBy,
       createdAt: createdAt ?? this.createdAt,
@@ -71,6 +75,7 @@ class Task extends Equatable {
     important: false,
     content: "",
     units: [],
+    files: [],
     name: "",
     createdBy: "",
     createdAt: "",
@@ -86,6 +91,7 @@ class Task extends Equatable {
         important,
         content,
         units,
+        files,
         name,
         createdBy,
         createdAt,

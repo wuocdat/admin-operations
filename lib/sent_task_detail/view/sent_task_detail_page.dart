@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/sent_task_detail/cubit/sent_task_detail_cubit.dart';
+import 'package:tctt_mobile/sent_task_detail/widgets/attachment.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/widgets/content_container.dart';
 
@@ -70,91 +71,94 @@ class SentTaskDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              size: 30,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            size: 30,
           ),
-          title: Text(
-            'Nhiệm vụ',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontFamily: 'Urbanist',
-                  letterSpacing: 0,
-                ),
-          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        body: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: BlocConsumer<SentTaskDetailCubit, SentTaskDetailState>(
-                  listener: (context, state) {
-                    if (state.currentTask.disable && state.status.isSuccess) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Thu hồi nhiệm vụ thành công'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-
-                      // Exit dialog
-                      Navigator.pop(context);
-
-                      // Go back and return true to refresh task list
-                      Navigator.of(context).pop(true);
-                    }
-                    if (state.status.isFailure) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Có lỗi xảy ra'),
-                        ),
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    return Column(
-                      children: [
-                        ContentContainer(
-                          title: state.currentTask.name,
-                          content: state.currentTask.content,
-                          time: state.currentTask.createdAt,
-                          actions: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.star,
-                                color: Theme.of(context).primaryColor,
-                                size: 24,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () => _showWithDrawDialog(context),
-                              icon: Icon(
-                                Icons.delete_outlined,
-                                color: Theme.of(context).colorScheme.error,
-                                size: 24,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+        title: Text(
+          'Nhiệm vụ',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontFamily: 'Urbanist',
+                letterSpacing: 0,
+              ),
+        ),
+      ),
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: BlocConsumer<SentTaskDetailCubit, SentTaskDetailState>(
+                listener: (context, state) {
+                  if (state.currentTask.disable && state.status.isSuccess) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Thu hồi nhiệm vụ thành công'),
+                        backgroundColor: Colors.green,
+                      ),
                     );
-                  },
-                ),
+
+                    // Exit dialog
+                    Navigator.pop(context);
+
+                    // Go back and return true to refresh task list
+                    Navigator.of(context).pop(true);
+                  }
+                  if (state.status.isFailure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Có lỗi xảy ra'),
+                      ),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      ContentContainer(
+                        title: state.currentTask.name,
+                        content: state.currentTask.content,
+                        time: state.currentTask.createdAt,
+                        actions: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.star,
+                              color: Theme.of(context).primaryColor,
+                              size: 24,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => _showWithDrawDialog(context),
+                            icon: Icon(
+                              Icons.delete_outlined,
+                              color: Theme.of(context).colorScheme.error,
+                              size: 24,
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (state.currentTask.files.isNotEmpty) const Divider(),
+                      Attachment(filePaths: state.currentTask.files),
+                    ],
+                  );
+                },
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
