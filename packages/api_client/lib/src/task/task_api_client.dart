@@ -9,6 +9,8 @@ class TaskRequestFailure implements Exception {}
 
 class TaskNotFoundFailure implements Exception {}
 
+class DownLoadFailure implements Exception {}
+
 class TaskApiClient {
   TaskApiClient({Dio? dio})
       : _dio = dio ?? Dio(ApiConfig.options)
@@ -130,5 +132,15 @@ class TaskApiClient {
 
   Future<void> updateSentTask(String taskId, Map<String, dynamic> data) async {
     await _dio.patch('${TaskUrl.original}/$taskId', data: data);
+  }
+
+  Future<void> downloadFile(String url, String path,
+      void Function(int, int) onReceiveProgress) async {
+    final response = await _dio.download('/$url', path,
+        onReceiveProgress: onReceiveProgress);
+
+    if (response.statusCode != 200) {
+      throw DownLoadFailure();
+    }
   }
 }

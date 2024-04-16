@@ -65,4 +65,9 @@ class TaskRepository {
       "disable": true,
     });
   }
+
+  Future<void> downloadFile(String url, String path,
+      void Function(int, int) onReceiveProgress) async {
+    await _taskApiClient.downloadFile(url, path, onReceiveProgress);
+  }
 }
