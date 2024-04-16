@@ -27,4 +27,10 @@ final class FileHelper {
     }
     return "${dir?.path}$filename";
   }
+
+  static bool isImageFile(String path) {
+    final imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
+    final ext = path.split('.').last;
+    return imageExtensions.contains(ext);
+  }
 }

@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/sent_task_detail/widgets/cubit/attachment_cubit.dart';
 import 'package:tctt_mobile/shared/utils/file.dart';
-
-const imageExtensions = ['jpg', 'jpeg', 'png'];
+import 'package:tctt_mobile/widgets/internet_img_displayer.dart';
 
 class Attachment extends StatelessWidget {
   const Attachment({super.key, required this.filePaths});
@@ -87,6 +86,18 @@ class FileItem extends StatelessWidget {
       builder: (context, state) {
         return InkWell(
           onTap: () {
+            if (FileHelper.isImageFile(path)) {
+              showDialog(
+                context: context,
+                builder: (_) => ImageDialog(
+                  url: path,
+                  onDownload: () => context
+                      .read<AttachmentCubit>()
+                      .downloadFile(path, FileHelper.getFileNameFromUrl(path)),
+                ),
+              );
+              return;
+            }
             context
                 .read<AttachmentCubit>()
                 .downloadFile(path, FileHelper.getFileNameFromUrl(path));

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:tctt_mobile/shared/utils/constants.dart';
+import 'package:tctt_mobile/shared/utils/file.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 
 class InternetImgDisplayer extends StatefulWidget {
@@ -35,7 +37,7 @@ class _InternetImgDisplayerState extends State<InternetImgDisplayer> {
     return _token != null
         ? Image.network(
             headers: {"cookie": "token=$_token"},
-            widget.url,
+            '$baseUrl/${widget.url}',
             errorBuilder: (context, error, stackTrace) =>
                 const Center(child: Text('Đã xảy ra lỗi')),
             fit: BoxFit.cover,
@@ -45,7 +47,9 @@ class _InternetImgDisplayerState extends State<InternetImgDisplayer> {
 }
 
 class ImageDialog extends StatelessWidget {
-  const ImageDialog({super.key, required this.url});
+  const ImageDialog({super.key, required this.url, required this.onDownload});
+
+  final void Function() onDownload;
 
   final String url;
   @override
@@ -58,13 +62,30 @@ class ImageDialog extends StatelessWidget {
       child: Stack(children: [
         Container(
           width: screenSize.width * 0.8,
-          padding: const EdgeInsets.all(10),
+          padding:
+              const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 40),
           child: InternetImgDisplayer(url),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // Text(getFileNameFromUrl(url)),
+            const SizedBox(width: 10),
+            Expanded(
+                child: Text(
+              FileHelper.getFileNameFromUrl(url),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            )),
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                onDownload();
+              },
+              icon: const Icon(
+                Icons.download,
+                size: 20,
+              ),
+            ),
             IconButton(
               onPressed: () {
                 Navigator.of(context).pop();
