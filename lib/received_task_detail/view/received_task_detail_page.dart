@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/received_task_detail/cubit/received_task_detail_cubit.dart';
 import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/widgets/content_container.dart';
 
 class ReceivedTaskDetailPage extends StatelessWidget {
@@ -81,6 +82,8 @@ class ReceivedTaskDetailPage extends StatelessWidget {
                             ),
                         ],
                       ),
+                      if (state.currentTask.files.isNotEmpty) const Divider(),
+                      Attachment(filePaths: state.currentTask.files),
                     ],
                   );
                 },
