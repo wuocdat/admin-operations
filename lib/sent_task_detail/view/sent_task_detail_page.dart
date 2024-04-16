@@ -132,14 +132,15 @@ class SentTaskDetailPage extends StatelessWidget {
                         content: state.currentTask.content,
                         time: state.currentTask.createdAt,
                         actions: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.star,
-                              color: Theme.of(context).primaryColor,
-                              size: 24,
+                          if (state.currentTask.important)
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.star,
+                                color: Theme.of(context).primaryColor,
+                                size: 24,
+                              ),
                             ),
-                          ),
                           IconButton(
                             onPressed: () => _showWithDrawDialog(context),
                             icon: Icon(

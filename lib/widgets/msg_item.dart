@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class MessageItem extends StatelessWidget {
   const MessageItem({
@@ -8,6 +9,7 @@ class MessageItem extends StatelessWidget {
     required this.content,
     required this.time,
     this.badgeCount,
+    this.isImportant,
     this.onTap,
   });
 
@@ -15,6 +17,7 @@ class MessageItem extends StatelessWidget {
   final String title;
   final String content;
   final String time;
+  final bool? isImportant;
   final int? badgeCount;
   final void Function()? onTap;
 
@@ -50,17 +53,26 @@ class MessageItem extends StatelessWidget {
                     children: [
                       Row(
                         mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            name.toUpperCase(),
-                            style: textTheme.bodySmall,
+                          Expanded(
+                            child: Text(
+                              name.toUpperCase(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: textTheme.bodySmall,
+                            ),
                           ),
-                          const Icon(
-                            Icons.keyboard_arrow_right_rounded,
-                            // color: textTheme.secondaryText,
-                            size: 24,
-                          ),
+                          if (isImportant == true)
+                            Icon(
+                              Icons.star_rate_rounded,
+                              color: Theme.of(context).primaryColor,
+                              size: 24,
+                            )
+                          else
+                            const Icon(
+                              Icons.keyboard_arrow_right_rounded,
+                              size: 24,
+                            ),
                         ],
                       ),
                       Padding(
@@ -118,6 +130,7 @@ class MessageItem extends StatelessWidget {
                                     style: textTheme.bodyMedium?.copyWith(
                                       fontFamily: 'Plus Jakarta Sans',
                                       color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.bold,
                                     )),
                               ),
                             ),

@@ -152,6 +152,7 @@ class _TasksViewState extends State<TasksView> {
                     time: state.tasks[index].createdAt,
                     title: state.tasks[index].name,
                     content: state.tasks[index].content,
+                    isImportant: state.tasks[index].important,
                     onTap: () {},
                   );
           },

@@ -98,6 +98,7 @@ class SentTasks extends StatelessWidget {
                                 time: state.tasks[index].createdAt,
                                 title: state.tasks[index].name,
                                 content: state.tasks[index].content,
+                                isImportant: state.tasks[index].important,
                                 onTap: () async {
                                   final needToReload =
                                       await Navigator.of(context).push(
