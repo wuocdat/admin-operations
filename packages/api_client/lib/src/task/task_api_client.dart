@@ -130,6 +130,14 @@ class TaskApiClient {
     return result;
   }
 
+  Future<Map<String, dynamic>> fetchReceivedTaskById(String taskId) async {
+    final response = await _dio.get('${TaskUrl.received}/$taskId');
+
+    final result = Handler.parseResponse(response) as Map<String, dynamic>;
+
+    return result;
+  }
+
   Future<void> updateSentTask(String taskId, Map<String, dynamic> data) async {
     await _dio.patch('${TaskUrl.original}/$taskId', data: data);
   }

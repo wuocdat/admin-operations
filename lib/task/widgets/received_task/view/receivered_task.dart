@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
+import 'package:tctt_mobile/received_task_detail/view/received_task_detail_page.dart';
 import 'package:tctt_mobile/task/bloc/task_bloc.dart';
 import 'package:tctt_mobile/task/widgets/received_task/bloc/receiver_bloc.dart';
 import 'package:tctt_mobile/widgets/bottom_loader.dart';
@@ -153,7 +154,11 @@ class _TasksViewState extends State<TasksView> {
                     title: state.tasks[index].name,
                     content: state.tasks[index].content,
                     isImportant: state.tasks[index].important,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(
+                        ReceivedTaskDetailPage.route(state.tasks[index].id),
+                      );
+                    },
                   );
           },
           itemCount:
