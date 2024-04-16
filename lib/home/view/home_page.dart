@@ -26,6 +26,31 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> menuItems = [
+      {
+        'icon': Icons.account_box_outlined,
+        'title': 'Quản lý tài khoản',
+        'action': () {
+          //Navigator.of(context).push();
+        },
+      },
+      {
+        'icon': Icons.settings_outlined,
+        'title': 'Cài đặt',
+        'action': () {
+          //Navigator.of(context).push();
+        },
+      },
+      {
+        'icon': Icons.logout_outlined,
+        'title': 'Đăng xuất',
+        'action': () {
+          context
+              .read<AuthenticationBloc>()
+              .add(AuthenticationLogoutRequested());
+        },
+      },
+    ];
     final theme = Theme.of(context);
     return BlocProvider(
       create: (context) => HomeCubit(),
@@ -45,18 +70,37 @@ class HomePage extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                  child: IconButton(
-                    onPressed: () {
-                      context
-                          .read<AuthenticationBloc>()
-                          .add(AuthenticationLogoutRequested());
-                    },
-                    icon: selectedIndex.isHome
-                        ? const Icon(Icons.account_circle_outlined)
-                        : const Icon(Icons.settings_outlined),
-                    iconSize: 30,
-                    // color: theme.primaryColor,
-                  ),
+                  child: selectedIndex.isHome
+                      ? MenuAnchor(
+                          builder: (context, controller, child) => IconButton(
+                                onPressed: () {
+                                  if (controller.isOpen) {
+                                    controller.close();
+                                  } else {
+                                    controller.open();
+                                  }
+                                },
+                                icon: const Icon(Icons.account_circle_outlined),
+                                iconSize: 30,
+                              ),
+                          menuChildren: menuItems
+                              .map(
+                                (e) => ListTile(
+                                  leading: Icon(e['icon']),
+                                  title: Text(e['title']),
+                                  onTap: () {
+                                    e['action']();
+                                  },
+                                ),
+                              )
+                              .toList())
+                      : IconButton(
+                          onPressed: () {
+                            // navigate to settings page
+                          },
+                          icon: const Icon(Icons.settings_outlined),
+                          iconSize: 30,
+                        ),
                 ),
               ],
             ),
