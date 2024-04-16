@@ -127,6 +127,7 @@ class SentTaskDetailPage extends StatelessWidget {
                   return Column(
                     children: [
                       ContentContainer(
+                        sender: state.currentTask.unitSent.name,
                         title: state.currentTask.name,
                         content: state.currentTask.content,
                         time: state.currentTask.createdAt,

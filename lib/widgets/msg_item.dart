@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class MessageItem extends StatelessWidget {
   const MessageItem({
     super.key,
+    required this.name,
     required this.title,
     required this.content,
     required this.time,
@@ -10,6 +11,7 @@ class MessageItem extends StatelessWidget {
     this.onTap,
   });
 
+  final String name;
   final String title;
   final String content;
   final String time;
@@ -51,7 +53,7 @@ class MessageItem extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            title,
+                            name.toUpperCase(),
                             style: textTheme.bodySmall,
                           ),
                           const Icon(
@@ -60,6 +62,18 @@ class MessageItem extends StatelessWidget {
                             size: 24,
                           ),
                         ],
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                       Padding(
                         padding:

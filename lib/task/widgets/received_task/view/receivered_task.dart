@@ -148,8 +148,9 @@ class _TasksViewState extends State<TasksView> {
             return index >= state.tasks.length
                 ? const BottomLoader()
                 : MessageItem(
+                    name: state.tasks[index].unitSent.name,
                     time: state.tasks[index].createdAt,
-                    title: state.tasks[index].unitSent.name,
+                    title: state.tasks[index].name,
                     content: state.tasks[index].content,
                     onTap: () {},
                   );
