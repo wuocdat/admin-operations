@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/received_task_detail/cubit/received_task_detail_cubit.dart';
+import 'package:tctt_mobile/received_task_detail/widgets/report_detail.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/widgets/content_container.dart';
@@ -84,6 +85,19 @@ class ReceivedTaskDetailPage extends StatelessWidget {
                       ),
                       if (state.currentTask.files.isNotEmpty) const Divider(),
                       Attachment(filePaths: state.currentTask.files),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        child: Divider(),
+                      ),
+                      BlocSelector<ReceivedTaskDetailCubit,
+                              ReceivedTaskDetailState, Progress>(
+                          selector: (state) => state.currentTask.progress!,
+                          builder: (context, progress) {
+                            return ReportDetail(
+                                reportContent: progress.content,
+                                times: progress.total ?? 0,
+                                time: progress.createdAt);
+                          })
                     ],
                   );
                 },
