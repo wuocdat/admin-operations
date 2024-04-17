@@ -15,7 +15,7 @@ Progress _$ProgressFromJson(Map<String, dynamic> json) => Progress(
       createdBy: json['createdBy'] as String,
       createdAt: json['createdAt'] as String,
       repeat: json['repeat'] as int,
-      status: Map<String, String>.from(json['status'] as Map),
+      status: Progress._fromJson(json['status']),
       task: json['task'] as String,
       total: json['total'] as int?,
     );

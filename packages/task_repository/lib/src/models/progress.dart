@@ -28,7 +28,8 @@ class Progress extends Equatable {
   final String createdBy;
   final String createdAt;
   final int repeat;
-  final Map<String, String> status;
+  @JsonKey(fromJson: _fromJson)
+  final String status;
   final String task;
   final int? total;
 
@@ -44,7 +45,7 @@ class Progress extends Equatable {
     String? createdBy,
     String? createdAt,
     int? repeat,
-    Map<String, String>? status,
+    String? status,
     String? task,
     int? total,
   }) {
@@ -72,7 +73,7 @@ class Progress extends Equatable {
     createdBy: '',
     createdAt: '',
     repeat: 0,
-    status: {},
+    status: "",
     task: '',
   );
 
@@ -90,4 +91,13 @@ class Progress extends Equatable {
         task,
         total,
       ];
+
+  static String _fromJson(dynamic value) {
+    if (value is String) {
+      return value;
+    } else {
+      final json = value as Map<String, dynamic>;
+      return json['_id'] as String;
+    }
+  }
 }
