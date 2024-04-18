@@ -7,6 +7,7 @@ import 'package:tctt_mobile/home/widgets/notifications_bell.dart';
 import 'package:tctt_mobile/mail/view/mail_page.dart';
 import 'package:tctt_mobile/target/view/target_page.dart';
 import 'package:tctt_mobile/task/view/task_page.dart';
+import 'package:tctt_mobile/setting/view/setting_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -46,11 +47,10 @@ class HomePage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
                   child: IconButton(
-                    onPressed: () {
-                      context
-                          .read<AuthenticationBloc>()
-                          .add(AuthenticationLogoutRequested());
-                    },
+                    onPressed: () =>
+                      selectedIndex.isHome
+                        ? context.read<AuthenticationBloc>().add(AuthenticationLogoutRequested())
+                        : Navigator.push(context, MaterialPageRoute(builder: (context) => SettingPage())),
                     icon: selectedIndex.isHome
                         ? const Icon(Icons.account_circle_outlined)
                         : const Icon(Icons.settings_outlined),
