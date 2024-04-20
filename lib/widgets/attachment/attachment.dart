@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/widgets/attachment/cubit/attachment_cubit.dart';
 import 'package:tctt_mobile/shared/utils/file.dart';
+import 'package:tctt_mobile/widgets/attachment/label_text.dart';
 import 'package:tctt_mobile/widgets/internet_img_displayer.dart';
 
 class Attachment extends StatelessWidget {
@@ -63,6 +64,8 @@ class Attachment extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const MediumLabelText('Tệp đính kèm'),
+            const SizedBox(height: 8),
             ...filePaths.map(
               (filePath) => FileItem(
                 path: filePath,

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/received_task_detail/cubit/received_task_detail_cubit.dart';
 import 'package:tctt_mobile/received_task_detail/widgets/report_detail.dart';
+import 'package:tctt_mobile/received_task_detail/widgets/report_form.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/widgets/content_container.dart';
@@ -84,18 +85,38 @@ class ReceivedTaskDetailPage extends StatelessWidget {
                         ],
                       ),
                       if (state.currentTask.files.isNotEmpty) const Divider(),
-                      Attachment(filePaths: state.currentTask.files),
+                      if (state.currentTask.files.isNotEmpty)
+                        Attachment(filePaths: state.currentTask.files),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),
                         child: Divider(),
                       ),
-                      BlocSelector<ReceivedTaskDetailCubit,
-                              ReceivedTaskDetailState, Progress>(
-                          selector: (state) =>
-                              state.currentTask.progress ?? Progress.empty,
-                          builder: (context, progress) {
-                            return ReportDetail(progress: progress);
-                          })
+                      if (state.reportStatus.isDetailMode)
+                        BlocSelector<ReceivedTaskDetailCubit,
+                                ReceivedTaskDetailState, Progress>(
+                            selector: (state) =>
+                                state.currentTask.progress ?? Progress.empty,
+                            builder: (context, progress) {
+                              return ReportDetail(
+                                progress: progress,
+                                onReportAgain: () {
+                                  context
+                                      .read<ReceivedTaskDetailCubit>()
+                                      .reportAgain();
+                                },
+                              );
+                            }),
+                      if (state.reportStatus.isFormMode)
+                        ReportForm(
+                          onClosed:
+                              ((state.currentTask.progress?.repeat ?? 0) > 0)
+                                  ? () {
+                                      context
+                                          .read<ReceivedTaskDetailCubit>()
+                                          .closeFormMode();
+                                    }
+                                  : null,
+                        ),
                     ],
                   );
                 },
@@ -106,4 +127,9 @@ class ReceivedTaskDetailPage extends StatelessWidget {
       ),
     );
   }
+}
+
+extension on ReportStatus {
+  bool get isDetailMode => this == ReportStatus.detail;
+  bool get isFormMode => this == ReportStatus.form;
 }

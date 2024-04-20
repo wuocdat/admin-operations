@@ -20,9 +20,26 @@ class ReceivedTaskDetailCubit extends Cubit<ReceivedTaskDetailState> {
       emit(state.copyWith(
         currentTask: taskDetail,
         status: FetchDataStatus.success,
+        reportStatus: switch (taskDetail.progress?.repeat) {
+          null => ReportStatus.initial,
+          0 => ReportStatus.form,
+          _ => ReportStatus.detail,
+        },
       ));
     } catch (_) {
       emit(state.copyWith(status: FetchDataStatus.failure));
+    }
+  }
+
+  void reportAgain() {
+    if ((state.currentTask.progress?.repeat ?? 0) < 3) {
+      emit(state.copyWith(reportStatus: ReportStatus.form));
+    }
+  }
+
+  void closeFormMode() {
+    if (state.currentTask.progress?.repeat != 0) {
+      emit(state.copyWith(reportStatus: ReportStatus.detail));
     }
   }
 }

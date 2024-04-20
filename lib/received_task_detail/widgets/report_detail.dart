@@ -3,11 +3,14 @@ import 'package:task_repository/task_repository.dart';
 
 class ReportDetail extends StatelessWidget {
   final Progress _progress;
+  final void Function() _onReportAgain;
 
   const ReportDetail({
     super.key,
     required Progress progress,
-  }) : _progress = progress;
+    required void Function() onReportAgain,
+  })  : _progress = progress,
+        _onReportAgain = onReportAgain;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +39,7 @@ class ReportDetail extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: _progress.repeat <= 3 ? () {} : null,
+              onPressed: _progress.repeat < 3 ? _onReportAgain : null,
               style: TextButton.styleFrom(
                 foregroundColor: primaryColor,
               ),
