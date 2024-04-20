@@ -91,12 +91,10 @@ class ReceivedTaskDetailPage extends StatelessWidget {
                       ),
                       BlocSelector<ReceivedTaskDetailCubit,
                               ReceivedTaskDetailState, Progress>(
-                          selector: (state) => state.currentTask.progress!,
+                          selector: (state) =>
+                              state.currentTask.progress ?? Progress.empty,
                           builder: (context, progress) {
-                            return ReportDetail(
-                                reportContent: progress.content,
-                                times: progress.total ?? 0,
-                                time: progress.createdAt);
+                            return ReportDetail(progress: progress);
                           })
                     ],
                   );
