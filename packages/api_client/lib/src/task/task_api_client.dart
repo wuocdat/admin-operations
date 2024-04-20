@@ -151,4 +151,25 @@ class TaskApiClient {
       throw DownLoadFailure();
     }
   }
+
+  Future<void> updateTaskProgress(String taskProgressId, String content,
+      int times, List<String> paths) async {
+    final formData = FormData.fromMap({
+      'content': content,
+      'total': times,
+    });
+
+    if (paths.isNotEmpty) {
+      formData.files.addAll(await Future.wait(paths.map((path) async {
+        return MapEntry('files', await MultipartFile.fromFile(path));
+      })));
+    }
+
+    final response =
+        await _dio.patch('${TaskUrl.progress}/$taskProgressId', data: formData);
+
+    if (response.statusCode != 200) {
+      throw TaskRequestFailure();
+    }
+  }
 }

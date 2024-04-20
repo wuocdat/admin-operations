@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/received_task_detail/cubit/received_task_detail_cubit.dart';
 import 'package:tctt_mobile/received_task_detail/widgets/report_detail.dart';
-import 'package:tctt_mobile/received_task_detail/widgets/report_form.dart';
+import 'package:tctt_mobile/received_task_detail/widgets/report_form/report_form.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/widgets/content_container.dart';
@@ -108,6 +108,7 @@ class ReceivedTaskDetailPage extends StatelessWidget {
                             }),
                       if (state.reportStatus.isFormMode)
                         ReportForm(
+                          taskProgressId: state.currentTask.progress?.id ?? '',
                           onClosed:
                               ((state.currentTask.progress?.repeat ?? 0) > 0)
                                   ? () {

@@ -1,20 +1,38 @@
 import 'package:file_picker/file_picker.dart' as picker;
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tctt_mobile/theme/colors.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 
 const int _maxFileSizeInMb = 10 * 1024 * 1024;
 
+enum FileType { any, image, video, audio }
+
+extension FileTypeX on FileType {
+  picker.FileType get toPickerFileType {
+    switch (this) {
+      case FileType.any:
+        return picker.FileType.any;
+      case FileType.image:
+        return picker.FileType.image;
+      case FileType.video:
+        return picker.FileType.video;
+      case FileType.audio:
+        return picker.FileType.audio;
+    }
+  }
+}
+
 class FilePicker extends StatefulWidget {
   const FilePicker({
     super.key,
     required List<picker.PlatformFile> fileNames,
     required this.onFilesSelected,
+    this.fileType,
   }) : _files = fileNames;
 
   final List<picker.PlatformFile> _files;
+  final FileType? fileType;
   final void Function(List<picker.PlatformFile>) onFilesSelected;
 
   @override
@@ -28,22 +46,31 @@ class _FilePickerState extends State<FilePicker> {
     setState(() {
       _isLoading = true;
     });
-    picker.FilePickerResult? result =
-        await picker.FilePicker.platform.pickFiles(allowMultiple: true);
 
-    if (result != null) {
+    try {
+      picker.FilePickerResult? result =
+          await picker.FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: widget.fileType?.toPickerFileType ?? picker.FileType.any,
+      );
+
+      if (result != null) {
+        final files = result.files.nonNulls
+            .where((element) => element.size <= _maxFileSizeInMb)
+            .toList();
+        if (files.length > 5) {
+          files.removeRange(5, files.length);
+        }
+        widget.onFilesSelected(result.files.nonNulls
+            .where((element) => element.size <= _maxFileSizeInMb)
+            .toList());
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
       setState(() {
         _isLoading = false;
       });
-      final files = result.files.nonNulls
-          .where((element) => element.size <= _maxFileSizeInMb)
-          .toList();
-      if (files.length > 5) {
-        files.removeRange(5, files.length);
-      }
-      widget.onFilesSelected(result.files.nonNulls
-          .where((element) => element.size <= _maxFileSizeInMb)
-          .toList());
     }
   }
 
