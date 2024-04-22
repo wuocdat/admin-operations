@@ -1,58 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tctt_mobile/theme/colors.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
-
-class CustomButton extends StatelessWidget {
-  const CustomButton({
-    super.key,
-    required String text,
-    required IconData icon,
-    required VoidCallback? onPressed,
-  })  : _text = text,
-        _icon = icon,
-        _onPressed = onPressed;
-
-  final VoidCallback? _onPressed;
-  final String _text;
-  final IconData _icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            elevation: 6,
-            textStyle: const TextStyle(
-                fontSize: 13,
-                fontFamily: 'Plus Jakarta Sans',
-                letterSpacing: 0,
-                fontWeight: FontWeight.bold),
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            minimumSize: const Size(0, 28),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                _icon,
-                size: 16,
-              ),
-              const SizedBox(width: 6),
-              Text(_text),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+import 'package:tctt_mobile/widgets/contained_button.dart';
 
 class BigPadding extends StatelessWidget {
   const BigPadding({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tctt_mobile/theme/colors.dart';
-import 'package:tctt_mobile/account_setting/view/account_setting_page.dart';
+import 'package:tctt_mobile/widgets/contained_button.dart';
 
 class CustomPadding extends StatelessWidget {
   const CustomPadding({
