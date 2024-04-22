@@ -11,11 +11,12 @@ class ReceivedTaskDetailCubit extends Cubit<ReceivedTaskDetailState> {
 
   final TaskRepository _taskRepository;
 
-  Future<void> fetchTask(String taskId) async {
+  Future<void> fetchTask([String? taskId]) async {
     emit(state.copyWith(status: FetchDataStatus.loading));
 
     try {
-      final taskDetail = await _taskRepository.fetchReceivedTaskById(taskId);
+      final taskDetail = await _taskRepository
+          .fetchReceivedTaskById(taskId ?? state.currentTask.id);
 
       emit(state.copyWith(
         currentTask: taskDetail,

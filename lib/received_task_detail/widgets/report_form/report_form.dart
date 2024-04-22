@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:task_repository/task_repository.dart';
+import 'package:tctt_mobile/received_task_detail/cubit/received_task_detail_cubit.dart';
 import 'package:tctt_mobile/shared/models/content.dart';
 import 'package:tctt_mobile/widgets/attachment/label_text.dart';
 import 'package:tctt_mobile/widgets/file_picker.dart';
@@ -29,6 +30,7 @@ class ReportForm extends StatelessWidget {
                 backgroundColor: Colors.green,
               ),
             );
+            context.read<ReceivedTaskDetailCubit>().fetchTask();
           } else if (state.status.isFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
