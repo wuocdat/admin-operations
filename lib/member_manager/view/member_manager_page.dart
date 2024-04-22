@@ -95,9 +95,7 @@ class MemberManager extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: SafeArea(
-          child: Scaffold(
+    return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
               automaticallyImplyLeading: false,
@@ -115,75 +113,76 @@ class MemberManager extends StatelessWidget {
                 ),
               ),
             ),
-            body: SafeArea(
-              child: Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 4),
-                        child: Text(
-                          'Thành phố Đà Nẵng',
-                          style: TextStyle(
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontSize: 16,
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.bold,
+            body: Container(
+              color: Colors.white,
+              child: SafeArea(
+                child: Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      scrollDirection: Axis.vertical,
+                      children: [
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 4),
+                          child: Text(
+                            'Thành phố Đà Nẵng',
+                            style: TextStyle(
+                              fontFamily: 'Plus Jakarta Sans',
+                              fontSize: 16,
+                              letterSpacing: 0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Padding(
-                              padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                              child: Icon(
-                                Icons.person_add_rounded,
-                                color: Color(0xFF14181B),
-                                size: 20,
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                                child: Icon(
+                                  Icons.person_add_rounded,
+                                  color: Color(0xFF14181B),
+                                  size: 20,
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-                                child: Text(
-                                  'Thêm thành viên',
-                                  style: TextStyle(
-                                    fontFamily: 'Plus Jakarta Sans',
-                                    color: Color(0xFF14181B),
-                                    fontSize: 14,
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.w500,
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
+                                  child: Text(
+                                    'Thêm thành viên',
+                                    style: TextStyle(
+                                      fontFamily: 'Plus Jakarta Sans',
+                                      color: Color(0xFF14181B),
+                                      fontSize: 14,
+                                      letterSpacing: 0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Divider(
-                        height: 1,
-                        thickness: 1,
-                        color: Colors.grey,
-                      ),
-                      CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
-                      CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
-                      CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
-                      CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
-                      CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
-                    ],
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: Colors.grey,
+                        ),
+                        CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
+                        CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
+                        CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
+                        CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
+                        CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        )
-    );
+          );
   }
 }

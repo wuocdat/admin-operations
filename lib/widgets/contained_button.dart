@@ -132,3 +132,55 @@ class CustomElevatedButton extends StatelessWidget {
     );
   }
 }
+
+class ContentButton extends StatelessWidget {
+  const ContentButton({
+    super.key,
+    required String text,
+    required VoidCallback? onPressed,
+  })  : _text = text,
+        _onPressed = onPressed;
+
+  final VoidCallback? _onPressed;
+  final String _text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 1),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        focusColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        onTap: _onPressed,
+        child: Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _text,
+                  style: const TextStyle(
+                    fontFamily: 'Urbanest',
+                    fontSize: 22,
+                    letterSpacing: 0,
+                  ),
+                ),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: Colors.black,
+                  size: 24,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

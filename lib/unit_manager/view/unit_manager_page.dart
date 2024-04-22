@@ -126,9 +126,7 @@ class UnitManager extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: SafeArea(
-          child: Scaffold(
+    return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
               automaticallyImplyLeading: false,
@@ -146,50 +144,54 @@ class UnitManager extends StatelessWidget {
                 ),
               ),
             ),
-            body: SafeArea(
-              child: Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      const Padding(
+            body: Container(
+              color: Colors.white,
+              child: SafeArea(
+                child: Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      scrollDirection: Axis.vertical,
+                      children: [
+                        const Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
-                        child: Text(
-                          'Thành phố Đà Nẵng',
-                          style: TextStyle(
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontSize: 16,
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.bold,
+                          child: Text(
+                            'Thành phố Đà Nẵng',
+                            style: TextStyle(
+                              fontFamily: 'Plus Jakarta Sans',
+                              fontSize: 16,
+                              letterSpacing: 0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 12),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            WhiteCustomtButton(text: 'Thành viên', icon: Icons.group, onPressed: () {}),
-                            SizedBox(width: 16),
-                            CustomButton(text: 'Thêm đơn vị', icon: Icons.add, onPressed: () {}),
-                          ],
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 12),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              WhiteCustomtButton(text: 'Thành viên', icon: Icons.group, onPressed: () {}),
+                              const SizedBox(width: 16),
+                              CustomButton(text: 'Thêm đơn vị', icon: Icons.add, onPressed: () {}),
+                            ],
+                          ),
                         ),
-                      ),
-                      CustomPadding(text: 'Quận Hải  Châu', onPressed: () {} ),
-                      CustomPadding(text: 'Quận Ngũ Hành Sơn', onPressed: () {} ),
-                      CustomPadding(text: 'Quận Cẩm Lệ', onPressed: () {} ),
-                      CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {} )
-                    ],
+                        CustomPadding(text: 'Quận Hải  Châu', onPressed: () {} ),
+                        CustomPadding(text: 'Quận Ngũ Hành Sơn', onPressed: () {} ),
+                        CustomPadding(text: 'Quận Cẩm Lệ', onPressed: () {} ),
+                        CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {} ),
+                        CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {} ),
+                        CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {} ),
+                        CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {} )
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        )
-    );
+          );
   }
 }
