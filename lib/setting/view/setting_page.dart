@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/theme/colors.dart';
 import 'package:tctt_mobile/unit_manager/view/unit_manager_page.dart';
 import 'package:tctt_mobile/member_manager/view/member_manager_page.dart';
 import 'package:tctt_mobile/account_setting/view/account_setting_page.dart';
+
+import '../../authentication/bloc/authentication_bloc.dart';
 
 
 class ReviewPadding extends StatelessWidget {
@@ -67,7 +70,6 @@ class SettingPage extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
-              automaticallyImplyLeading: false,
               leading: BackButton(
                 color: Colors.black,
                 onPressed: () {
@@ -124,7 +126,7 @@ class SettingPage extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 0, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(14, 0, 0, 8),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -138,7 +140,11 @@ class SettingPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(50),
                       ),
                     ),
-                    onPressed: () {  },
+                    onPressed: () {
+                      context
+                          .read<AuthenticationBloc>()
+                          .add(AuthenticationLogoutRequested());
+                    },
                     child: const Padding(
                       padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                       child: Text(
