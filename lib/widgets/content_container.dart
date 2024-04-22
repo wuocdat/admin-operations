@@ -5,11 +5,13 @@ class ContentContainer extends StatelessWidget {
   const ContentContainer({
     super.key,
     required this.title,
+    required this.sender,
     required this.content,
     required this.time,
     required this.actions,
   });
 
+  final String sender;
   final String title;
   final String content;
   final String time;
@@ -42,7 +44,7 @@ class ContentContainer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      sender,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: textTheme.bodyLarge?.copyWith(
@@ -68,6 +70,16 @@ class ContentContainer extends StatelessWidget {
             ),
             ...actions
           ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: Text(
+            title.toUpperCase(),
+            style: textTheme.bodyLarge?.copyWith(
+              letterSpacing: 0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 12),

@@ -19,6 +19,9 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
       disable: json['disable'] as bool,
       unitSent: Unit.fromJson(json['unitSent'] as Map<String, dynamic>),
       type: TaskType.fromJson(json['type'] as Map<String, dynamic>),
+      progress: json['progress'] == null
+          ? null
+          : Progress.fromJson(json['progress'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
@@ -34,4 +37,5 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
       'disable': instance.disable,
       'unitSent': instance.unitSent,
       'type': instance.type,
+      'progress': instance.progress,
     };

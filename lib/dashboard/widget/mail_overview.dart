@@ -44,7 +44,8 @@ class MailOverview extends StatelessWidget {
             ),
           ),
           const MessageItem(
-            title: "Tin nhắn mới",
+            name: 'Tin nhắn mới',
+            title: "Report mục tiêu",
             time: "Hôm nay, 6:20pm",
             content:
                 'Kình gửi XXX, thông tin liên quan đến đối tượng Nguyễn Lân Thắng. Hồ sơ đối tượng trong file đính kèm....',

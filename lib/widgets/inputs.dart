@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tctt_mobile/theme/colors.dart';
 
 class Input extends StatefulWidget {
@@ -113,6 +114,28 @@ class SearchInput extends StatelessWidget {
   }
 }
 
+enum InputFormat { text, number }
+
+extension InputFormatX on InputFormat {
+  List<TextInputFormatter>? get formatter {
+    switch (this) {
+      case InputFormat.number:
+        return [FilteringTextInputFormatter.digitsOnly];
+      default:
+        return null;
+    }
+  }
+
+  TextInputType get keyboardType {
+    switch (this) {
+      case InputFormat.number:
+        return TextInputType.number;
+      default:
+        return TextInputType.text;
+    }
+  }
+}
+
 class BorderInput extends StatelessWidget {
   const BorderInput({
     super.key,
@@ -122,6 +145,7 @@ class BorderInput extends StatelessWidget {
     int? minLines,
     int? maxLength,
     String? errorText,
+    InputFormat? format,
     ValueChanged<String>? onChanged,
   })  : _autoFocus = autoFocus,
         _labelText = labelText,
@@ -129,6 +153,7 @@ class BorderInput extends StatelessWidget {
         _minLines = minLines,
         _maxLength = maxLength,
         _errorText = errorText,
+        _format = format ?? InputFormat.text,
         _onChanged = onChanged;
 
   final bool? _autoFocus;
@@ -137,6 +162,7 @@ class BorderInput extends StatelessWidget {
   final int? _maxLines;
   final int? _minLines;
   final int? _maxLength;
+  final InputFormat _format;
   final ValueChanged<String>? _onChanged;
 
   @override
@@ -145,6 +171,8 @@ class BorderInput extends StatelessWidget {
     return TextField(
       autofocus: _autoFocus ?? false,
       obscureText: false,
+      keyboardType: _format.keyboardType,
+      inputFormatters: _format.formatter,
       onChanged: _onChanged,
       decoration: InputDecoration(
         labelText: _labelText,

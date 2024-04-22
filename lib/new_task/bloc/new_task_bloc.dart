@@ -7,6 +7,7 @@ import 'package:formz/formz.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/new_task/models/models.dart';
 import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/models/content.dart';
 import 'package:units_repository/units_repository.dart';
 
 part 'new_task_event.dart';

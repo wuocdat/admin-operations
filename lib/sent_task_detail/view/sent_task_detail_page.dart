@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/sent_task_detail/cubit/sent_task_detail_cubit.dart';
-import 'package:tctt_mobile/sent_task_detail/widgets/attachment.dart';
+import 'package:tctt_mobile/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/widgets/content_container.dart';
 
@@ -127,18 +127,20 @@ class SentTaskDetailPage extends StatelessWidget {
                   return Column(
                     children: [
                       ContentContainer(
+                        sender: state.currentTask.unitSent.name,
                         title: state.currentTask.name,
                         content: state.currentTask.content,
                         time: state.currentTask.createdAt,
                         actions: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.star,
-                              color: Theme.of(context).primaryColor,
-                              size: 24,
+                          if (state.currentTask.important)
+                            IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.star,
+                                color: Theme.of(context).primaryColor,
+                                size: 24,
+                              ),
                             ),
-                          ),
                           IconButton(
                             onPressed: () => _showWithDrawDialog(context),
                             icon: Icon(

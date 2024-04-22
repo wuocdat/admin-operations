@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
-import 'package:tctt_mobile/sent_task_detail/widgets/cubit/attachment_cubit.dart';
+import 'package:tctt_mobile/widgets/attachment/cubit/attachment_cubit.dart';
 import 'package:tctt_mobile/shared/utils/file.dart';
+import 'package:tctt_mobile/widgets/label_text.dart';
 import 'package:tctt_mobile/widgets/internet_img_displayer.dart';
 
 class Attachment extends StatelessWidget {
-  const Attachment({super.key, required this.filePaths});
+  const Attachment({super.key, required this.filePaths, this.withoutTitle});
 
   final List<String> filePaths;
+  final bool? withoutTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +65,8 @@ class Attachment extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (withoutTitle != true) const MediumLabelText('Tệp đính kèm'),
+            const SizedBox(height: 8),
             ...filePaths.map(
               (filePath) => FileItem(
                 path: filePath,

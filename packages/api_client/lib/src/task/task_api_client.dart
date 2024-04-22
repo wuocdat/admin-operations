@@ -4,6 +4,8 @@ import 'package:api_client/src/api_config.dart';
 import 'package:api_client/src/common/handlers.dart';
 import 'package:api_client/src/task/path.dart';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 class TaskRequestFailure implements Exception {}
 
@@ -130,6 +132,14 @@ class TaskApiClient {
     return result;
   }
 
+  Future<Map<String, dynamic>> fetchReceivedTaskById(String taskId) async {
+    final response = await _dio.get('${TaskUrl.received}/$taskId');
+
+    final result = Handler.parseResponse(response) as Map<String, dynamic>;
+
+    return result;
+  }
+
   Future<void> updateSentTask(String taskId, Map<String, dynamic> data) async {
     await _dio.patch('${TaskUrl.original}/$taskId', data: data);
   }
@@ -141,6 +151,33 @@ class TaskApiClient {
 
     if (response.statusCode != 200) {
       throw DownLoadFailure();
+    }
+  }
+
+  Future<void> updateTaskProgress(String taskProgressId, String content,
+      int times, List<String> paths) async {
+    final formData = FormData.fromMap({
+      'content': content,
+      'total': times,
+    });
+
+    if (paths.isNotEmpty) {
+      formData.files.addAll(await Future.wait(paths.map((path) async {
+        return MapEntry(
+          'files',
+          await MultipartFile.fromFile(
+            path,
+            contentType: MediaType.parse(lookupMimeType(path) ?? 'image/png'),
+          ),
+        );
+      })));
+    }
+
+    final response =
+        await _dio.patch('${TaskUrl.progress}/$taskProgressId', data: formData);
+
+    if (response.statusCode != 200) {
+      throw TaskRequestFailure();
     }
   }
 }

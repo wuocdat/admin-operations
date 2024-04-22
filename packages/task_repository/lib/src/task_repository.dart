@@ -60,6 +60,12 @@ class TaskRepository {
     return Task.fromJson(taskJson);
   }
 
+  Future<Task> fetchReceivedTaskById(String id) async {
+    final taskJson = await _taskApiClient.fetchReceivedTaskById(id);
+
+    return Task.fromJson(taskJson);
+  }
+
   Future<void> withDrawTask(String taskId) async {
     await _taskApiClient.updateSentTask(taskId, {
       "disable": true,
@@ -69,5 +75,11 @@ class TaskRepository {
   Future<void> downloadFile(String url, String path,
       void Function(int, int) onReceiveProgress) async {
     await _taskApiClient.downloadFile(url, path, onReceiveProgress);
+  }
+
+  Future<void> reportTaskProgress(String taskProgressId, String content,
+      int times, List<String> filePaths) async {
+    await _taskApiClient.updateTaskProgress(
+        taskProgressId, content, times, filePaths);
   }
 }

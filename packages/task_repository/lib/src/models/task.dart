@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:task_repository/src/models/progress.dart';
 import 'package:task_repository/src/models/task_type.dart';
 import 'package:units_repository/units_repository.dart';
 
@@ -20,6 +21,7 @@ class Task extends Equatable {
     required this.disable,
     required this.unitSent,
     required this.type,
+    this.progress,
   });
 
   @JsonKey(name: "_id")
@@ -36,6 +38,7 @@ class Task extends Equatable {
   final bool disable;
   final Unit unitSent;
   final TaskType type;
+  final Progress? progress;
 
   factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 
@@ -52,6 +55,7 @@ class Task extends Equatable {
     bool? disable,
     Unit? unitSent,
     TaskType? type,
+    Progress? progress,
   }) {
     return Task(
       id: id ?? this.id,
@@ -66,6 +70,7 @@ class Task extends Equatable {
       disable: disable ?? this.disable,
       unitSent: unitSent ?? this.unitSent,
       type: type ?? this.type,
+      progress: progress ?? this.progress,
     );
   }
 
@@ -85,7 +90,7 @@ class Task extends Equatable {
   );
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         id,
         isActive,
         important,
@@ -97,7 +102,8 @@ class Task extends Equatable {
         createdAt,
         disable,
         unitSent,
-        type
+        type,
+        progress,
       ];
 
   static List<String> _fromJson(List<dynamic> value) {
