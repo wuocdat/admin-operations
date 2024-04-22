@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/widgets/attachment/cubit/attachment_cubit.dart';
 import 'package:tctt_mobile/shared/utils/file.dart';
-import 'package:tctt_mobile/widgets/attachment/label_text.dart';
+import 'package:tctt_mobile/widgets/label_text.dart';
 import 'package:tctt_mobile/widgets/internet_img_displayer.dart';
 
 class Attachment extends StatelessWidget {

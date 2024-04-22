@@ -4,7 +4,7 @@ import 'package:formz/formz.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/received_task_detail/cubit/received_task_detail_cubit.dart';
 import 'package:tctt_mobile/shared/models/content.dart';
-import 'package:tctt_mobile/widgets/attachment/label_text.dart';
+import 'package:tctt_mobile/widgets/label_text.dart';
 import 'package:tctt_mobile/widgets/file_picker.dart';
 import 'package:tctt_mobile/widgets/inputs.dart';
 import './cubit/report_form_cubit.dart';
