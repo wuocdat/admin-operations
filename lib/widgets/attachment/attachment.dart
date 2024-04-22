@@ -7,9 +7,10 @@ import 'package:tctt_mobile/widgets/attachment/label_text.dart';
 import 'package:tctt_mobile/widgets/internet_img_displayer.dart';
 
 class Attachment extends StatelessWidget {
-  const Attachment({super.key, required this.filePaths});
+  const Attachment({super.key, required this.filePaths, this.withoutTitle});
 
   final List<String> filePaths;
+  final bool? withoutTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,7 @@ class Attachment extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const MediumLabelText('Tệp đính kèm'),
+            if (withoutTitle != true) const MediumLabelText('Tệp đính kèm'),
             const SizedBox(height: 8),
             ...filePaths.map(
               (filePath) => FileItem(

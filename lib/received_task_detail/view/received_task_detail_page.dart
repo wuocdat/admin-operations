@@ -99,6 +99,7 @@ class ReceivedTaskDetailPage extends StatelessWidget {
                             builder: (context, progress) {
                               return ReportDetail(
                                 progress: progress,
+                                attachments: progress.files,
                                 onReportAgain: () {
                                   context
                                       .read<ReceivedTaskDetailCubit>()
