@@ -4,6 +4,8 @@ import 'package:api_client/src/api_config.dart';
 import 'package:api_client/src/common/handlers.dart';
 import 'package:api_client/src/task/path.dart';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 class TaskRequestFailure implements Exception {}
 
@@ -161,7 +163,13 @@ class TaskApiClient {
 
     if (paths.isNotEmpty) {
       formData.files.addAll(await Future.wait(paths.map((path) async {
-        return MapEntry('files', await MultipartFile.fromFile(path));
+        return MapEntry(
+          'files',
+          await MultipartFile.fromFile(
+            path,
+            contentType: MediaType.parse(lookupMimeType(path) ?? 'image/png'),
+          ),
+        );
       })));
     }
 
