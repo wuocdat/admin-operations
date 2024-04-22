@@ -50,3 +50,33 @@ extension TaskTypeEX on TaskTypeE {
     }
   }
 }
+
+enum ERole { superadmin, admin, mod, member }
+
+extension ERoleX on ERole {
+  String get name {
+    switch (this) {
+      case ERole.superadmin:
+        return 'Super Admin';
+      case ERole.admin:
+        return 'Admin';
+      case ERole.mod:
+        return 'Quản lý';
+      case ERole.member:
+        return 'Thành viên';
+    }
+  }
+
+  String get id {
+    switch (this) {
+      case ERole.superadmin:
+        return '0';
+      case ERole.admin:
+        return '1';
+      case ERole.mod:
+        return '2';
+      case ERole.member:
+        return '3';
+    }
+  }
+}

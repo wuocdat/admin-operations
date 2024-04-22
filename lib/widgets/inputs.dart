@@ -84,16 +84,21 @@ class SearchInput extends StatelessWidget {
   const SearchInput({
     super.key,
     this.onChanged,
+    this.leading,
+    this.noAutoFocus = false,
   });
 
+  final Widget? leading;
+  final bool noAutoFocus;
   final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       onChanged: onChanged,
-      autofocus: true,
+      autofocus: !noAutoFocus,
       decoration: InputDecoration(
+        prefixIcon: leading ?? const Icon(Icons.search),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             color: Color(0xFFF1F4F8),

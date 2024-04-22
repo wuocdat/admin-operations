@@ -25,6 +25,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       permissions: (json['permissions'] as Map<String, dynamic>).map(
         (k, e) => MapEntry(k, Permission.fromJson(e as Map<String, dynamic>)),
       ),
+      role: User._fromJson(json['role']),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -42,4 +43,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'unit': instance.unit,
       'parentUnit': instance.parentUnit,
       'permissions': instance.permissions,
+      'role': instance.role,
     };

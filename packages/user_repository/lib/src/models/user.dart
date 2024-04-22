@@ -22,6 +22,7 @@ class User extends Equatable {
     required this.unit,
     this.parentUnit,
     required this.permissions,
+    required this.role,
   });
 
   static const User empty = User(
@@ -38,7 +39,8 @@ class User extends Equatable {
     updatedAt: '',
     unit: Unit.empty,
     parentUnit: null,
-    permissions: const <String, Permission>{},
+    permissions: <String, Permission>{},
+    role: '',
   );
 
   @JsonKey(name: "_id")
@@ -56,6 +58,8 @@ class User extends Equatable {
   final Unit unit;
   final Unit? parentUnit;
   final Map<String, Permission> permissions;
+  @JsonKey(fromJson: _fromJson)
+  final String role;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
@@ -77,5 +81,11 @@ class User extends Equatable {
         unit,
         parentUnit,
         permissions,
+        role,
       ];
+
+  static String _fromJson(dynamic value) {
+    final json = value as Map<String, dynamic>;
+    return json['_id'] as String;
+  }
 }
