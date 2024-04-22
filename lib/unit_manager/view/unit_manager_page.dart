@@ -132,8 +132,11 @@ class UnitManager extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: Colors.white,
               automaticallyImplyLeading: false,
-              leading: const BackButton(
+              leading: BackButton(
                 color: Colors.black,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
               title: const Text(
                 'Danh bạ đơn vị',

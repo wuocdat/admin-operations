@@ -8,6 +8,7 @@ import 'package:tctt_mobile/mail/view/mail_page.dart';
 import 'package:tctt_mobile/target/view/target_page.dart';
 import 'package:tctt_mobile/task/view/task_page.dart';
 import 'package:tctt_mobile/setting/view/setting_page.dart';
+import 'package:tctt_mobile/account_setting/view/account_setting_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -32,7 +33,7 @@ class HomePage extends StatelessWidget {
         'icon': Icons.account_box_outlined,
         'title': 'Quản lý tài khoản',
         'action': () {
-          //Navigator.of(context).push();
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AccountSetting()));
         },
       },
       {
