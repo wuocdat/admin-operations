@@ -10,6 +10,7 @@ class MessageItem extends StatelessWidget {
     this.badgeCount,
     this.isImportant,
     this.onTap,
+    this.tag,
   });
 
   final String name;
@@ -18,6 +19,7 @@ class MessageItem extends StatelessWidget {
   final String time;
   final bool? isImportant;
   final int? badgeCount;
+  final Widget? tag;
   final void Function()? onTap;
 
   @override
@@ -61,17 +63,20 @@ class MessageItem extends StatelessWidget {
                               style: textTheme.bodySmall,
                             ),
                           ),
+                          tag ??
+                              const Icon(
+                                Icons.keyboard_arrow_right_rounded,
+                                size: 24,
+                              ),
                           if (isImportant == true)
-                            Icon(
-                              Icons.star_rate_rounded,
-                              color: Theme.of(context).primaryColor,
-                              size: 24,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Icon(
+                                Icons.star_rate_rounded,
+                                color: Theme.of(context).primaryColor,
+                                size: 24,
+                              ),
                             )
-                          else
-                            const Icon(
-                              Icons.keyboard_arrow_right_rounded,
-                              size: 24,
-                            ),
                         ],
                       ),
                       Padding(

@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/sent_task_detail/view/sent_task_detail_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/task/bloc/task_bloc.dart';
 import 'package:tctt_mobile/task/widgets/sent_task/bloc/sender_bloc.dart';
 import 'package:tctt_mobile/widgets/empty_list_message.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/msg_item.dart';
 import 'package:tctt_mobile/widgets/rich_list_view.dart';
+import 'package:tctt_mobile/widgets/tags.dart';
 import 'package:tctt_mobile/widgets/toggle_options.dart';
 
 class SentTasks extends StatelessWidget {
@@ -99,6 +101,11 @@ class SentTasks extends StatelessWidget {
                                 title: state.tasks[index].name,
                                 content: state.tasks[index].content,
                                 isImportant: state.tasks[index].important,
+                                tag: SimpleTag(
+                                  text: state.tasks[index].type.name,
+                                  color:
+                                      state.tasks[index].type.toTaskTypeE.color,
+                                ),
                                 onTap: () async {
                                   final needToReload =
                                       await Navigator.of(context).push(

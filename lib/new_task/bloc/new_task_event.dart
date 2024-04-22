@@ -47,7 +47,7 @@ final class UnitsChanged extends NewTaskEvent {
 final class TypeChanged extends NewTaskEvent {
   const TypeChanged(this.type);
 
-  final TaskType type;
+  final TaskTypeE type;
 
   @override
   List<Object> get props => [type];

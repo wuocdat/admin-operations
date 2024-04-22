@@ -5,8 +5,10 @@ import 'package:tctt_mobile/received_task_detail/cubit/received_task_detail_cubi
 import 'package:tctt_mobile/received_task_detail/widgets/report_detail.dart';
 import 'package:tctt_mobile/received_task_detail/widgets/report_form/report_form.dart';
 import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/widgets/content_container.dart';
+import 'package:tctt_mobile/widgets/tags.dart';
 
 class ReceivedTaskDetailPage extends StatelessWidget {
   const ReceivedTaskDetailPage({super.key});
@@ -73,10 +75,14 @@ class ReceivedTaskDetailPage extends StatelessWidget {
                         content: state.currentTask.content,
                         time: state.currentTask.createdAt,
                         actions: [
+                          SimpleTag(
+                            text: state.currentTask.type.name,
+                            color: state.currentTask.type.toTaskTypeE.color,
+                          ),
                           if (state.currentTask.important)
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Icon(
                                 Icons.star,
                                 color: Theme.of(context).primaryColor,
                                 size: 24,

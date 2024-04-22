@@ -154,7 +154,7 @@ class TypeSelector extends StatelessWidget {
       buildWhen: (previous, current) => previous.type != current.type,
       builder: (context, state) {
         return BorderDropdown(
-          items: TaskType.values
+          items: TaskTypeE.values
               .map(
                 (e) => DropdownMenuEntry(
                   value: e,
@@ -165,7 +165,7 @@ class TypeSelector extends StatelessWidget {
           initialSelection: state.type,
           onSelected: (type) => context
               .read<NewTaskBloc>()
-              .add(TypeChanged(type ?? TaskType.report)),
+              .add(TypeChanged(type ?? TaskTypeE.report)),
         );
       },
     );

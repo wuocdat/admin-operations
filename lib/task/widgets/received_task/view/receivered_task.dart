@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/received_task_detail/view/received_task_detail_page.dart';
+import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/task/bloc/task_bloc.dart';
 import 'package:tctt_mobile/task/widgets/received_task/bloc/receiver_bloc.dart';
 import 'package:tctt_mobile/widgets/bottom_loader.dart';
 import 'package:tctt_mobile/widgets/empty_list_message.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/msg_item.dart';
+import 'package:tctt_mobile/widgets/tags.dart';
 import 'package:tctt_mobile/widgets/toggle_options.dart';
 
 class ReceivedTasks extends StatelessWidget {
@@ -154,6 +157,10 @@ class _TasksViewState extends State<TasksView> {
                     title: state.tasks[index].name,
                     content: state.tasks[index].content,
                     isImportant: state.tasks[index].important,
+                    tag: SimpleTag(
+                      text: state.tasks[index].type.name,
+                      color: state.tasks[index].type.toTaskTypeE.color,
+                    ),
                     onTap: () {
                       Navigator.of(context).push(
                         ReceivedTaskDetailPage.route(state.tasks[index].id),

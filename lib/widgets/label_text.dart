@@ -16,3 +16,20 @@ class MediumLabelText extends StatelessWidget {
     );
   }
 }
+
+class BodySmallText extends StatelessWidget {
+  final String text;
+  final Color color;
+
+  const BodySmallText(this.text, {super.key, this.color = Colors.white});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: color,
+          ),
+    );
+  }
+}

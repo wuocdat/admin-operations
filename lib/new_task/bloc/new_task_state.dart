@@ -1,42 +1,12 @@
 part of 'new_task_bloc.dart';
 
-enum TaskType { report, investigate, monitor, other }
-
-extension TaskTypeX on TaskType {
-  String get name {
-    switch (this) {
-      case TaskType.report:
-        return 'Báo xấu';
-      case TaskType.investigate:
-        return 'Điều tra';
-      case TaskType.monitor:
-        return 'Giám sát';
-      case TaskType.other:
-        return 'Khác';
-    }
-  }
-
-  String get id {
-    switch (this) {
-      case TaskType.report:
-        return '1';
-      case TaskType.investigate:
-        return '2';
-      case TaskType.monitor:
-        return '3';
-      case TaskType.other:
-        return '0';
-    }
-  }
-}
-
 class NewTaskState extends Equatable {
   const NewTaskState({
     this.title = const Title.pure(),
     this.content = const Content.pure(),
     this.units = const <String>[],
     this.childrenUnits = const <Unit>[],
-    this.type = TaskType.report,
+    this.type = TaskTypeE.report,
     this.important = false,
     this.status = FormzSubmissionStatus.initial,
     this.isValid = false,
@@ -48,7 +18,7 @@ class NewTaskState extends Equatable {
   final Content content;
   final List<String> units;
   final List<Unit> childrenUnits;
-  final TaskType type;
+  final TaskTypeE type;
   final bool important;
   final FormzSubmissionStatus status;
   final bool isValid;
@@ -60,7 +30,7 @@ class NewTaskState extends Equatable {
     Content? content,
     List<String>? units,
     List<Unit>? childrenUnits,
-    TaskType? type,
+    TaskTypeE? type,
     bool? important,
     FormzSubmissionStatus? status,
     bool? isValid,

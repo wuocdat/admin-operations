@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/sent_task_detail/cubit/sent_task_detail_cubit.dart';
+import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/widgets/content_container.dart';
+import 'package:tctt_mobile/widgets/tags.dart';
 
 class SentTaskDetailPage extends StatelessWidget {
   const SentTaskDetailPage({super.key, required this.taskId});
@@ -132,6 +134,10 @@ class SentTaskDetailPage extends StatelessWidget {
                         content: state.currentTask.content,
                         time: state.currentTask.createdAt,
                         actions: [
+                          SimpleTag(
+                            text: state.currentTask.type.name,
+                            color: state.currentTask.type.toTaskTypeE.color,
+                          ),
                           if (state.currentTask.important)
                             IconButton(
                               onPressed: () {},
