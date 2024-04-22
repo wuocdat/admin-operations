@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:api_client/src/api_config.dart';
 import 'package:api_client/src/common/handlers.dart';
-import 'package:api_client/src/task/models/models.dart';
 import 'package:api_client/src/task/path.dart';
 import 'package:dio/dio.dart';
 
 class TaskRequestFailure implements Exception {}
 
 class TaskNotFoundFailure implements Exception {}
+
+class DownLoadFailure implements Exception {}
 
 class TaskApiClient {
   TaskApiClient({Dio? dio})
@@ -17,7 +18,7 @@ class TaskApiClient {
 
   final Dio _dio;
 
-  Future<Overall> getOverall() async {
+  Future<Map<String, dynamic>> getOverall() async {
     final response = await _dio.get(TaskUrl.overall, queryParameters: {
       'task': true,
     });
@@ -26,17 +27,16 @@ class TaskApiClient {
 
     if (!result.containsKey('task')) throw TaskNotFoundFailure();
 
-    final taskOverall = result['task'] as Map<String, dynamic>;
-
-    return Overall.fromJson(taskOverall);
+    return result['task'] as Map<String, dynamic>;
   }
 
-  Future<List<Task>> getReceivedTasks(
+  Future<List<Map<String, dynamic>>> getReceivedTasks(
       String progressStatus, String? text, int limit,
       [int currentPage = 1]) async {
     final Map<String, dynamic> queryParameters = {
       "pageSize": limit,
       "currentPage": currentPage,
+      "disable": false,
       "taskProgressStatus": progressStatus,
     };
 
@@ -53,16 +53,18 @@ class TaskApiClient {
 
     return result.map((dynamic json) {
       final map = json as Map<String, dynamic>;
-      return Task.fromJson(map);
+      return map;
     }).toList();
   }
 
-  Future<List<Task>> getSentTasks(String owner, String? text, int limit,
+  Future<List<Map<String, dynamic>>> getSentTasks(
+      String owner, String? text, int limit,
       [int currentPage = 1]) async {
     final Map<String, dynamic> queryParameters = {
       "pageSize": limit,
       "currentPage": currentPage,
       "owner": owner,
+      "disable": false,
       "sortBy": jsonEncode({
         "createdAt": -1,
       }),
@@ -81,7 +83,64 @@ class TaskApiClient {
 
     return result.map((dynamic json) {
       final map = json as Map<String, dynamic>;
-      return Task.fromJson(map);
+      return map;
     }).toList();
+  }
+
+  Future<void> createTask(
+    String name,
+    String type,
+    List<String> units,
+    String content,
+    bool important,
+    List<String> filePaths,
+  ) async {
+    final formData = FormData.fromMap({
+      'name': name,
+      'type': type,
+      'content': content,
+      'important': important,
+    });
+
+    formData.fields.addAll(units.map((unit) {
+      return MapEntry('units[]', unit);
+    }));
+
+    if (filePaths.isNotEmpty) {
+      formData.files.addAll(await Future.wait(filePaths.map((path) async {
+        return MapEntry('files', await MultipartFile.fromFile(path));
+      })));
+    }
+
+    final response = await _dio.post(
+      TaskUrl.original,
+      data: formData,
+    );
+
+    if (response.statusCode != 201) {
+      throw TaskRequestFailure();
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchSentTaskById(String taskId) async {
+    final response = await _dio.get('${TaskUrl.sent}/$taskId');
+
+    final result = Handler.parseResponse(response) as Map<String, dynamic>;
+
+    return result;
+  }
+
+  Future<void> updateSentTask(String taskId, Map<String, dynamic> data) async {
+    await _dio.patch('${TaskUrl.original}/$taskId', data: data);
+  }
+
+  Future<void> downloadFile(String url, String path,
+      void Function(int, int) onReceiveProgress) async {
+    final response = await _dio.download('/$url', path,
+        onReceiveProgress: onReceiveProgress);
+
+    if (response.statusCode != 200) {
+      throw DownLoadFailure();
+    }
   }
 }

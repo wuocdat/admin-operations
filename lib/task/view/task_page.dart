@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/new_task/new_task.dart';
 import 'package:tctt_mobile/task/bloc/task_bloc.dart';
 import 'package:tctt_mobile/task/widgets/received_task/view/receivered_task.dart';
@@ -37,12 +38,27 @@ class TaskPage extends StatelessWidget {
                 onCloseSearchInput: () =>
                     context.read<TaskBloc>().add(const InputClosedEvent()),
                 action: !state.mode.isReceiverMode
-                    ? IconButton(
-                        onPressed: () {
-                          Navigator.push(context, NewTaskPage.route());
+                    ? BlocSelector<AuthenticationBloc, AuthenticationState,
+                        String>(
+                        selector: (state) {
+                          return state.user.unit.id;
                         },
-                        icon: const Icon(Icons.add),
-                        color: Theme.of(context).primaryColor,
+                        builder: (context, unitId) {
+                          return IconButton(
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                NewTaskPage.route(unitId),
+                              );
+                              if (!context.mounted) return;
+                              context
+                                  .read<TaskBloc>()
+                                  .add(const ReloadIncreasedEvent());
+                            },
+                            icon: const Icon(Icons.add),
+                            color: Theme.of(context).primaryColor,
+                          );
+                        },
                       )
                     : null,
               ),

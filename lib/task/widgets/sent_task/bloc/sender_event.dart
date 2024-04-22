@@ -31,3 +31,10 @@ final class SearchInputChangedEvent extends SenderEvent {
   @override
   List<Object> get props => [searchValue];
 }
+
+final class SentTaskRefetched extends SenderEvent {
+  const SentTaskRefetched();
+
+  @override
+  List<Object> get props => [];
+}

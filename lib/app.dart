@@ -7,6 +7,7 @@ import 'package:tctt_mobile/home/home.dart';
 import 'package:tctt_mobile/login/login.dart';
 import 'package:tctt_mobile/splash/splash.dart';
 import 'package:tctt_mobile/theme/theme.dart';
+import 'package:units_repository/units_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
 class App extends StatefulWidget {
@@ -19,11 +20,13 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   late final AuthenticationRepository _authenticationRepository;
   late final UserRepository _userRepository;
+  late final UnitsRepository _unitsRepository;
 
   @override
   void initState() {
     _authenticationRepository = AuthenticationRepository();
     _userRepository = UserRepository();
+    _unitsRepository = UnitsRepository();
     super.initState();
   }
 
@@ -37,12 +40,9 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider.value(
-          value: _authenticationRepository,
-        ),
-        RepositoryProvider(
-          create: (context) => TaskRepository(),
-        ),
+        RepositoryProvider.value(value: _authenticationRepository),
+        RepositoryProvider(create: (context) => TaskRepository()),
+        RepositoryProvider.value(value: _unitsRepository)
       ],
       child: BlocProvider(
         create: (_) => AuthenticationBloc(

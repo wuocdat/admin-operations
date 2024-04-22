@@ -22,6 +22,7 @@ class SenderBloc extends Bloc<SenderEvent, SenderState> {
       transformer: debounce(debounceDuration),
     );
     on<OwnerChangedEvent>(_onOwnerChanged);
+    on<SentTaskRefetched>(_onTaskRefetched);
   }
 
   final TaskRepository _taskRepository;
@@ -101,6 +102,27 @@ class SenderBloc extends Bloc<SenderEvent, SenderState> {
         status: FetchDataStatus.failure,
         tasks: List<Task>.empty(),
       ));
+    }
+  }
+
+  Future<void> _onTaskRefetched(
+    SentTaskRefetched event,
+    Emitter<SenderState> emit,
+  ) async {
+    emit(state.copyWith(
+        status: FetchDataStatus.loading, tasks: List<Task>.empty()));
+
+    try {
+      final tasks = await _taskRepository.fetchSentTasks(
+          state.owner.query, state.searchValue);
+      emit(state.copyWith(
+        status: FetchDataStatus.success,
+        tasks: tasks,
+        hasReachedMax: tasks.length < taskLimit,
+      ));
+    } catch (_) {
+      emit(state.copyWith(
+          status: FetchDataStatus.failure, tasks: List<Task>.empty()));
     }
   }
 }

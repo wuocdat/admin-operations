@@ -7,6 +7,15 @@ sealed class NewTaskEvent extends Equatable {
   List<Object> get props => [];
 }
 
+final class NewTaskStarted extends NewTaskEvent {
+  const NewTaskStarted({required this.unitId});
+
+  final String unitId;
+
+  @override
+  List<Object> get props => [unitId];
+}
+
 final class TitleChanged extends NewTaskEvent {
   const TitleChanged(this.title);
 
@@ -26,12 +35,13 @@ final class ContentChanged extends NewTaskEvent {
 }
 
 final class UnitsChanged extends NewTaskEvent {
-  const UnitsChanged(this.units);
+  const UnitsChanged({required this.unit, required this.checked});
 
-  final List<String> units;
+  final String unit;
+  final bool checked;
 
   @override
-  List<Object> get props => [units];
+  List<Object> get props => [unit, checked];
 }
 
 final class TypeChanged extends NewTaskEvent {
@@ -55,4 +65,13 @@ final class NewTaskSubmitted extends NewTaskEvent {
 
   @override
   List<Object> get props => [];
+}
+
+final class FilePicked extends NewTaskEvent {
+  const FilePicked(this.files);
+
+  final List<PlatformFile> files;
+
+  @override
+  List<Object> get props => [files];
 }

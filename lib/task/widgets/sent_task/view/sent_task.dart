@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
+import 'package:tctt_mobile/sent_task_detail/view/sent_task_detail_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/task/bloc/task_bloc.dart';
 import 'package:tctt_mobile/task/widgets/sent_task/bloc/sender_bloc.dart';
@@ -41,6 +42,13 @@ class SentTasks extends StatelessWidget {
               context
                   .read<SenderBloc>()
                   .add(SearchInputChangedEvent(state.searchValue));
+            },
+          ),
+          BlocListener<TaskBloc, TaskState>(
+            listenWhen: (previous, current) =>
+                previous.reloadCount != current.reloadCount,
+            listener: (context, state) {
+              context.read<SenderBloc>().add(const SentTaskRefetched());
             },
           ),
         ],
@@ -89,6 +97,20 @@ class SentTasks extends StatelessWidget {
                                 time: state.tasks[index].createdAt,
                                 title: state.tasks[index].unitSent.name,
                                 content: state.tasks[index].content,
+                                onTap: () async {
+                                  final needToReload =
+                                      await Navigator.of(context).push(
+                                    SentTaskDetailPage.route(
+                                        state.tasks[index].id),
+                                  );
+                                  if (!context.mounted ||
+                                      needToReload != true) {
+                                    return;
+                                  }
+                                  context
+                                      .read<SenderBloc>()
+                                      .add(const SentTaskRefetched());
+                                },
                               ),
                           onReachedEnd: () {
                             context

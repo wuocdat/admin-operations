@@ -7,7 +7,6 @@ import 'package:tctt_mobile/home/widgets/notifications_bell.dart';
 import 'package:tctt_mobile/mail/view/mail_page.dart';
 import 'package:tctt_mobile/target/view/target_page.dart';
 import 'package:tctt_mobile/task/view/task_page.dart';
-import 'package:tctt_mobile/setting/view/setting_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -27,6 +26,31 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> menuItems = [
+      {
+        'icon': Icons.account_box_outlined,
+        'title': 'Quản lý tài khoản',
+        'action': () {
+          //Navigator.of(context).push();
+        },
+      },
+      {
+        'icon': Icons.settings_outlined,
+        'title': 'Cài đặt',
+        'action': () {
+          //Navigator.of(context).push();
+        },
+      },
+      {
+        'icon': Icons.logout_outlined,
+        'title': 'Đăng xuất',
+        'action': () {
+          context
+              .read<AuthenticationBloc>()
+              .add(AuthenticationLogoutRequested());
+        },
+      },
+    ];
     final theme = Theme.of(context);
     return BlocProvider(
       create: (context) => HomeCubit(),
@@ -46,17 +70,37 @@ class HomePage extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                  child: IconButton(
-                    onPressed: () =>
-                      selectedIndex.isHome
-                        ? context.read<AuthenticationBloc>().add(AuthenticationLogoutRequested())
-                        : Navigator.push(context, MaterialPageRoute(builder: (context) => SettingPage())),
-                    icon: selectedIndex.isHome
-                        ? const Icon(Icons.account_circle_outlined)
-                        : const Icon(Icons.settings_outlined),
-                    iconSize: 30,
-                    // color: theme.primaryColor,
-                  ),
+                  child: selectedIndex.isHome
+                      ? MenuAnchor(
+                          builder: (context, controller, child) => IconButton(
+                                onPressed: () {
+                                  if (controller.isOpen) {
+                                    controller.close();
+                                  } else {
+                                    controller.open();
+                                  }
+                                },
+                                icon: const Icon(Icons.account_circle_outlined),
+                                iconSize: 30,
+                              ),
+                          menuChildren: menuItems
+                              .map(
+                                (e) => ListTile(
+                                  leading: Icon(e['icon']),
+                                  title: Text(e['title']),
+                                  onTap: () {
+                                    e['action']();
+                                  },
+                                ),
+                              )
+                              .toList())
+                      : IconButton(
+                          onPressed: () {
+                            // navigate to settings page
+                          },
+                          icon: const Icon(Icons.settings_outlined),
+                          iconSize: 30,
+                        ),
                 ),
               ],
             ),

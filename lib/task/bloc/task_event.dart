@@ -31,3 +31,10 @@ final class InputClosedEvent extends TaskEvent {
   @override
   List<Object> get props => [];
 }
+
+final class ReloadIncreasedEvent extends TaskEvent {
+  const ReloadIncreasedEvent();
+
+  @override
+  List<Object> get props => [];
+}

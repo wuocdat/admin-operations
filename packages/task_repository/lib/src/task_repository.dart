@@ -12,12 +12,7 @@ class TaskRepository {
   Future<Overall> getOverall() async {
     final overall = await _taskApiClient.getOverall();
 
-    return Overall(
-      all: overall.all,
-      finished: overall.finished,
-      unfinished: overall.unfinished,
-      unread: overall.unread,
-    );
+    return Overall.fromJson(overall);
   }
 
   Future<List<Task>> fetchReceivedTasks(
@@ -30,33 +25,7 @@ class TaskRepository {
       (taskLength / taskLimit).ceil() + 1,
     );
 
-    return tasks
-        .map(
-          (task) => Task(
-            id: task.id,
-            isActive: task.isActive,
-            important: task.important,
-            content: task.content,
-            units: task.units,
-            name: task.name,
-            createdBy: task.createdBy,
-            createdAt: task.createdAt,
-            disable: task.disable,
-            unitSent: Unit(
-              id: task.unitSent.id,
-              name: task.unitSent.name,
-              createdBy: task.unitSent.createdBy,
-              createdAt: task.unitSent.createdAt,
-              isActive: task.unitSent.isActive,
-            ),
-            type: TaskType(
-              id: task.type.id,
-              isActive: task.type.isActive,
-              name: task.type.name,
-            ),
-          ),
-        )
-        .toList();
+    return tasks.map((e) => Task.fromJson(e)).toList();
   }
 
   Future<List<Task>> fetchSentTasks(String owner, String? searchValue,
@@ -64,32 +33,41 @@ class TaskRepository {
     final tasks = await _taskApiClient.getSentTasks(
         owner, searchValue, taskLimit, (taskLength / taskLimit).ceil() + 1);
 
-    return tasks
-        .map(
-          (task) => Task(
-            id: task.id,
-            isActive: task.isActive,
-            important: task.important,
-            content: task.content,
-            units: task.units,
-            name: task.name,
-            createdBy: task.createdBy,
-            createdAt: task.createdAt,
-            disable: task.disable,
-            unitSent: Unit(
-              id: task.unitSent.id,
-              name: task.unitSent.name,
-              createdBy: task.unitSent.createdBy,
-              createdAt: task.unitSent.createdAt,
-              isActive: task.unitSent.isActive,
-            ),
-            type: TaskType(
-              id: task.type.id,
-              isActive: task.type.isActive,
-              name: task.type.name,
-            ),
-          ),
-        )
-        .toList();
+    return tasks.map((e) => Task.fromJson(e)).toList();
+  }
+
+  Future<void> sentTask(
+    String name,
+    String type,
+    List<String> units,
+    String content,
+    bool important,
+    List<String> filePaths,
+  ) async {
+    await _taskApiClient.createTask(
+      name,
+      type,
+      units,
+      content,
+      important,
+      filePaths,
+    );
+  }
+
+  Future<Task> fetchSentTaskById(String id) async {
+    final taskJson = await _taskApiClient.fetchSentTaskById(id);
+
+    return Task.fromJson(taskJson);
+  }
+
+  Future<void> withDrawTask(String taskId) async {
+    await _taskApiClient.updateSentTask(taskId, {
+      "disable": true,
+    });
+  }
+
+  Future<void> downloadFile(String url, String path,
+      void Function(int, int) onReceiveProgress) async {
+    await _taskApiClient.downloadFile(url, path, onReceiveProgress);
   }
 }
