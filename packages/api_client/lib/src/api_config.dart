@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final class ApiConfig {
-  static final options = BaseOptions(baseUrl: 'http://10.0.2.2:3000');
+  static final options = BaseOptions(baseUrl: 'http://10.0.2.2:3200');
 }
 
 class ApiInterceptors extends Interceptor {
