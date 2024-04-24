@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tctt_mobile/theme/colors.dart';
 import 'package:tctt_mobile/unit_manager/view/unit_manager_page.dart';
 import 'package:tctt_mobile/member_manager/view/member_manager_page.dart';
 import 'package:tctt_mobile/account_setting/view/account_setting_page.dart';
 import 'package:tctt_mobile/widgets/contained_button.dart';
 import 'package:tctt_mobile/widgets/label_text.dart';
+import 'package:tctt_mobile/account_setting/view/account_setting_page.dart';
+import 'package:tctt_mobile/unit_manager/view/unit_manager_page.dart';
+import 'package:tctt_mobile/member_manager/view/member_manager_page.dart';
 
 import '../../authentication/bloc/authentication_bloc.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
+
+  static Route<void> route() {
+    return MaterialPageRoute<void>(
+      builder: (_) => const SettingPage(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

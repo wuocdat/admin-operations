@@ -70,6 +70,12 @@ class Devider extends StatelessWidget {
 class AccountSetting extends StatelessWidget {
   const AccountSetting({super.key});
 
+  static Route<void> route() {
+    return MaterialPageRoute<void>(
+      builder: (_) => const AccountSetting(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +99,6 @@ class AccountSetting extends StatelessWidget {
           body: Container(
             color: Colors.white,
             child: SafeArea(
-              top: true,
               child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
                 child: SingleChildScrollView(

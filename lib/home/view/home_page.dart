@@ -33,16 +33,14 @@ class HomePage extends StatelessWidget {
         'icon': Icons.account_box_outlined,
         'title': 'Quản lý tài khoản',
         'action': () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const AccountSetting()));
+          Navigator.of(context).push(AccountSetting.route());
         },
       },
       {
         'icon': Icons.settings_outlined,
         'title': 'Cài đặt',
         'action': () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const SettingPage()));
+          Navigator.of(context).push(SettingPage.route());
         },
       },
       {
