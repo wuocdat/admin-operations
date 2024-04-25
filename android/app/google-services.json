@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "178550442314",
-    "project_id": "fcm-test-9423e",
-    "storage_bucket": "fcm-test-9423e.appspot.com"
+    "project_number": "351685453356",
+    "project_id": "tctt-moible",
+    "storage_bucket": "tctt-moible.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:178550442314:android:98c76d9af4b69d618e19b3",
+        "mobilesdk_app_id": "1:351685453356:android:592a1db74d9b6a4eb01389",
         "android_client_info": {
           "package_name": "com.example.tctt_mobile"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC2pooufS194IhdNf6qapaT03ktHRU1wgU"
+          "current_key": "AIzaSyApIcRXNrhWyHnGPMxQxMTh9eMCJZjt44o"
         }
       ],
       "services": {

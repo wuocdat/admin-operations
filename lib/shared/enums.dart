@@ -80,3 +80,29 @@ extension ERoleX on ERole {
     }
   }
 }
+
+enum ENotificationType { mission, mail, chat }
+
+extension ENotificationTypeX on ENotificationType {
+  String get title {
+    switch (this) {
+      case ENotificationType.mission:
+        return 'Nhiệm vụ';
+      case ENotificationType.mail:
+        return 'Mail';
+      case ENotificationType.chat:
+        return 'Tin nhắn';
+    }
+  }
+
+  String get id {
+    switch (this) {
+      case ENotificationType.mission:
+        return '1';
+      case ENotificationType.mail:
+        return '2';
+      case ENotificationType.chat:
+        return '3';
+    }
+  }
+}
