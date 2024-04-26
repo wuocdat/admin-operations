@@ -158,7 +158,8 @@ class SentTaskDetailPage extends StatelessWidget {
                         ],
                       ),
                       if (state.currentTask.files.isNotEmpty) const Divider(),
-                      Attachment(filePaths: state.currentTask.files),
+                      if (state.currentTask.files.isNotEmpty)
+                        Attachment(filePaths: state.currentTask.files),
                     ],
                   );
                 },
