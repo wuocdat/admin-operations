@@ -21,7 +21,8 @@ class HomePage extends StatelessWidget {
     DashBoardPage(),
     TaskPage(),
     TargetPage(),
-    MailPage()
+    MailPage(),
+    MailPage(),
   ];
 
   @override
@@ -137,6 +138,17 @@ class HomePage extends StatelessWidget {
                     child: Icon(Icons.mail_outline),
                   ),
                   label: 'Hòm thư',
+                ),
+                NavigationDestination(
+                  selectedIcon: Badge(
+                    label: Text('5'),
+                    child: Icon(Icons.messenger),
+                  ),
+                  icon: Badge(
+                    label: Text('5'),
+                    child: Icon(Icons.messenger_outline),
+                  ),
+                  label: 'Nhắn tin',
                 ),
               ],
             ),
