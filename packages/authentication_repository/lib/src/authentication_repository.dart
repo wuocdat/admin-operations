@@ -27,12 +27,15 @@ class AuthenticationRepository {
   Future<void> login({
     required String username,
     required String password,
+    required String fcmToken,
   }) async {
     await _authApiClient.login(username, password);
+    await _authApiClient.sentFcmToken(fcmToken);
     _controller.add(AuthenticationStatus.authenticated);
   }
 
-  void logout() async {
+  Future<void> logout(String fcmToken) async {
+    await _authApiClient.logout(fcmToken);
     await _storage.delete(key: "access_token");
     _controller.add(AuthenticationStatus.unauthenticated);
   }

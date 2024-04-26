@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:tctt_mobile/login/models/models.dart';
+import 'package:tctt_mobile/services/firebase_service.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -47,8 +48,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state.isValid) {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
+        final fcmToken = await FirebaseService.getFCMToken();
+
         await _authenticationRepository.login(
-            username: state.username.value, password: state.password.value);
+            username: state.username.value,
+            password: state.password.value,
+            fcmToken: fcmToken ?? "");
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       } catch (_) {
         emit(state.copyWith(status: FormzSubmissionStatus.failure));

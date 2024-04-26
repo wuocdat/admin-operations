@@ -13,6 +13,8 @@ class AuthApiClient {
         _storage = storage ?? const FlutterSecureStorage();
 
   static const loginUrl = "/auth/login";
+  static const logoutUrl = "/auth/logout";
+  static const fcmUrl = "/notification/device";
 
   final Dio _dio;
   final FlutterSecureStorage _storage;
@@ -42,5 +44,17 @@ class AuthApiClient {
     }
 
     throw TokenNotFoundFailure();
+  }
+
+  Future<void> sentFcmToken(String fcmToken) async {
+    await _dio.post(fcmUrl, data: {
+      "tokens": [fcmToken],
+    });
+  }
+
+  Future<void> logout(String fcmToken) async {
+    await _dio.get(logoutUrl, queryParameters: {
+      "token": fcmToken,
+    });
   }
 }

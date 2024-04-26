@@ -4,6 +4,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:tctt_mobile/services/firebase_service.dart';
 import 'package:user_repository/user_repository.dart';
 
 part 'authentication_event.dart';
@@ -52,11 +53,16 @@ class AuthenticationBloc
     }
   }
 
-  void _onAuthenticationLogoutRequested(
+  Future<void> _onAuthenticationLogoutRequested(
     AuthenticationLogoutRequested event,
     Emitter<AuthenticationState> emit,
-  ) {
-    _authenticationRepository.logout();
+  ) async {
+    try {
+      final fcmToken = await FirebaseService.getFCMToken();
+      await _authenticationRepository.logout(fcmToken ?? "");
+    } catch (_) {
+      emit(const AuthenticationState.unauthenticated());
+    }
   }
 
   Future<User?> _tryGetUser() async {
