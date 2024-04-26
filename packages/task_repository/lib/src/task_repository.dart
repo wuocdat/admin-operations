@@ -1,7 +1,7 @@
 import 'package:api_client/api_client.dart';
 import 'package:task_repository/src/models/models.dart';
 
-const taskLimit = 5;
+const taskLimit = 10;
 
 class TaskRepository {
   TaskRepository({TaskApiClient? taskApiClient})

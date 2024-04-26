@@ -3,4 +3,5 @@
 
 * Api:
 
+- get received task errors
 - get only active incoming task GET tasks/received?disable=false
