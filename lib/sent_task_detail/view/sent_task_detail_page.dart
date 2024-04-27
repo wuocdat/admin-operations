@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/sent_task_detail/cubit/sent_task_detail_cubit.dart';
+import 'package:tctt_mobile/sent_task_detail/widgets/statistic_tree.dart';
 import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/shared/enums.dart';
@@ -127,6 +128,7 @@ class SentTaskDetailPage extends StatelessWidget {
                 },
                 builder: (context, state) {
                   return Column(
+                    mainAxisSize: MainAxisSize.max,
                     children: [
                       ContentContainer(
                         sender: state.currentTask.unitSent.name,
@@ -160,6 +162,7 @@ class SentTaskDetailPage extends StatelessWidget {
                       if (state.currentTask.files.isNotEmpty) const Divider(),
                       if (state.currentTask.files.isNotEmpty)
                         Attachment(filePaths: state.currentTask.files),
+                      const StatisticTree()
                     ],
                   );
                 },

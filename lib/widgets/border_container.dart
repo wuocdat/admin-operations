@@ -8,16 +8,19 @@ class BorderContainer extends StatelessWidget {
     this.borderColor = AppColors.secondaryBackground,
     this.borderWidth = 2,
     this.borderRadius = 8,
+    this.height,
   });
 
   final Widget child;
   final Color borderColor;
   final double borderWidth;
   final double borderRadius;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: height,
       decoration: BoxDecoration(
         border: Border.all(
           color: borderColor,

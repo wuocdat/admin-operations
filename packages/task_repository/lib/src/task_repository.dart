@@ -2,6 +2,7 @@ import 'package:api_client/api_client.dart';
 import 'package:task_repository/src/models/models.dart';
 
 const taskLimit = 10;
+const progressLimit = 10;
 
 class TaskRepository {
   TaskRepository({TaskApiClient? taskApiClient})
@@ -34,6 +35,16 @@ class TaskRepository {
         owner, searchValue, taskLimit, (taskLength / taskLimit).ceil() + 1);
 
     return tasks.map((e) => Task.fromJson(e)).toList();
+  }
+
+  Future<List<ProgressDetail>> fetchTaskProgresses(String taskId, String unitId,
+      [int length = 0]) async {
+    final progresses = await _taskApiClient.fetchProgresses(
+        taskId, unitId, progressLimit, (length / progressLimit).ceil() + 1);
+
+    return progresses
+        .map((e) => ProgressDetail.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Future<void> sentTask(
@@ -81,5 +92,13 @@ class TaskRepository {
       int times, List<String> filePaths) async {
     await _taskApiClient.updateTaskProgress(
         taskProgressId, content, times, filePaths);
+  }
+
+  Future<Statistic?> fetchStatistic(String taskId) async {
+    final statisticJson = await _taskApiClient.fetchResultStatistic(taskId);
+
+    if (statisticJson == null) return null;
+
+    return Statistic.fromJson(statisticJson);
   }
 }

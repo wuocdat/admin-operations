@@ -180,4 +180,29 @@ class TaskApiClient {
       throw TaskRequestFailure();
     }
   }
+
+  Future<Map<String, dynamic>?> fetchResultStatistic(String taskId) async {
+    final response = await _dio.get('${TaskUrl.statistic}/$taskId');
+
+    final result = Handler.parseResponse(response);
+
+    return result;
+  }
+
+  Future<List> fetchProgresses(String taskId, String unitId, int limit,
+      [int currentPage = 1]) async {
+    final response = await _dio.get(
+      TaskUrl.progress,
+      queryParameters: {
+        "pageSize": limit,
+        "currentPage": currentPage,
+        "task": taskId,
+        "unit": unitId,
+      },
+    );
+
+    final result = Handler.parseResponse(response) as List;
+
+    return result;
+  }
 }
