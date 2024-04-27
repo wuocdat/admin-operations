@@ -62,8 +62,7 @@ class ImageDialog extends StatelessWidget {
       child: Stack(children: [
         Container(
           width: screenSize.width * 0.8,
-          padding:
-              const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 40),
+          padding: const EdgeInsets.only(left: 10, bottom: 10, top: 40),
           child: InternetImgDisplayer(url),
         ),
         Row(

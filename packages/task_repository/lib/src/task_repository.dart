@@ -78,7 +78,7 @@ class TaskRepository {
   }
 
   Future<void> reportTaskProgress(String taskProgressId, String content,
-      int times, List<String> filePaths) async {
+      int? times, List<String> filePaths) async {
     await _taskApiClient.updateTaskProgress(
         taskProgressId, content, times, filePaths);
   }

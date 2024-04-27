@@ -11,6 +11,8 @@ extension FetchDataStatusX on FetchDataStatus {
 enum TaskTypeE { report, investigate, monitor, other }
 
 extension TaskTypeEX on TaskTypeE {
+  bool get isReport => this == TaskTypeE.report;
+
   String get name {
     switch (this) {
       case TaskTypeE.report:

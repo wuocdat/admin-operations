@@ -155,11 +155,14 @@ class TaskApiClient {
   }
 
   Future<void> updateTaskProgress(String taskProgressId, String content,
-      int times, List<String> paths) async {
+      int? times, List<String> paths) async {
     final formData = FormData.fromMap({
       'content': content,
-      'total': times,
     });
+
+    if (times != null) {
+      formData.fields.add(MapEntry('total', '$times'));
+    }
 
     if (paths.isNotEmpty) {
       formData.files.addAll(await Future.wait(paths.map((path) async {

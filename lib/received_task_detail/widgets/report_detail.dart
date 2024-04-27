@@ -56,10 +56,11 @@ class ReportDetail extends StatelessWidget {
           'Lúc: ${_progress.createdAt}',
           style: const TextStyle(fontSize: 14),
         ),
-        Text(
-          'Số lượt: ${_progress.total}',
-          style: const TextStyle(fontSize: 14),
-        ),
+        if (_progress.total != null)
+          Text(
+            'Số lượt: ${_progress.total}',
+            style: const TextStyle(fontSize: 14),
+          ),
         if (_attachments.isNotEmpty)
           Attachment(
             filePaths: _attachments,

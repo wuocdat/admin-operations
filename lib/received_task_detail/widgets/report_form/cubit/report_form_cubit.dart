@@ -9,17 +9,21 @@ import 'package:tctt_mobile/shared/models/content.dart';
 part 'report_form_state.dart';
 
 class ReportFormCubit extends Cubit<ReportFormState> {
-  ReportFormCubit({required TaskRepository taskRepository})
+  ReportFormCubit(
+      {required TaskRepository taskRepository, required bool hideReportTimes})
       : _taskRepository = taskRepository,
+        _hideReportTimes = hideReportTimes,
         super(const ReportFormState());
 
   final TaskRepository _taskRepository;
+  final bool _hideReportTimes;
 
   void contentChanged(String stringValue) {
     final content = Content.dirty(stringValue);
     emit(state.copyWith(
       content: content,
-      isValid: Formz.validate([content, state.times]),
+      isValid: Formz.validate([content]) &&
+          (_hideReportTimes || Formz.validate([state.times])),
     ));
   }
 
@@ -44,7 +48,7 @@ class ReportFormCubit extends Cubit<ReportFormState> {
       await _taskRepository.reportTaskProgress(
           taskProgressId,
           state.content.value,
-          int.parse(state.times.value),
+          !_hideReportTimes ? int.parse(state.times.value) : null,
           state.files.map((e) => e.path!).toList());
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     } catch (_) {

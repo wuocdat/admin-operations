@@ -172,8 +172,10 @@ extension on int {
         return "Nhiệm vụ";
       case 2:
         return "Đối tượng";
+      case 3:
+        return "Hòm thư";
     }
-    return "Hòm thư";
+    return "Nhắn tin";
   }
 
   bool get isHome => this == 0;
