@@ -4,14 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/sent_task_detail/cubit/sent_task_detail_cubit.dart';
 import 'package:tctt_mobile/shared/enums.dart';
-import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
 import 'package:tctt_mobile/widgets/content_container.dart';
 import 'package:tctt_mobile/widgets/empty_list_message.dart';
 import 'package:tctt_mobile/widgets/label_text.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/rich_list_view.dart';
-import 'package:tctt_mobile/widgets/tags.dart';
 
 class StatisticTree extends StatelessWidget {
   const StatisticTree({
@@ -43,18 +41,19 @@ class StatisticTree extends StatelessWidget {
                                 title: Text(titles.first),
                                 subtitle: Text(titles.last),
                                 onTap: () => {
-                                      context
-                                          .read<SentTaskDetailCubit>()
-                                          .changeUnit(node.data?.id ?? ""),
-                                      showDialog<String>(
-                                        context: context,
-                                        builder: (_) =>
-                                            MemberProgressOfSelectedUnitList(
-                                          context.read<SentTaskDetailCubit>(),
-                                          unitId: node.data?.id ?? "",
-                                        ),
-                                      ),
-                                    })
+                                  context
+                                      .read<SentTaskDetailCubit>()
+                                      .changeUnit(node.data?.id ?? ""),
+                                  showDialog<String>(
+                                    context: context,
+                                    builder: (_) =>
+                                        MemberProgressOfSelectedUnitList(
+                                      context.read<SentTaskDetailCubit>(),
+                                      unitId: node.data?.id ?? "",
+                                    ),
+                                  ),
+                                },
+                              )
                             : const SizedBox();
                       },
                     ),
@@ -117,12 +116,7 @@ class MemberProgressOfSelectedUnitList extends StatelessWidget {
                         title: state.progresses[index].content,
                         content: state.currentTask.content,
                         time: state.progresses[index].createdAt,
-                        actions: [
-                          SimpleTag(
-                            text: state.currentTask.type.name,
-                            color: state.currentTask.type.toTaskTypeE.color,
-                          ),
-                        ],
+                        actions: const [],
                       ),
                     ),
                     onReachedEnd: () {
