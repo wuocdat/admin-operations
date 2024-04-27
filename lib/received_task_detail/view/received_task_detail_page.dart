@@ -67,6 +67,7 @@ class ReceivedTaskDetailPage extends StatelessWidget {
                   }
                 },
                 builder: (context, state) {
+                  final taskType = state.currentTask.type.toTaskTypeE;
                   return Column(
                     children: [
                       ContentContainer(
@@ -77,7 +78,7 @@ class ReceivedTaskDetailPage extends StatelessWidget {
                         actions: [
                           SimpleTag(
                             text: state.currentTask.type.name,
-                            color: state.currentTask.type.toTaskTypeE.color,
+                            color: taskType.color,
                           ),
                           if (state.currentTask.important)
                             Padding(
@@ -116,6 +117,7 @@ class ReceivedTaskDetailPage extends StatelessWidget {
                       if (state.reportStatus.isFormMode)
                         ReportForm(
                           taskProgressId: state.currentTask.progress?.id ?? '',
+                          hideReportTimes: !taskType.isReport,
                           onClosed:
                               ((state.currentTask.progress?.repeat ?? 0) > 0)
                                   ? () {

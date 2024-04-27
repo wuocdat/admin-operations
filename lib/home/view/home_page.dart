@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/conversation_center/view/conversation_center_page.dart';
 import 'package:tctt_mobile/dashboard/view/dashboard_page.dart';
 import 'package:tctt_mobile/home/cubit/home_cubit.dart';
 import 'package:tctt_mobile/home/widgets/notifications_bell.dart';
@@ -22,7 +23,7 @@ class HomePage extends StatelessWidget {
     TaskPage(),
     TargetPage(),
     MailPage(),
-    MailPage(),
+    ConversationCenter(),
   ];
 
   @override
@@ -171,8 +172,10 @@ extension on int {
         return "Nhiệm vụ";
       case 2:
         return "Đối tượng";
+      case 3:
+        return "Hòm thư";
     }
-    return "Hòm thư";
+    return "Nhắn tin";
   }
 
   bool get isHome => this == 0;

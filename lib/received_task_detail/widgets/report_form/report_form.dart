@@ -11,16 +11,24 @@ import './cubit/report_form_cubit.dart';
 import './models/report_times.dart';
 
 class ReportForm extends StatelessWidget {
-  const ReportForm({super.key, this.onClosed, required this.taskProgressId});
+  const ReportForm({
+    super.key,
+    this.onClosed,
+    required this.taskProgressId,
+    this.hideReportTimes = false,
+  });
 
   final String taskProgressId;
+  final bool hideReportTimes;
   final void Function()? onClosed;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ReportFormCubit(
-          taskRepository: RepositoryProvider.of<TaskRepository>(context)),
+        taskRepository: RepositoryProvider.of<TaskRepository>(context),
+        hideReportTimes: hideReportTimes,
+      ),
       child: BlocListener<ReportFormCubit, ReportFormState>(
         listener: (context, state) {
           if (state.status.isSuccess) {
@@ -59,18 +67,20 @@ class ReportForm extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 12),
-            BlocBuilder<ReportFormCubit, ReportFormState>(
-              builder: (context, state) {
-                return BorderInput(
-                  labelText: "Số lượt",
-                  format: InputFormat.number,
-                  onChanged: (value) =>
-                      context.read<ReportFormCubit>().timesChanged(value),
-                  errorText: state.times.displayError?.errorMessage,
-                );
-              },
-            ),
+            if (!hideReportTimes) ...[
+              const SizedBox(height: 12),
+              BlocBuilder<ReportFormCubit, ReportFormState>(
+                builder: (context, state) {
+                  return BorderInput(
+                    labelText: "Số lượt",
+                    format: InputFormat.number,
+                    onChanged: (value) =>
+                        context.read<ReportFormCubit>().timesChanged(value),
+                    errorText: state.times.displayError?.errorMessage,
+                  );
+                },
+              ),
+            ],
             const SizedBox(height: 12),
             BlocBuilder<ReportFormCubit, ReportFormState>(
               buildWhen: (previous, current) => previous.files != current.files,
