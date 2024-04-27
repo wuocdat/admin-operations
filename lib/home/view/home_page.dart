@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/conversation_center/view/conversation_center_page.dart';
 import 'package:tctt_mobile/dashboard/view/dashboard_page.dart';
 import 'package:tctt_mobile/home/cubit/home_cubit.dart';
 import 'package:tctt_mobile/home/widgets/notifications_bell.dart';
@@ -22,7 +23,7 @@ class HomePage extends StatelessWidget {
     TaskPage(),
     TargetPage(),
     MailPage(),
-    MailPage(),
+    ConversationCenter(),
   ];
 
   @override

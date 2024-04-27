@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class MediumLabelText extends StatelessWidget {
   final String text;
+  final Color? color;
 
-  const MediumLabelText(this.text, {super.key});
+  const MediumLabelText(this.text, {super.key, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +13,7 @@ class MediumLabelText extends StatelessWidget {
       style: Theme.of(context).textTheme.titleMedium?.copyWith(
             letterSpacing: 0,
             fontWeight: FontWeight.bold,
+            color: color,
           ),
     );
   }
