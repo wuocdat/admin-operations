@@ -63,20 +63,20 @@ class MessageItem extends StatelessWidget {
                               style: textTheme.bodySmall,
                             ),
                           ),
-                          tag ??
-                              const Icon(
-                                Icons.keyboard_arrow_right_rounded,
-                                size: 24,
-                              ),
                           if (isImportant == true)
                             Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
+                              padding: const EdgeInsets.only(right: 8.0),
                               child: Icon(
                                 Icons.star_rate_rounded,
                                 color: Theme.of(context).primaryColor,
                                 size: 24,
                               ),
-                            )
+                            ),
+                          tag ??
+                              const Icon(
+                                Icons.keyboard_arrow_right_rounded,
+                                size: 24,
+                              ),
                         ],
                       ),
                       Padding(

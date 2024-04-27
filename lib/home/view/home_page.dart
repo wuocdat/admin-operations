@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/conversation_center/view/conversation_center_page.dart';
 import 'package:tctt_mobile/dashboard/view/dashboard_page.dart';
@@ -55,14 +56,16 @@ class HomePage extends StatelessWidget {
     ];
     final theme = Theme.of(context);
     return BlocProvider(
-      create: (context) => HomeCubit(),
-      child: BlocBuilder<HomeCubit, int>(
-        builder: (context, selectedIndex) {
+      create: (context) => HomeCubit(
+        taskRepository: RepositoryProvider.of<TaskRepository>(context),
+      )..checkUnreadTask(),
+      child: BlocBuilder<HomeCubit, HomeState>(
+        builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
               title: Text(
-                selectedIndex.title,
+                state.index.title,
                 style: theme.textTheme.headlineMedium,
               ),
               actions: [
@@ -72,7 +75,7 @@ class HomePage extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                  child: selectedIndex.isHome
+                  child: state.index.isHome
                       ? MenuAnchor(
                           builder: (context, controller, child) => IconButton(
                                 onPressed: () {
@@ -112,24 +115,30 @@ class HomePage extends StatelessWidget {
                 context.read<HomeCubit>().changeIndex(index);
               },
               indicatorColor: theme.primaryColor,
-              selectedIndex: selectedIndex,
-              destinations: const <Widget>[
-                NavigationDestination(
+              selectedIndex: state.index,
+              destinations: <Widget>[
+                const NavigationDestination(
                   selectedIcon: Icon(Icons.dashboard),
                   icon: Icon(Icons.dashboard_outlined),
                   label: 'Trang chủ',
                 ),
                 NavigationDestination(
-                  selectedIcon: Badge(child: Icon(Icons.task)),
-                  icon: Badge(child: Icon(Icons.task_outlined)),
+                  selectedIcon: Badge(
+                    isLabelVisible: state.hasUnreadTask,
+                    child: const Icon(Icons.task),
+                  ),
+                  icon: Badge(
+                    isLabelVisible: state.hasUnreadTask,
+                    child: const Icon(Icons.task_outlined),
+                  ),
                   label: 'Nhiệm vụ',
                 ),
-                NavigationDestination(
+                const NavigationDestination(
                   selectedIcon: Icon(Icons.supervised_user_circle),
                   icon: Icon(Icons.supervised_user_circle_outlined),
                   label: 'Đối tượng',
                 ),
-                NavigationDestination(
+                const NavigationDestination(
                   selectedIcon: Badge(
                     label: Text('2'),
                     child: Icon(Icons.mail),
@@ -140,7 +149,7 @@ class HomePage extends StatelessWidget {
                   ),
                   label: 'Hòm thư',
                 ),
-                NavigationDestination(
+                const NavigationDestination(
                   selectedIcon: Badge(
                     label: Text('5'),
                     child: Icon(Icons.messenger),
@@ -154,7 +163,7 @@ class HomePage extends StatelessWidget {
               ],
             ),
             body: SafeArea(
-              child: _widgetOptions.elementAt(selectedIndex),
+              child: _widgetOptions.elementAt(state.index),
             ),
           );
         },
