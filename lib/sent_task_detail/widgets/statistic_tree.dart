@@ -112,7 +112,7 @@ class MemberProgressOfSelectedUnitList extends StatelessWidget {
                     itemBuilder: (index) => Padding(
                       padding: const EdgeInsets.only(bottom: 12.0),
                       child: ContentContainer(
-                        sender: state.progresses[index].content,
+                        sender: state.progresses[index].createdBy['name'] ?? "",
                         title: state.progresses[index].content,
                         content: state.currentTask.content,
                         time: state.progresses[index].createdAt,
