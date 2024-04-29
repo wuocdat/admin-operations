@@ -157,6 +157,7 @@ class _TasksViewState extends State<TasksView> {
                     title: state.tasks[index].name,
                     content: state.tasks[index].content,
                     isImportant: state.tasks[index].important,
+                    highlighted: state.tasks[index].progress == null,
                     tag: SimpleTag(
                       text: state.tasks[index].type.name,
                       color: state.tasks[index].type.toTaskTypeE.color,

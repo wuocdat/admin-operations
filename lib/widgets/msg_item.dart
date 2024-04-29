@@ -11,6 +11,7 @@ class MessageItem extends StatelessWidget {
     this.isImportant,
     this.onTap,
     this.tag,
+    this.highlighted = false,
   });
 
   final String name;
@@ -20,10 +21,12 @@ class MessageItem extends StatelessWidget {
   final bool? isImportant;
   final int? badgeCount;
   final Widget? tag;
+  final bool highlighted;
   final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final commonFontWeight = highlighted ? FontWeight.bold : FontWeight.normal;
     final textTheme = Theme.of(context).textTheme;
     return InkWell(
       onTap: onTap,
@@ -60,7 +63,9 @@ class MessageItem extends StatelessWidget {
                               name.toUpperCase(),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: textTheme.bodySmall,
+                              style: textTheme.bodySmall?.copyWith(
+                                fontWeight: commonFontWeight,
+                              ),
                             ),
                           ),
                           if (isImportant == true)
@@ -88,6 +93,7 @@ class MessageItem extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w600,
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
                       ),
@@ -98,7 +104,9 @@ class MessageItem extends StatelessWidget {
                           content,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: textTheme.bodyMedium,
+                          style: textTheme.bodyMedium?.copyWith(
+                            fontWeight: commonFontWeight,
+                          ),
                         ),
                       ),
                       Padding(
@@ -112,13 +120,17 @@ class MessageItem extends StatelessWidget {
                                   0, 0, 4, 0),
                               child: Text(
                                 'Thời gian:',
-                                style: textTheme.labelMedium,
+                                style: textTheme.labelMedium?.copyWith(
+                                  fontWeight: commonFontWeight,
+                                ),
                               ),
                             ),
                             Expanded(
                               child: Text(
                                 time,
-                                style: textTheme.bodyMedium,
+                                style: textTheme.bodyMedium?.copyWith(
+                                  fontWeight: commonFontWeight,
+                                ),
                               ),
                             ),
                             Badge(
