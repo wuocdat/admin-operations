@@ -31,3 +31,10 @@ final class SearchInputChangedEvent extends ReceiverEvent {
   @override
   List<Object> get props => [searchValue];
 }
+
+final class ReceiverResetEvent extends ReceiverEvent {
+  const ReceiverResetEvent();
+
+  @override
+  List<Object> get props => [];
+}

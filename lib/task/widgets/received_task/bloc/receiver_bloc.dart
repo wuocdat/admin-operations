@@ -17,6 +17,7 @@ class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
     on<ProgressStatusChangedEvent>(_onProgressStatusChanged);
     on<SearchInputChangedEvent>(_onSearchInputChanged,
         transformer: debounce(debounceDuration));
+    on<ReceiverResetEvent>(_onReload);
   }
 
   final TaskRepository _taskRepository;
@@ -89,6 +90,27 @@ class ReceiverBloc extends Bloc<ReceiverEvent, ReceiverState> {
         status: ReceiverStatus.failure,
         tasks: List<Task>.empty(),
       ));
+    }
+  }
+
+  Future<void> _onReload(
+    ReceiverResetEvent event,
+    Emitter<ReceiverState> emit,
+  ) async {
+    emit(state.copyWith(
+        status: ReceiverStatus.loading, tasks: List<Task>.empty()));
+
+    try {
+      final tasks = await _taskRepository.fetchReceivedTasks(
+          state.progressStatus.query, state.searchValue);
+      emit(state.copyWith(
+        status: ReceiverStatus.success,
+        tasks: tasks,
+        hasReachedMax: tasks.length < taskLimit,
+      ));
+    } catch (_) {
+      emit(state.copyWith(
+          status: ReceiverStatus.failure, tasks: List<Task>.empty()));
     }
   }
 }

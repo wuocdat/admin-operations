@@ -161,10 +161,14 @@ class _TasksViewState extends State<TasksView> {
                       text: state.tasks[index].type.name,
                       color: state.tasks[index].type.toTaskTypeE.color,
                     ),
-                    onTap: () {
-                      Navigator.of(context).push(
+                    onTap: () async {
+                      await Navigator.of(context).push(
                         ReceivedTaskDetailPage.route(state.tasks[index].id),
                       );
+                      if (!context.mounted) return;
+                      context
+                          .read<ReceiverBloc>()
+                          .add(const ReceiverResetEvent());
                     },
                   );
           },
