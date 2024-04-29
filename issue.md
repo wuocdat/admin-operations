@@ -2,6 +2,7 @@
 - update tree view.
 - send fcmToken to server whenever the token is updated.
 - use Stream for received task. (read todos bloc app).
+- change toggle options to filter icon in task page.
 
 * Api:
 

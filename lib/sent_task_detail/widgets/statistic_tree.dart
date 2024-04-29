@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/sent_task_detail/cubit/sent_task_detail_cubit.dart';
 import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
 import 'package:tctt_mobile/widgets/content_container.dart';
 import 'package:tctt_mobile/widgets/empty_list_message.dart';
@@ -89,14 +90,14 @@ class MemberProgressOfSelectedUnitList extends StatelessWidget {
     return BlocProvider.value(
       value: sentTaskDetailCubit,
       child: AlertDialog(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         title: const Text('Danh sách báo cáo'),
         content: Container(
           width: screenSize.width * 0.8,
-          padding:
-              const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 40),
+          padding: const EdgeInsets.only(bottom: 10, top: 40),
           child: BlocBuilder<SentTaskDetailCubit, SentTaskDetailState>(
             builder: (context, state) {
               switch (state.status) {
@@ -117,16 +118,34 @@ class MemberProgressOfSelectedUnitList extends StatelessWidget {
                   return RichListView(
                     hasReachedMax: state.hasReachedMax,
                     itemCount: state.progresses.length,
-                    itemBuilder: (index) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: ContentContainer(
-                        sender: state.progresses[index].createdBy['name'] ?? "",
-                        title: state.progresses[index].content,
-                        content: state.currentTask.content,
-                        time: state.progresses[index].createdAt,
-                        actions: const [],
-                      ),
-                    ),
+                    itemBuilder: (index) {
+                      final currentProgress = state.progresses[index];
+                      return Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom:
+                                BorderSide(color: Colors.grey.withOpacity(0.3)),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            ContentContainer(
+                              sender: currentProgress.createdBy['name'] ?? "",
+                              title: currentProgress.content,
+                              content: state.currentTask.content,
+                              time: currentProgress.createdAt,
+                              actions: const [],
+                            ),
+                            if (currentProgress.files.isNotEmpty)
+                              Attachment(
+                                filePaths: currentProgress.files,
+                                withoutTitle: true,
+                              ),
+                          ],
+                        ),
+                      );
+                    },
                     onReachedEnd: () {
                       context
                           .read<SentTaskDetailCubit>()
