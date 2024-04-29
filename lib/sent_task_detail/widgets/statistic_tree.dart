@@ -19,45 +19,53 @@ class StatisticTree extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SentTaskDetailCubit, SentTaskDetailState>(
-      buildWhen: (previous, current) => previous.statistic != current.statistic,
+      buildWhen: (previous, current) =>
+          previous.statistic != current.statistic ||
+          previous.status != current.status,
       builder: (context, state) {
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 16),
             const MediumLabelText("Thống kê"),
             const SizedBox(height: 8),
-            BorderContainer(
-              height: 300,
-              child: state.status == FetchDataStatus.loading
-                  ? const Loader()
-                  : TreeView.simpleTyped<Statistic, TreeNode<Statistic>>(
-                      tree: state.statistic?.toTreeData ?? TreeNode.root(),
-                      builder: (_, node) {
-                        final titles = node.data?.name.split("-");
+            if (state.statistic == null && !state.status.isLoading)
+              const Text(
+                'Không có dữ liệu thống kê',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              )
+            else
+              BorderContainer(
+                height: 300,
+                child: state.status.isLoading
+                    ? const Loader()
+                    : TreeView.simpleTyped<Statistic, TreeNode<Statistic>>(
+                        tree: state.statistic?.toTreeData ?? TreeNode.root(),
+                        builder: (_, node) {
+                          final titles = node.data?.name.split("-");
 
-                        return titles != null
-                            ? ListTile(
-                                title: Text(titles.first),
-                                subtitle: Text(titles.last),
-                                onTap: () => {
-                                  context
-                                      .read<SentTaskDetailCubit>()
-                                      .changeUnit(node.data?.id ?? ""),
-                                  showDialog<String>(
-                                    context: context,
-                                    builder: (_) =>
-                                        MemberProgressOfSelectedUnitList(
-                                      context.read<SentTaskDetailCubit>(),
-                                      unitId: node.data?.id ?? "",
+                          return titles != null
+                              ? ListTile(
+                                  title: Text(titles.first),
+                                  subtitle: Text(titles.last),
+                                  onTap: () => {
+                                    context
+                                        .read<SentTaskDetailCubit>()
+                                        .changeUnit(node.data?.id ?? ""),
+                                    showDialog<String>(
+                                      context: context,
+                                      builder: (_) =>
+                                          MemberProgressOfSelectedUnitList(
+                                        context.read<SentTaskDetailCubit>(),
+                                        unitId: node.data?.id ?? "",
+                                      ),
                                     ),
-                                  ),
-                                },
-                              )
-                            : const SizedBox();
-                      },
-                    ),
-            ),
+                                  },
+                                )
+                              : const SizedBox();
+                        },
+                      ),
+              ),
           ],
         );
       },
@@ -102,7 +110,7 @@ class MemberProgressOfSelectedUnitList extends StatelessWidget {
                     return const SizedBox(
                       height: 300,
                       child: EmptyListMessage(
-                        message: "Không có báo cáo nào",
+                        message: "Chưa có báo cáo nào",
                       ),
                     );
                   }
