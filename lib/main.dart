@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -7,14 +10,19 @@ import 'package:tctt_mobile/bloc_observer.dart';
 import 'package:tctt_mobile/services/firebase_service.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  Bloc.observer = const AppBlocObserver();
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: kIsWeb
-        ? HydratedStorage.webStorageDirectory
-        : await getTemporaryDirectory(),
-  );
-  await FirebaseService.init();
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      Bloc.observer = const AppBlocObserver();
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: kIsWeb
+            ? HydratedStorage.webStorageDirectory
+            : await getTemporaryDirectory(),
+      );
+      await FirebaseService.init();
 
-  runApp(const App());
+      runApp(const App());
+    },
+    (error, stack) => log(error.toString(), stackTrace: stack),
+  );
 }
