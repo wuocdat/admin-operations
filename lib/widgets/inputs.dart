@@ -145,7 +145,8 @@ class BorderInput extends StatelessWidget {
   const BorderInput({
     super.key,
     bool? autoFocus,
-    required String labelText,
+    String? labelText,
+    String? hintText,
     int? maxLines,
     int? minLines,
     int? maxLength,
@@ -154,6 +155,7 @@ class BorderInput extends StatelessWidget {
     ValueChanged<String>? onChanged,
   })  : _autoFocus = autoFocus,
         _labelText = labelText,
+        _hintText = hintText,
         _maxLines = maxLines,
         _minLines = minLines,
         _maxLength = maxLength,
@@ -162,7 +164,8 @@ class BorderInput extends StatelessWidget {
         _onChanged = onChanged;
 
   final bool? _autoFocus;
-  final String _labelText;
+  final String? _labelText;
+  final String? _hintText;
   final String? _errorText;
   final int? _maxLines;
   final int? _minLines;
@@ -180,12 +183,12 @@ class BorderInput extends StatelessWidget {
       inputFormatters: _format.formatter,
       onChanged: _onChanged,
       decoration: InputDecoration(
+        hintText: _hintText,
         labelText: _labelText,
         errorText: _errorText,
         alignLabelWithHint: true,
         hintStyle: theme.textTheme.labelLarge?.copyWith(
-          fontFamily: 'Plus Jakarta Sans',
-          letterSpacing: 0,
+          color: Colors.grey[400],
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
