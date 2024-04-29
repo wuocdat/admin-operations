@@ -3,22 +3,22 @@ part of 'home_cubit.dart';
 class HomeState extends Equatable {
   const HomeState({
     this.index = 0,
-    this.hasUnreadTask = false,
+    this.unReadTaskNum = 0,
   });
 
   final int index;
-  final bool hasUnreadTask;
+  final int unReadTaskNum;
 
   HomeState copyWith({
     int? index,
-    bool? hasUnreadTask,
+    int? unReadTaskNum,
   }) {
     return HomeState(
       index: index ?? this.index,
-      hasUnreadTask: hasUnreadTask ?? this.hasUnreadTask,
+      unReadTaskNum: unReadTaskNum ?? this.unReadTaskNum,
     );
   }
 
   @override
-  List<Object> get props => [index, hasUnreadTask];
+  List<Object> get props => [index, unReadTaskNum];
 }

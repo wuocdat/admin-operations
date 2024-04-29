@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:task_repository/task_repository.dart' hide Overall;
-import 'package:tctt_mobile/dashboard/models/task_overall.dart';
+import 'package:task_repository/task_repository.dart';
 
 part 'dashboard_event.dart';
 part 'dashboard_state.dart';
@@ -19,20 +18,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     DashboardStartupEvent event,
     Emitter<DashboardState> emit,
   ) async {
-    try {
-      final task = await _taskRepository.getOverall();
+    emit(state.copyWith(status: DashboardStatus.loading));
 
-      emit(state.copyWith(
+    await emit.forEach<Overall>(
+      _taskRepository.overall,
+      onData: (overall) => state.copyWith(
         status: DashboardStatus.success,
-        task: TaskOverall(
-          all: task.all,
-          finished: task.finished,
-          unfinished: task.unfinished,
-          unread: task.unread,
-        ),
-      ));
-    } catch (_) {
-      emit(state.copyWith(status: DashboardStatus.failure));
-    }
+        task: overall,
+      ),
+      onError: (_, __) => state.copyWith(
+        status: DashboardStatus.failure,
+      ),
+    );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:api_client/api_client.dart';
 import 'package:task_repository/src/models/models.dart';
 
@@ -9,11 +11,14 @@ class TaskRepository {
       : _taskApiClient = taskApiClient ?? TaskApiClient();
 
   final TaskApiClient _taskApiClient;
+  final _controller = StreamController<Overall>();
 
-  Future<Overall> getOverall() async {
+  Stream<Overall> get overall async* {
     final overall = await _taskApiClient.getOverall();
 
-    return Overall.fromJson(overall);
+    yield Overall.fromJson(overall);
+
+    yield* _controller.stream;
   }
 
   Future<List<Task>> fetchReceivedTasks(
@@ -73,6 +78,8 @@ class TaskRepository {
 
   Future<Task> fetchReceivedTaskById(String id) async {
     final taskJson = await _taskApiClient.fetchReceivedTaskById(id);
+    final overall = await _taskApiClient.getOverall();
+    _controller.add(Overall.fromJson(overall));
 
     return Task.fromJson(taskJson);
   }

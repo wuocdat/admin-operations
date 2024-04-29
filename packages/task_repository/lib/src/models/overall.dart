@@ -17,6 +17,13 @@ class Overall extends Equatable {
   final int unfinished;
   final int unread;
 
+  static const empty = Overall(
+    all: 0,
+    finished: 0,
+    unfinished: 0,
+    unread: 0,
+  );
+
   factory Overall.fromJson(Map<String, dynamic> json) =>
       _$OverallFromJson(json);
 

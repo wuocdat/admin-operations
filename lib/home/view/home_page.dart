@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeCubit(
         taskRepository: RepositoryProvider.of<TaskRepository>(context),
-      )..checkUnreadTask(),
+      ),
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           return Scaffold(
@@ -124,11 +124,13 @@ class HomePage extends StatelessWidget {
                 ),
                 NavigationDestination(
                   selectedIcon: Badge(
-                    isLabelVisible: state.hasUnreadTask,
+                    label: Text('${state.unReadTaskNum}'),
+                    isLabelVisible: state.unReadTaskNum > 0,
                     child: const Icon(Icons.task),
                   ),
                   icon: Badge(
-                    isLabelVisible: state.hasUnreadTask,
+                    label: Text('${state.unReadTaskNum}'),
+                    isLabelVisible: state.unReadTaskNum > 0,
                     child: const Icon(Icons.task_outlined),
                   ),
                   label: 'Nhiệm vụ',

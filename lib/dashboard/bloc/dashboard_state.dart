@@ -4,16 +4,16 @@ enum DashboardStatus { initial, loading, success, failure }
 
 class DashboardState extends Equatable {
   const DashboardState({
-    this.task = TaskOverall.empty,
+    this.task = Overall.empty,
     this.status = DashboardStatus.initial,
   });
 
   final DashboardStatus status;
-  final TaskOverall task;
+  final Overall task;
 
   DashboardState copyWith({
     DashboardStatus? status,
-    TaskOverall? task,
+    Overall? task,
   }) {
     return DashboardState(
       status: status ?? this.status,
