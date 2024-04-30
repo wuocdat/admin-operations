@@ -21,9 +21,7 @@ class TaskApiClient {
   final Dio _dio;
 
   Future<Map<String, dynamic>> getOverall() async {
-    final response = await _dio.get(TaskUrl.overall, queryParameters: {
-      'task': true,
-    });
+    final response = await _dio.get(TaskUrl.overall);
 
     final result = Handler.parseResponse(response) as Map<String, dynamic>;
 

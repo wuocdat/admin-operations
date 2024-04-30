@@ -40,7 +40,8 @@ class MainParameter extends StatelessWidget {
                   );
                 }),
                 ParameterItem(
-                  parameterValue: 5,
+                  parameterValue: context
+                      .select((DashboardBloc bloc) => bloc.state.mail.all),
                   title: "Hòm thư",
                   themeColor: Colors.amber[700],
                 ),

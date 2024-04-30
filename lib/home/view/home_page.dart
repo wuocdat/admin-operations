@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mail_repository/mail_repository.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/conversation_center/view/conversation_center_page.dart';
@@ -58,6 +59,7 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => HomeCubit(
         taskRepository: RepositoryProvider.of<TaskRepository>(context),
+        mailRepository: RepositoryProvider.of<MailRepository>(context),
       ),
       child: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
@@ -140,14 +142,16 @@ class HomePage extends StatelessWidget {
                   icon: Icon(Icons.supervised_user_circle_outlined),
                   label: 'Đối tượng',
                 ),
-                const NavigationDestination(
+                NavigationDestination(
                   selectedIcon: Badge(
-                    label: Text('2'),
-                    child: Icon(Icons.mail),
+                    isLabelVisible: state.unReadMailNum > 0,
+                    label: Text('${state.unReadMailNum}'),
+                    child: const Icon(Icons.mail),
                   ),
                   icon: Badge(
-                    label: Text('2'),
-                    child: Icon(Icons.mail_outline),
+                    isLabelVisible: state.unReadMailNum > 0,
+                    label: Text('${state.unReadMailNum}'),
+                    child: const Icon(Icons.mail_outline),
                   ),
                   label: 'Hòm thư',
                 ),

@@ -29,7 +29,7 @@ class Conversation extends StatelessWidget {
         title: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
           title: const Text(
-            'Nguyễn Văn A',
+            'Lăng Kỳ Thiên',
             style: TextStyle(
               fontSize: 18,
               fontFamily: 'Urbanist',

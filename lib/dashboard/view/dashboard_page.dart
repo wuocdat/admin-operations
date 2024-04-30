@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mail_repository/mail_repository.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/dashboard/bloc/dashboard_bloc.dart';
 import 'package:tctt_mobile/dashboard/widget/mail_overview.dart';
@@ -13,8 +14,11 @@ class DashBoardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => DashboardBloc(
-          taskRepository: RepositoryProvider.of<TaskRepository>(context))
-        ..add(const DashboardStartupEvent()),
+        taskRepository: RepositoryProvider.of<TaskRepository>(context),
+        mailRepository: RepositoryProvider.of<MailRepository>(context),
+      )
+        ..add(const TaskOverallSubscriptionRequested())
+        ..add(const MailOverallSubscriptionRequested()),
       child: const Scaffold(
           body: SingleChildScrollView(
         child: Column(

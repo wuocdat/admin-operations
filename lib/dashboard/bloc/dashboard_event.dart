@@ -7,6 +7,10 @@ sealed class DashboardEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class DashboardStartupEvent extends DashboardEvent {
-  const DashboardStartupEvent();
+final class TaskOverallSubscriptionRequested extends DashboardEvent {
+  const TaskOverallSubscriptionRequested();
+}
+
+final class MailOverallSubscriptionRequested extends DashboardEvent {
+  const MailOverallSubscriptionRequested();
 }
