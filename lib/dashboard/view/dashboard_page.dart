@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mail_repository/mail_repository.dart';
+import 'package:target_repository/target_repository.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/dashboard/bloc/dashboard_bloc.dart';
 import 'package:tctt_mobile/dashboard/widget/mail_overview.dart';
@@ -17,6 +18,7 @@ class DashBoardPage extends StatelessWidget {
       create: (context) => DashboardBloc(
         taskRepository: RepositoryProvider.of<TaskRepository>(context),
         mailRepository: RepositoryProvider.of<MailRepository>(context),
+        targetRepository: RepositoryProvider.of<TargetRepository>(context),
       )
         ..add(const TaskOverallSubscriptionRequested())
         ..add(const MailOverallSubscriptionRequested()),
@@ -29,7 +31,7 @@ class DashBoardPage extends StatelessWidget {
             TaskOverview(),
             MailOverview(),
             TargetOverview(),
-            SizedBox(height: 32),
+            SizedBox(height: 16),
           ],
         ),
       )),

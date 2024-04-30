@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:mail_repository/mail_repository.dart';
+import 'package:target_repository/target_repository.dart';
 import 'package:task_repository/task_repository.dart';
 
 part 'dashboard_event.dart';
@@ -10,8 +11,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   DashboardBloc({
     required TaskRepository taskRepository,
     required MailRepository mailRepository,
+    required TargetRepository targetRepository,
   })  : _taskRepository = taskRepository,
         _mailRepository = mailRepository,
+        _targetRepository = targetRepository,
         super(const DashboardState()) {
     on<TaskOverallSubscriptionRequested>(_onTaskOverallSubscriptionRequested);
     on<MailOverallSubscriptionRequested>(_onMailOverallSubscriptionRequested);
@@ -19,6 +22,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   final TaskRepository _taskRepository;
   final MailRepository _mailRepository;
+  final TargetRepository _targetRepository;
 
   Future<void> _onTaskOverallSubscriptionRequested(
     TaskOverallSubscriptionRequested event,
@@ -41,10 +45,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   ) async {
     try {
       final newestMail = await _mailRepository.getNewestMail();
+      final targetOverall = await _targetRepository.getOverall();
 
-      if (newestMail != null) {
-        emit(state.copyWith(newestMail: newestMail));
-      }
+      emit(state.copyWith(newestMail: newestMail, target: targetOverall));
     } catch (_) {
       emit(state.copyWith(status: DashboardStatus.failure));
     }

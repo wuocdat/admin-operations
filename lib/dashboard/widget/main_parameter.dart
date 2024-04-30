@@ -45,8 +45,9 @@ class MainParameter extends StatelessWidget {
                   title: "Hòm thư",
                   themeColor: Colors.amber[700],
                 ),
-                const ParameterItem(
-                  parameterValue: 112,
+                ParameterItem(
+                  parameterValue: context
+                      .select((DashboardBloc bloc) => bloc.state.target.all),
                   title: "Đối tượng",
                   themeColor: Colors.redAccent,
                 ),

@@ -2,6 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mail_repository/mail_repository.dart';
+import 'package:target_repository/target_repository.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/home/home.dart';
@@ -44,6 +45,7 @@ class _AppState extends State<App> {
         RepositoryProvider.value(value: _authenticationRepository),
         RepositoryProvider(create: (context) => TaskRepository()),
         RepositoryProvider(create: (context) => MailRepository()),
+        RepositoryProvider(create: (context) => TargetRepository()),
         RepositoryProvider.value(value: _unitsRepository),
       ],
       child: BlocProvider(

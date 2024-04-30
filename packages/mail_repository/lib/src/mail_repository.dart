@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:api_client/api_client.dart';
-import 'package:mail_repository/src/models/mail_overall.dart';
 import 'package:mail_repository/src/models/models.dart';
 
 class MailRepository {
