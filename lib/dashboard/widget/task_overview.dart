@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/dashboard/bloc/dashboard_bloc.dart';
 import 'package:tctt_mobile/dashboard/widget/info_item.dart';
-import 'package:tctt_mobile/widgets/shadow_box.dart';
+import 'package:tctt_mobile/dashboard/widget/overview.dart';
 
 class TaskOverview extends StatelessWidget {
   const TaskOverview({
@@ -11,40 +11,14 @@ class TaskOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return BlocBuilder<DashboardBloc, DashboardState>(
       builder: (context, state) {
-        return ShadowBox(
-            child: Column(
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Nhiệm Vụ',
-                      style: textTheme.headlineSmall,
-                    ),
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                      child: Text(
-                        'Nhiệm vụ nhận trong ngày',
-                        style: textTheme.labelMedium,
-                      ),
-                    ),
-                  ],
-                ),
-                const Icon(
-                  Icons.keyboard_arrow_right_rounded,
-                  size: 24,
-                ),
-              ],
-            ),
-            Row(
+        return Overview(
+          title: 'Nhiệm Vụ',
+          subtitle: 'Nhiệm vụ nhận trong ngày',
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),
+            child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -62,8 +36,8 @@ class TaskOverview extends StatelessWidget {
                 ),
               ],
             ),
-          ],
-        ));
+          ),
+        );
       },
     );
   }

@@ -5,6 +5,7 @@ import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/dashboard/bloc/dashboard_bloc.dart';
 import 'package:tctt_mobile/dashboard/widget/mail_overview.dart';
 import 'package:tctt_mobile/dashboard/widget/main_parameter.dart';
+import 'package:tctt_mobile/dashboard/widget/target_overview.dart';
 import 'package:tctt_mobile/dashboard/widget/task_overview.dart';
 
 class DashBoardPage extends StatelessWidget {
@@ -27,6 +28,8 @@ class DashBoardPage extends StatelessWidget {
             MainParameter(),
             TaskOverview(),
             MailOverview(),
+            TargetOverview(),
+            SizedBox(height: 32),
           ],
         ),
       )),
