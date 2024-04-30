@@ -53,7 +53,7 @@ class MainParameter extends StatelessWidget {
                 ),
                 const ParameterItem(
                   parameterValue: 16,
-                  title: "Nhiệm vụ",
+                  title: "Trang truyền thông",
                   themeColor: Colors.blueAccent,
                 ),
               ],
