@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/dashboard/bloc/dashboard_bloc.dart';
+import 'package:tctt_mobile/dashboard/widget/info_item.dart';
 import 'package:tctt_mobile/widgets/shadow_box.dart';
 
 class TaskOverview extends StatelessWidget {
@@ -47,77 +48,20 @@ class TaskOverview extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${state.task.finished}/${state.task.all}',
-                          style: textTheme.displaySmall,
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                          child: Text(
-                            'Đã báo cáo',
-                            style: textTheme.labelMedium,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                InfoItem(
+                  value: '${state.task.finished}/${state.task.all}',
+                  title: 'Đã báo cáo',
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${state.task.unfinished}',
-                          style: textTheme.displaySmall,
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                          child: Text(
-                            'Đang thực hiện',
-                            style: textTheme.labelMedium,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                InfoItem(
+                  value: '${state.task.unfinished}',
+                  title: 'Đang thực hiện',
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${state.task.unread}',
-                          style: textTheme.displaySmall,
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                          child: Text(
-                            'Chưa đọc',
-                            style: textTheme.labelMedium,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                InfoItem(
+                  value: '${state.task.unread}',
+                  title: 'Chưa đọc',
                 ),
               ],
-            )
+            ),
           ],
         ));
       },

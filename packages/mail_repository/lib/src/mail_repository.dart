@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:api_client/api_client.dart';
 import 'package:mail_repository/src/models/mail_overall.dart';
+import 'package:mail_repository/src/models/models.dart';
 
 class MailRepository {
   MailRepository({MailApiClient? mailApiClient})
@@ -16,5 +17,22 @@ class MailRepository {
     yield MailOverall.fromJson(overall);
 
     yield* _controller.stream;
+  }
+
+  Future<Mail?> getNewestMail() async {
+    //mocked data
+    return const Mail(
+      content:
+          'Kình gửi XXX, thông tin liên quan đến đối tượng Nguyễn Lân Thắng. Hồ sơ đối tượng trong file đính kèm....',
+      createdAt: 'Hôm nay, 6:20pm',
+      createdBy: {},
+      files: [],
+      important: false,
+      id: 'id',
+      name: 'Report mục tiêu',
+      read: false,
+      updatedAt: 'updatedAt',
+      updatedBy: 'updatedBy',
+    );
   }
 }

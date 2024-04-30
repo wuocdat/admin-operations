@@ -39,6 +39,16 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     MailOverallSubscriptionRequested event,
     Emitter<DashboardState> emit,
   ) async {
+    try {
+      final newestMail = await _mailRepository.getNewestMail();
+
+      if (newestMail != null) {
+        emit(state.copyWith(newestMail: newestMail));
+      }
+    } catch (_) {
+      emit(state.copyWith(status: DashboardStatus.failure));
+    }
+
     await emit.forEach<MailOverall>(
       _mailRepository.overall,
       onData: (overall) => state.copyWith(
