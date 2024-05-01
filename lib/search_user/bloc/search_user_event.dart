@@ -15,3 +15,20 @@ class SearchInputChangeEvent extends SearchUserEvent {
   @override
   List<Object> get props => [value];
 }
+
+class ModeChangedEvent extends SearchUserEvent {
+  const ModeChangedEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class CheckBoxStatusChangeEvent extends SearchUserEvent {
+  const CheckBoxStatusChangeEvent(this.checked, this.user);
+
+  final bool checked;
+  final ShortProfile user;
+
+  @override
+  List<Object> get props => [checked, user];
+}

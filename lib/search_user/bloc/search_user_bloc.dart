@@ -15,6 +15,8 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
       _onSearchInputChange,
       transformer: debounce(debounceDuration),
     );
+    on<ModeChangedEvent>(_onModeToggled);
+    on<CheckBoxStatusChangeEvent>(_onCheckboxStatusChanged);
   }
 
   final UserRepository _repository;
@@ -38,6 +40,25 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
       emit(state.copyWith(status: FetchDataStatus.success, users: users));
     } catch (_) {
       emit(state.copyWith(status: FetchDataStatus.failure));
+    }
+  }
+
+  void _onModeToggled(ModeChangedEvent event, Emitter<SearchUserState> emit) {
+    emit(SearchUserState(groupMode: !state.groupMode));
+  }
+
+  void _onCheckboxStatusChanged(
+      CheckBoxStatusChangeEvent event, Emitter<SearchUserState> emit) {
+    if (!state.groupMode) return;
+
+    if (event.checked) {
+      emit(state.copyWith(
+          pickedUsers: List.of(state.pickedUsers)..add(event.user)));
+    } else {
+      emit(
+        state.copyWith(
+            pickedUsers: List.of(state.pickedUsers)..remove(event.user)),
+      );
     }
   }
 }
