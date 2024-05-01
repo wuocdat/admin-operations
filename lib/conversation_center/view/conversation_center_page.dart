@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tctt_mobile/conversation/view/conversation_page.dart';
+import 'package:tctt_mobile/search_user/view/search_user_page.dart';
 import 'package:tctt_mobile/widgets/images.dart';
 import 'package:tctt_mobile/widgets/label_text.dart';
 
@@ -13,16 +14,19 @@ class ConversationCenter extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(8.0),
-            color: theme.primaryColor.withOpacity(0.1),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.search),
-                SizedBox(width: 8),
-                Text('Tìm kiếm tên người dùng hoặc số điện thoại'),
-              ],
+          InkWell(
+            onTap: () => Navigator.of(context).push(SearchUser.route()),
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              color: theme.primaryColor.withOpacity(0.1),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.search),
+                  SizedBox(width: 8),
+                  Text('Tìm kiếm tên người dùng hoặc số điện thoại'),
+                ],
+              ),
             ),
           ),
           ConversationItem(

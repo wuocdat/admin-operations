@@ -43,10 +43,11 @@ class _AppState extends State<App> {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: _authenticationRepository),
+        RepositoryProvider.value(value: _userRepository),
+        RepositoryProvider.value(value: _unitsRepository),
         RepositoryProvider(create: (context) => TaskRepository()),
         RepositoryProvider(create: (context) => MailRepository()),
         RepositoryProvider(create: (context) => TargetRepository()),
-        RepositoryProvider.value(value: _unitsRepository),
       ],
       child: BlocProvider(
         create: (_) => AuthenticationBloc(

@@ -113,7 +113,7 @@ class SearchInput extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(12),
         ),
-        contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
+        contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 8),
       ),
     );
   }
