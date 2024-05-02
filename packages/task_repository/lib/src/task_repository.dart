@@ -18,7 +18,7 @@ class TaskRepository {
 
     yield Overall.fromJson(overall);
 
-    yield* _controller.stream;
+    yield* _controller.stream.asBroadcastStream();
   }
 
   Future<List<Task>> fetchReceivedTasks(

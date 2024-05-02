@@ -15,7 +15,7 @@ class MailRepository {
 
     yield MailOverall.fromJson(overall);
 
-    yield* _controller.stream;
+    yield* _controller.stream.asBroadcastStream();
   }
 
   Future<Mail?> getNewestMail() async {
