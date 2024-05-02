@@ -86,9 +86,11 @@ class SearchInput extends StatelessWidget {
     this.onChanged,
     this.leading,
     this.noAutoFocus = false,
+    this.hintText,
   });
 
   final Widget? leading;
+  final String? hintText;
   final bool noAutoFocus;
   final void Function(String)? onChanged;
 
@@ -98,6 +100,7 @@ class SearchInput extends StatelessWidget {
       onChanged: onChanged,
       autofocus: !noAutoFocus,
       decoration: InputDecoration(
+        hintText: hintText,
         prefixIcon: leading ?? const Icon(Icons.search),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
@@ -113,7 +116,7 @@ class SearchInput extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(12),
         ),
-        contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
+        contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 8),
       ),
     );
   }
@@ -228,6 +231,40 @@ class BorderInput extends StatelessWidget {
       maxLines: _maxLines,
       maxLength: _maxLength,
       cursorColor: theme.primaryColor,
+    );
+  }
+}
+
+class BaseInput extends StatelessWidget {
+  const BaseInput({
+    super.key,
+    this.onChanged,
+    this.leading,
+    this.hintText,
+    this.backgroundColor,
+  });
+
+  final Widget? leading;
+  final String? hintText;
+  final Color? backgroundColor;
+  final void Function(String)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: TextField(
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          hintText: hintText,
+          border: InputBorder.none,
+          prefixIcon: leading,
+          contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 8),
+        ),
+      ),
     );
   }
 }

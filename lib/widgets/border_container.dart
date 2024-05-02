@@ -32,3 +32,31 @@ class BorderContainer extends StatelessWidget {
     );
   }
 }
+
+class BottomBorderContainer extends StatelessWidget {
+  const BottomBorderContainer({
+    super.key,
+    required this.child,
+    this.borderColor = AppColors.secondaryBackground,
+    this.borderWidth = 2,
+  });
+
+  final Widget child;
+  final Color borderColor;
+  final double borderWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: borderColor,
+            width: borderWidth,
+          ),
+        ),
+      ),
+      child: child,
+    );
+  }
+}
