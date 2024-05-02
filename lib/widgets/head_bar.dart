@@ -11,17 +11,19 @@ class HeadBar<T> extends StatefulWidget {
     this.selectedOption,
     this.options,
     this.onSearchChanged,
-    required this.onCloseSearchInput,
+    this.hideSearchBar = false,
+    this.onCloseSearchInput,
   });
 
   final String label;
   final String searchValue;
   final Widget? action;
+  final bool hideSearchBar;
   final ValueChanged<T?>? onPickedOption;
   final T? selectedOption;
   final List<DropdownMenuItem<T>>? options;
   final ValueChanged<String>? onSearchChanged;
-  final void Function() onCloseSearchInput;
+  final void Function()? onCloseSearchInput;
 
   @override
   State<HeadBar<T>> createState() => _HeadBarState<T>();
@@ -31,7 +33,9 @@ class _HeadBarState<T> extends State<HeadBar<T>> {
   bool isSearchMode = false;
 
   void onToggleMode() {
-    if (isSearchMode) widget.onCloseSearchInput();
+    if (isSearchMode && widget.onCloseSearchInput != null) {
+      widget.onCloseSearchInput!();
+    }
 
     setState(() {
       isSearchMode = !isSearchMode;
@@ -97,10 +101,11 @@ class _HeadBarState<T> extends State<HeadBar<T>> {
                   ),
                   Row(
                     children: [
-                      IconButton(
-                        onPressed: onToggleMode,
-                        icon: const Icon(Icons.search),
-                      ),
+                      if (!widget.hideSearchBar)
+                        IconButton(
+                          onPressed: onToggleMode,
+                          icon: const Icon(Icons.search),
+                        ),
                       widget.action ?? Container()
                     ],
                   )
