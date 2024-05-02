@@ -12,52 +12,32 @@ class MainParameter extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Colors.white,
       ),
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 12),
+      child: Wrap(
+        spacing: 12,
+        runSpacing: 8,
         children: [
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
-            child: Text(
-              'Các thông số chính của hệ thống',
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
+          ParameterItem(
+            parameterValue:
+                context.select((DashboardBloc bloc) => bloc.state.task.all),
+            title: "Nhiệm vụ",
           ),
-          Container(
-            height: 250,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: GridView.count(
-              crossAxisCount: 2,
-              childAspectRatio: 1.7,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 8,
-              children: [
-                Builder(builder: (context) {
-                  return ParameterItem(
-                    parameterValue: context
-                        .select((DashboardBloc bloc) => bloc.state.task.all),
-                    title: "Nhiệm vụ",
-                  );
-                }),
-                ParameterItem(
-                  parameterValue: context
-                      .select((DashboardBloc bloc) => bloc.state.mail.all),
-                  title: "Hòm thư",
-                  themeColor: Colors.amber[700],
-                ),
-                ParameterItem(
-                  parameterValue: context
-                      .select((DashboardBloc bloc) => bloc.state.target.all),
-                  title: "Đối tượng",
-                  themeColor: Colors.redAccent,
-                ),
-                const ParameterItem(
-                  parameterValue: 16,
-                  title: "Trang truyền thông",
-                  themeColor: Colors.blueAccent,
-                ),
-              ],
-            ),
+          ParameterItem(
+            parameterValue:
+                context.select((DashboardBloc bloc) => bloc.state.mail.all),
+            title: "Hòm thư",
+            themeColor: Colors.amber[700],
+          ),
+          ParameterItem(
+            parameterValue:
+                context.select((DashboardBloc bloc) => bloc.state.target.all),
+            title: "Đối tượng",
+            themeColor: Colors.redAccent,
+          ),
+          const ParameterItem(
+            parameterValue: 16,
+            title: "Trang truyền thông",
+            themeColor: Colors.blueAccent,
           ),
         ],
       ),
