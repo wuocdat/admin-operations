@@ -15,7 +15,7 @@ class ParameterItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 130,
+      width: 200,
       decoration: BoxDecoration(
         // color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(8),
