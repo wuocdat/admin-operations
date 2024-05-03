@@ -163,6 +163,10 @@ class SearchUser extends StatelessWidget {
                                   : null,
                               title: Text(currentUser.username),
                               subtitle: Text(currentUser.name),
+                              onTap: () => context.read<SearchUserBloc>().add(
+                                    OneByOneConversationCreatedEvent(
+                                        state.users[index].id),
+                                  ),
                             ),
                           );
                         },

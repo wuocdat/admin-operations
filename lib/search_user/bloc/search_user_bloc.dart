@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tctt_mobile/services/socket_service.dart';
 import 'package:tctt_mobile/shared/debounce.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:user_repository/user_repository.dart';
@@ -10,6 +11,7 @@ part 'search_user_state.dart';
 class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
   SearchUserBloc({required UserRepository userRepository})
       : _repository = userRepository,
+        _socketIOService = SocketIOService(),
         super(const SearchUserState()) {
     on<SearchInputChangeEvent>(
       _onSearchInputChange,
@@ -17,9 +19,19 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
     );
     on<ModeChangedEvent>(_onModeToggled);
     on<CheckBoxStatusChangeEvent>(_onCheckboxStatusChanged);
+    on<OneByOneConversationCreatedEvent>(_onOneByOneConversationCreated);
+
+    _socketIOService.connect();
   }
 
   final UserRepository _repository;
+  final SocketIOService _socketIOService;
+
+  @override
+  Future<void> close() {
+    _socketIOService.dispose();
+    return super.close();
+  }
 
   Future<void> _onSearchInputChange(
       SearchInputChangeEvent event, Emitter<SearchUserState> emit) async {
@@ -60,5 +72,14 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
             pickedUsers: List.of(state.pickedUsers)..remove(event.user)),
       );
     }
+  }
+
+  void _onOneByOneConversationCreated(
+    OneByOneConversationCreatedEvent event,
+    Emitter<SearchUserState> emit,
+  ) {
+    emit(state.copyWith(creatingStatus: CreateConversationStatus.loading));
+
+    _socketIOService.sendOneByOneConversationRequest(event.otherUserId);
   }
 }
