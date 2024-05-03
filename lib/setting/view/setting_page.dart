@@ -5,9 +5,6 @@ import 'package:tctt_mobile/member_manager/view/member_manager_page.dart';
 import 'package:tctt_mobile/account_setting/view/account_setting_page.dart';
 import 'package:tctt_mobile/widgets/contained_button.dart';
 import 'package:tctt_mobile/widgets/label_text.dart';
-import 'package:tctt_mobile/account_setting/view/account_setting_page.dart';
-import 'package:tctt_mobile/unit_manager/view/unit_manager_page.dart';
-import 'package:tctt_mobile/member_manager/view/member_manager_page.dart';
 
 import '../../authentication/bloc/authentication_bloc.dart';
 
@@ -51,13 +48,13 @@ class SettingPage extends StatelessWidget {
               scrollDirection: Axis.vertical,
               children: [
                 ContentButton(text: 'Quản lí tài khoản', onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AccountSetting()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AccountSetting()));
                 }),
                 ContentButton(text: 'Đơn vị', onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => UnitManager()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const UnitManager()));
                 }),
                 ContentButton(text: 'Thành viên', onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => MemberManager()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MemberManager()));
                 }),
               ],
             ),

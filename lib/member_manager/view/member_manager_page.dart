@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tctt_mobile/theme/colors.dart';
-import 'package:tctt_mobile/account_setting/view/account_setting_page.dart';
 
 class CustomContainer extends StatelessWidget {
   const CustomContainer({
@@ -20,19 +19,19 @@ class CustomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 150),
       curve: Curves.easeInOut,
       width: double.infinity,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
       ),
       child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(12, 8, 12, 8),
+        padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 12, 8),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(40),
                 child: Image.network(
@@ -45,7 +44,7 @@ class CustomContainer extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -53,7 +52,7 @@ class CustomContainer extends StatelessWidget {
                   children: [
                     Text(
                       _name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
                         color: Color(0xFF14181B),
                         fontSize: 14,
@@ -62,10 +61,10 @@ class CustomContainer extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                       child: Text(
                         _role,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontFamily: 'Plus Jakarta Sans',
                           color: AppColors.primary,
                           fontSize: 12,
@@ -78,7 +77,7 @@ class CustomContainer extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(
+            const Icon(
               Icons.more_vert,
               color: AppColors.primary,
               size: 24,
@@ -124,7 +123,7 @@ class MemberManager extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       scrollDirection: Axis.vertical,
                       children: [
-                        Padding(
+                        const Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 4),
                           child: Text(
                             'Thành phố Đà Nẵng',
@@ -136,7 +135,7 @@ class MemberManager extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Padding(
+                        const Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
@@ -167,7 +166,7 @@ class MemberManager extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Divider(
+                        const Divider(
                           height: 1,
                           thickness: 1,
                           color: Colors.grey,

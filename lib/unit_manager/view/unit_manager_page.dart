@@ -16,12 +16,12 @@ class CustomPadding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 1),
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 1),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               blurRadius: 0,
               color: Color(0xFFE0E3E7),
@@ -46,17 +46,17 @@ class CustomPadding extends StatelessWidget {
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                   child: Text(
                     _text,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Plus Jakarta Sans',
                       letterSpacing: 0,
                     ),
                   ),
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.more_vert,
                 color: Colors.black,
                 size: 24,
