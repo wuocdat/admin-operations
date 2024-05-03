@@ -2,6 +2,8 @@ part of 'target_cubit.dart';
 
 enum TargetOptions { subject, chanel }
 
+enum FbPageType { fanpage, personalPage, openGroup }
+
 extension TargetOptionsX on TargetOptions {
   String get title {
     if (this == TargetOptions.subject) {
