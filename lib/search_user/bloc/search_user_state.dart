@@ -2,6 +2,12 @@ part of 'search_user_bloc.dart';
 
 enum CreateConversationStatus { initial, loading, success }
 
+extension CreateConversationStatusX on CreateConversationStatus {
+  bool get isLoading => this == CreateConversationStatus.loading;
+
+  bool get isSuccess => this == CreateConversationStatus.success;
+}
+
 class SearchUserState extends Equatable {
   const SearchUserState({
     this.users = const [],
@@ -9,6 +15,7 @@ class SearchUserState extends Equatable {
     this.status = FetchDataStatus.initial,
     this.groupMode = false,
     this.creatingStatus = CreateConversationStatus.initial,
+    this.conversationId,
   });
 
   final List<ShortProfile> users;
@@ -16,6 +23,7 @@ class SearchUserState extends Equatable {
   final bool groupMode;
   final List<ShortProfile> pickedUsers;
   final CreateConversationStatus creatingStatus;
+  final String? conversationId;
 
   SearchUserState copyWith({
     List<ShortProfile>? users,
@@ -23,6 +31,7 @@ class SearchUserState extends Equatable {
     FetchDataStatus? status,
     bool? groupMode,
     CreateConversationStatus? creatingStatus,
+    String? conversationId,
   }) {
     return SearchUserState(
       users: users ?? this.users,
@@ -30,15 +39,17 @@ class SearchUserState extends Equatable {
       groupMode: groupMode ?? this.groupMode,
       pickedUsers: pickedUsers ?? this.pickedUsers,
       creatingStatus: creatingStatus ?? this.creatingStatus,
+      conversationId: conversationId ?? this.conversationId,
     );
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         users,
         status,
         groupMode,
         pickedUsers,
         creatingStatus,
+        conversationId,
       ];
 }

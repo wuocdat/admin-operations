@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tctt_mobile/services/socket_service.dart';
@@ -20,15 +22,21 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
     on<ModeChangedEvent>(_onModeToggled);
     on<CheckBoxStatusChangeEvent>(_onCheckboxStatusChanged);
     on<OneByOneConversationCreatedEvent>(_onOneByOneConversationCreated);
+    on<_ConversationIdReceivedEvent>(_onConversationIdReceived);
 
     _socketIOService.connect();
+
+    _conversationIdSubscription = _socketIOService.getResponse
+        .listen((id) => add(_ConversationIdReceivedEvent(id)));
   }
 
   final UserRepository _repository;
   final SocketIOService _socketIOService;
+  late StreamSubscription<String> _conversationIdSubscription;
 
   @override
   Future<void> close() {
+    _conversationIdSubscription.cancel();
     _socketIOService.dispose();
     return super.close();
   }
@@ -81,5 +89,15 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
     emit(state.copyWith(creatingStatus: CreateConversationStatus.loading));
 
     _socketIOService.sendOneByOneConversationRequest(event.otherUserId);
+  }
+
+  void _onConversationIdReceived(
+    _ConversationIdReceivedEvent event,
+    Emitter<SearchUserState> emit,
+  ) {
+    emit(state.copyWith(
+      creatingStatus: CreateConversationStatus.success,
+      conversationId: event.conversationId,
+    ));
   }
 }

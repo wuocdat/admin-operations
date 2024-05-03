@@ -4,13 +4,15 @@ import 'package:tctt_mobile/shared/utils/constants.dart';
 import 'package:tctt_mobile/widgets/inputs.dart';
 
 class Conversation extends StatelessWidget {
-  const Conversation({super.key});
+  const Conversation(this.conversationId, {super.key});
 
   static MaterialPageRoute route(String conversationId) {
     return MaterialPageRoute(
-      builder: (context) => const Conversation(),
+      builder: (context) => Conversation(conversationId),
     );
   }
+
+  final String conversationId;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class Conversation extends StatelessWidget {
             ),
           ),
           subtitle: Text(
-            'Ngũ Hành Sơn, Đà Nẵng',
+            'Ngũ Hành Sơn, Đà Nẵng $conversationId',
             style: TextStyle(
               color: Colors.grey[600],
               fontSize: 12,

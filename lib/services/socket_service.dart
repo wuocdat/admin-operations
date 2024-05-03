@@ -18,8 +18,12 @@ class SocketIOService {
               .build(),
         ) {
     _socket.onConnect((_) => print('conversation creating socket connected'));
-    _socket.on(EventNames.joinedConversationEvent, (data) => print(data));
+
+    _socket.on(EventNames.joinedConversationEvent,
+        (data) => addResponse(data['conversationId']));
+
     _socket.onDisconnect((_) => print('disconnect'));
+
     _socket.onError((data) => print(data));
   }
 

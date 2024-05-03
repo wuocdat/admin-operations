@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/conversation/view/conversation_page.dart';
 import 'package:tctt_mobile/search_user/bloc/search_user_bloc.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
@@ -74,7 +75,8 @@ class SearchUser extends StatelessWidget {
                         child: const Text(
                           'Tạo',
                           style: TextStyle(fontWeight: FontWeight.bold),
-                        ))
+                        ),
+                      )
                     : TextButton(
                         onPressed: () => context
                             .read<SearchUserBloc>()
@@ -87,7 +89,14 @@ class SearchUser extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: BlocBuilder<SearchUserBloc, SearchUserState>(
+        child: BlocConsumer<SearchUserBloc, SearchUserState>(
+          listener: (context, state) {
+            if (state.creatingStatus.isSuccess &&
+                state.conversationId != null) {
+              Navigator.pushReplacement(
+                  context, Conversation.route(state.conversationId!));
+            }
+          },
           builder: (context, state) {
             return Container(
               color: Colors.white,
@@ -129,7 +138,7 @@ class SearchUser extends StatelessWidget {
                                   .read<SearchUserBloc>()
                                   .add(CheckBoxStatusChangeEvent(false, e)),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     )
@@ -138,36 +147,17 @@ class SearchUser extends StatelessWidget {
                     child: LoadingOverlay(
                       opacity: 0.1,
                       overlayColor: Colors.grey,
-                      isLoading: state.status.isLoading,
+                      isLoading: state.status.isLoading ||
+                          state.creatingStatus.isLoading,
                       child: RichListView(
                         hasReachedMax: true,
                         itemCount: state.users.length,
                         itemBuilder: (index) {
                           final currentUser = state.users[index];
-                          return BottomBorderContainer(
-                            borderWidth: 1,
-                            borderColor: Colors.grey[300] ?? Colors.grey,
-                            child: ListTile(
-                              contentPadding:
-                                  const EdgeInsets.only(left: 0, right: 0),
-                              leading: state.groupMode
-                                  ? Checkbox(
-                                      shape: const CircleBorder(),
-                                      value: state.pickedUsers
-                                          .contains(currentUser),
-                                      onChanged: (value) => context
-                                          .read<SearchUserBloc>()
-                                          .add(CheckBoxStatusChangeEvent(
-                                              value ?? true, currentUser)),
-                                    )
-                                  : null,
-                              title: Text(currentUser.username),
-                              subtitle: Text(currentUser.name),
-                              onTap: () => context.read<SearchUserBloc>().add(
-                                    OneByOneConversationCreatedEvent(
-                                        state.users[index].id),
-                                  ),
-                            ),
+                          return UserItem(
+                            currentUser: currentUser,
+                            showCheckBox: state.groupMode,
+                            isPicked: state.pickedUsers.contains(currentUser),
                           );
                         },
                         onReachedEnd: () {},
@@ -179,6 +169,52 @@ class SearchUser extends StatelessWidget {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class UserItem extends StatelessWidget {
+  const UserItem({
+    super.key,
+    required this.currentUser,
+    required this.showCheckBox,
+    required this.isPicked,
+  });
+
+  final ShortProfile currentUser;
+  final bool showCheckBox;
+  final bool isPicked;
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomBorderContainer(
+      borderWidth: 1,
+      borderColor: Colors.grey[300] ?? Colors.grey,
+      child: ListTile(
+        contentPadding: const EdgeInsets.only(left: 0, right: 0),
+        leading: showCheckBox
+            ? Checkbox(
+                shape: const CircleBorder(),
+                value: isPicked,
+                onChanged: (value) => context
+                    .read<SearchUserBloc>()
+                    .add(CheckBoxStatusChangeEvent(value ?? true, currentUser)),
+              )
+            : null,
+        title: Text(currentUser.username),
+        subtitle: Text(currentUser.name),
+        onTap: () {
+          if (!showCheckBox) {
+            context.read<SearchUserBloc>().add(
+                  OneByOneConversationCreatedEvent(currentUser.id),
+                );
+          } else {
+            context
+                .read<SearchUserBloc>()
+                .add(CheckBoxStatusChangeEvent(!isPicked, currentUser));
+          }
+        },
       ),
     );
   }

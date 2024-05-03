@@ -41,3 +41,12 @@ class OneByOneConversationCreatedEvent extends SearchUserEvent {
   @override
   List<Object> get props => [otherUserId];
 }
+
+class _ConversationIdReceivedEvent extends SearchUserEvent {
+  const _ConversationIdReceivedEvent(this.conversationId);
+
+  final String conversationId;
+
+  @override
+  List<Object> get props => [conversationId];
+}
