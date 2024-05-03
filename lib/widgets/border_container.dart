@@ -69,36 +69,41 @@ class SelectableContainer extends StatelessWidget {
     super.key,
     required this.content,
     required this.isSelected,
+    this.onTap,
   });
 
   final String content;
   final bool isSelected;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.white : Colors.grey[300],
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(
-              color: isSelected ? AppColors.primary : Colors.transparent,
-              width: 1.5,
+    return InkWell(
+      onTap: onTap,
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.white : Colors.grey[300],
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(
+                color: isSelected ? AppColors.primary : Colors.transparent,
+                width: 1.5,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(content),
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(content),
-          ),
-        ),
-        if (isSelected)
-          const Icon(
-            Icons.check,
-            size: 16,
-            color: AppColors.primary,
-          ),
-      ],
+          if (isSelected)
+            const Icon(
+              Icons.check,
+              size: 16,
+              color: AppColors.primary,
+            ),
+        ],
+      ),
     );
   }
 }

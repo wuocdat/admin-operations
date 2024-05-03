@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/target/widgets/bad_subject/bad_subject.dart';
 import 'package:tctt_mobile/target/widgets/media_chanel/media_chanel.dart';
+import 'package:tctt_mobile/target/widgets/unit_selector/unit_selector.dart';
+import 'package:tctt_mobile/target/widgets/wrap_options.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
 import 'package:tctt_mobile/widgets/head_bar.dart';
 import 'package:tctt_mobile/widgets/inputs.dart';
@@ -78,10 +80,14 @@ class FilterContent extends StatelessWidget {
                   children: [
                     const Expanded(child: Text('Bộ lọc tìm kiếm')),
                     OutlinedButton(
-                        onPressed: () {}, child: const Text('Thiết lập lại')),
+                      onPressed: () {},
+                      child: const Text('Thiết lập lại'),
+                    ),
                     const SizedBox(width: 8),
                     ElevatedButton(
-                        onPressed: () {}, child: const Text('Áp dụng')),
+                      onPressed: () {},
+                      child: const Text('Áp dụng'),
+                    ),
                   ],
                 ),
               ),
@@ -93,12 +99,20 @@ class FilterContent extends StatelessWidget {
                 backgroundColor: Colors.grey[300],
               ),
             ),
-            const FilterSection(
-                name: 'Theo dạng trang',
-                child: SelectableContainer(
-                  content: 'Trang cá nhân',
+            FilterSection(
+              name: 'Theo dạng trang',
+              child: WrapOptions(
+                builderItem: (index) => SelectableContainer(
+                  content: FbPageType.values[index].title,
                   isSelected: true,
-                )),
+                ),
+                length: FbPageType.values.length,
+              ),
+            ),
+            const FilterSection(
+              name: 'Theo đơn vị quản lý',
+              child: UnitSelector(),
+            ),
           ],
         ));
   }

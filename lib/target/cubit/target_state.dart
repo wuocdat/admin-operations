@@ -4,6 +4,19 @@ enum TargetOptions { subject, chanel }
 
 enum FbPageType { fanpage, personalPage, openGroup }
 
+extension FbPageTypeX on FbPageType {
+  String get title {
+    switch (this) {
+      case FbPageType.fanpage:
+        return 'Fanpage';
+      case FbPageType.openGroup:
+        return 'Nhóm mở';
+      case FbPageType.personalPage:
+        return 'Trang cá nhân';
+    }
+  }
+}
+
 extension TargetOptionsX on TargetOptions {
   String get title {
     if (this == TargetOptions.subject) {

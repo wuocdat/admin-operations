@@ -5,16 +5,16 @@ class WrapOptions extends StatelessWidget {
     super.key,
     required this.builderItem,
     required this.length,
-    required this.selectedIndex,
   });
 
   final int length;
-  final int selectedIndex;
   final Widget Function(int) builderItem;
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
+      spacing: 8,
+      runSpacing: 4,
       children: List<Widget>.generate(length, builderItem),
     );
   }
