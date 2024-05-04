@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/account_setting/bloc/bloc/account_setting_bloc.dart';
+import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/theme/colors.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
 import 'package:tctt_mobile/widgets/contained_button.dart';
@@ -78,7 +81,11 @@ class AccountSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider(
+      create: (_) => AccountSettingBloc(),
+      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        builder: (context, state) {
+          return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
             automaticallyImplyLeading: false,
@@ -114,12 +121,12 @@ class AccountSetting extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                BigPadding(text: 'Thông tin cá nhân'),
-                                SmallPadding(text: 'Tài khoản: Nguyễn Văn A'),
-                                SmallPadding(text: 'Năm sinh: 2000'),
+                                const BigPadding(text: 'Thông tin cá nhân'),
+                                SmallPadding(text: 'Tài khoản: ${state.user.name}'),
+                                SmallPadding(text: 'Ngày tạo: ${state.user.createdAt}'),
                                 SmallPadding(text: 'SDT:'),
-                                SmallPadding(text: 'Đơn vị: Ban chỉ đạo 35'),
-                                Devider(),
+                                SmallPadding(text: 'Đơn vị: ${state.user.unit.name}'),
+                                const Devider(),
                                 CustomButton(text: 'Cập nhật ', icon: Icons.edit_square, onPressed: () {}),
                               ],
                             ),
@@ -127,20 +134,20 @@ class AccountSetting extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                         child: BorderContainer(
                           child: Align(
-                            alignment: AlignmentDirectional(0, 0),
+                            alignment: const AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  BigPadding(text: 'Bảo mật'),
-                                  SmallPadding(text: 'Quyền: Quản lý'),
-                                  Devider(),
+                                  const BigPadding(text: 'Bảo mật'),
+                                  SmallPadding(text: 'Quyền: ${state.user.role}'),
+                                  const Devider(),
                                   CustomButton(text: 'Thay đổi mật khẩu', icon: Icons.password_rounded, onPressed: () {}),
                                 ],
                               ),
@@ -149,19 +156,19 @@ class AccountSetting extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
                         child: BorderContainer(
                           child: Align(
-                            alignment: AlignmentDirectional(0, 0),
+                            alignment: const AlignmentDirectional(0, 0),
                             child: Padding(
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   BigPadding(text: 'Xác thực 2 lớp'),
-                                  SmallPadding(text: 'Trạng thái: Đã kích hoạt'),
+                                  SmallPadding(text: 'Trạng thái: ${state.user.is2FAEnabled ? 'Đã kích hoạt' : 'Chưa kích hoạt'}'),
                                   Devider(),
                                   CustomButton(text: 'Ngừng kích hoạt', icon: Icons.privacy_tip_outlined, onPressed: () {}),
                                 ],
@@ -177,5 +184,8 @@ class AccountSetting extends StatelessWidget {
             ),
           ),
         );
+        },
+      )
+    );
   }
 }
