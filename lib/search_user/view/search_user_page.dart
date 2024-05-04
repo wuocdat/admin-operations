@@ -38,7 +38,7 @@ class SearchUser extends StatelessWidget {
               onPressed: () {
                 if (state.groupMode) {
                   context.read<SearchUserBloc>().add(const ModeChangedEvent());
-                } else {
+                } else if (!state.creatingStatus.isLoading) {
                   Navigator.pop(context);
                 }
               },
@@ -55,6 +55,7 @@ class SearchUser extends StatelessWidget {
                     contentPadding: const EdgeInsets.all(0),
                   )
                 : SearchInput(
+                    readOnly: state.creatingStatus.isLoading,
                     hintText: "Tìm tên hoặc số điện thoại",
                     onChanged: (text) => context
                         .read<SearchUserBloc>()
@@ -78,9 +79,11 @@ class SearchUser extends StatelessWidget {
                         ),
                       )
                     : TextButton(
-                        onPressed: () => context
-                            .read<SearchUserBloc>()
-                            .add(const ModeChangedEvent()),
+                        onPressed: !state.creatingStatus.isLoading
+                            ? () => context
+                                .read<SearchUserBloc>()
+                                .add(const ModeChangedEvent())
+                            : null,
                         child: const Text('Tạo nhóm'),
                       ),
               );

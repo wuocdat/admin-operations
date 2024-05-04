@@ -87,16 +87,19 @@ class SearchInput extends StatelessWidget {
     this.leading,
     this.noAutoFocus = false,
     this.hintText,
+    this.readOnly = false,
   });
 
   final Widget? leading;
   final String? hintText;
   final bool noAutoFocus;
+  final bool readOnly;
   final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      readOnly: readOnly,
       onChanged: onChanged,
       autofocus: !noAutoFocus,
       decoration: InputDecoration(
