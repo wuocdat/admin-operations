@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:conversation_repository/conversation_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mail_repository/mail_repository.dart';
@@ -48,6 +49,7 @@ class _AppState extends State<App> {
         RepositoryProvider(create: (context) => TaskRepository()),
         RepositoryProvider(create: (context) => MailRepository()),
         RepositoryProvider(create: (context) => TargetRepository()),
+        RepositoryProvider(create: (context) => ConversationRepository()),
       ],
       child: BlocProvider(
         create: (_) => AuthenticationBloc(

@@ -54,6 +54,8 @@ dependencies:
     path: packages/mail_repository
   target_repository:
     path: packages/target_repository
+  conversation_repository:
+    path: packages/conversation_repository
   json_theme: ^6.4.1
   getwidget: ^4.0.0
   bloc_concurrency: ^0.2.5

@@ -1,8 +1,15 @@
+import 'package:conversation_repository/conversation_repository.dart'
+    hide Conversation;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/conversation/view/conversation_page.dart';
+import 'package:tctt_mobile/conversation_center/cubit/conversation_center_cubit.dart';
 import 'package:tctt_mobile/search_user/view/search_user_page.dart';
+import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/widgets/images.dart';
 import 'package:tctt_mobile/widgets/label_text.dart';
+import 'package:tctt_mobile/widgets/loader.dart';
 
 class ConversationCenter extends StatelessWidget {
   const ConversationCenter({super.key});
@@ -11,32 +18,50 @@ class ConversationCenter extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () => Navigator.of(context).push(SearchUser.route()),
-            child: Container(
-              padding: const EdgeInsets.all(8.0),
-              color: theme.primaryColor.withOpacity(0.1),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.search),
-                  SizedBox(width: 8),
-                  Text('Tìm kiếm tên người dùng hoặc số điện thoại'),
-                ],
-              ),
-            ),
-          ),
-          ConversationItem(
-            onTap: () => Navigator.of(context)
-                .push(Conversation.route('conversationId')),
-          ),
-          const ConversationItem(lastIsImage: true),
-          const ConversationItem(),
-          const ConversationItem(isLast: true),
-        ],
+    return BlocProvider(
+      create: (context) => ConversationCenterCubit(
+        conversationRepository:
+            RepositoryProvider.of<ConversationRepository>(context),
+      )..fetchConversations(),
+      child: SingleChildScrollView(
+        child: BlocBuilder<ConversationCenterCubit, ConversationCenterState>(
+          builder: (context, state) {
+            switch (state.status) {
+              case FetchDataStatus.loading:
+                return const SizedBox(height: 200, child: Loader());
+              default:
+                return Column(
+                  children: [
+                    InkWell(
+                      onTap: () =>
+                          Navigator.of(context).push(SearchUser.route()),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        color: theme.primaryColor.withOpacity(0.1),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.search),
+                            SizedBox(width: 8),
+                            Text('Tìm kiếm tên người dùng hoặc số điện thoại'),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ...state.conversations.map(
+                      (e) => ConversationItem(
+                        name: e.name.isEmpty
+                            ? "New Conversation"
+                            : e.name.capitalize(),
+                        onTap: () => Navigator.of(context)
+                            .push(Conversation.route(e.id)),
+                      ),
+                    ),
+                  ],
+                );
+            }
+          },
+        ),
       ),
     );
   }
@@ -48,8 +73,10 @@ class ConversationItem extends StatelessWidget {
     this.lastIsImage = false,
     this.isLast = false,
     this.onTap,
+    required this.name,
   });
 
+  final String name;
   final bool lastIsImage;
   final bool isLast;
   final void Function()? onTap;
@@ -72,9 +99,9 @@ class ConversationItem extends StatelessWidget {
         child: ListTile(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-          leading: const DemoAvatar(),
+          leading: SmartAvatar(text: name),
           title: MediumLabelText(
-            'Lăng Kỳ Thiên',
+            name,
             color: theme.primaryColor,
           ),
           subtitle: lastIsImage
