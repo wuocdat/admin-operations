@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:conversation_repository/conversation_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:formz/formz.dart';
 import 'package:tctt_mobile/services/socket_service.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 
@@ -63,13 +62,12 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     MessageSentEvent event,
     Emitter<ConversationState> emit,
   ) {
-    _socketIOService.sendMessage(state.messageTextInput.value);
+    _socketIOService.sendMessage(state.currentInputText);
   }
 
   void _onMessageTextInputChanged(
       MessageTextInputChangedEvent event, Emitter<ConversationState> emit) {
-    final messageTextInput = TextInput.dirty(event.text);
-    emit(state.copyWith(messageText: messageTextInput));
+    emit(state.copyWith(currentInputText: event.text));
   }
 
   void _onNewMessageReceived(

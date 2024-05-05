@@ -129,7 +129,7 @@ class BottomActionContainer extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               IconButton(
-                onPressed: state.messageTextInput.value.isNotEmpty
+                onPressed: state.currentInputText.isNotEmpty
                     ? () {
                         controller.clear();
                         context

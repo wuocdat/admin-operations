@@ -1,36 +1,28 @@
 part of 'conversation_bloc.dart';
 
-class TextInput extends FormzInput<String, dynamic> {
-  const TextInput.pure() : super.pure('');
-  const TextInput.dirty([super.value = '']) : super.dirty();
-
-  @override
-  validator(String value) {}
-}
-
 class ConversationState extends Equatable {
   const ConversationState({
     this.messages = const [],
     this.status = FetchDataStatus.initial,
-    this.messageTextInput = const TextInput.pure(),
+    this.currentInputText = "",
   });
 
   final List<Message> messages;
   final FetchDataStatus status;
-  final TextInput messageTextInput;
+  final String currentInputText;
 
   ConversationState copyWith({
     List<Message>? messages,
     FetchDataStatus? status,
-    TextInput? messageText,
+    String? currentInputText,
   }) {
     return ConversationState(
       messages: messages ?? this.messages,
       status: status ?? this.status,
-      messageTextInput: messageText ?? this.messageTextInput,
+      currentInputText: currentInputText ?? this.currentInputText,
     );
   }
 
   @override
-  List<Object> get props => [messages, status, messageTextInput];
+  List<Object> get props => [messages, status, currentInputText];
 }
