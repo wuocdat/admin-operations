@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/account_setting/bloc/bloc/account_setting_bloc.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/theme/colors.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
 import 'package:tctt_mobile/widgets/contained_button.dart';
@@ -124,7 +125,7 @@ class AccountSetting extends StatelessWidget {
                                 const BigPadding(text: 'Thông tin cá nhân'),
                                 SmallPadding(text: 'Tài khoản: ${state.user.name}'),
                                 SmallPadding(text: 'Ngày tạo: ${state.user.createdAt}'),
-                                SmallPadding(text: 'SDT:'),
+                                const SmallPadding(text: 'SDT:'),
                                 SmallPadding(text: 'Đơn vị: ${state.user.unit.name}'),
                                 const Devider(),
                                 CustomButton(text: 'Cập nhật ', icon: Icons.edit_square, onPressed: () {}),
@@ -146,7 +147,7 @@ class AccountSetting extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const BigPadding(text: 'Bảo mật'),
-                                  SmallPadding(text: 'Quyền: ${state.user.role}'),
+                                  SmallPadding(text: 'Quyền: ${state.user.roleE.name}'),
                                   const Devider(),
                                   CustomButton(text: 'Thay đổi mật khẩu', icon: Icons.password_rounded, onPressed: () {}),
                                 ],
@@ -167,9 +168,9 @@ class AccountSetting extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  BigPadding(text: 'Xác thực 2 lớp'),
+                                  const BigPadding(text: 'Xác thực 2 lớp'),
                                   SmallPadding(text: 'Trạng thái: ${state.user.is2FAEnabled ? 'Đã kích hoạt' : 'Chưa kích hoạt'}'),
-                                  Devider(),
+                                  const Devider(),
                                   CustomButton(text: 'Ngừng kích hoạt', icon: Icons.privacy_tip_outlined, onPressed: () {}),
                                 ],
                               ),
