@@ -8,13 +8,10 @@ class ConversationUser extends Equatable {
   const ConversationUser({
     required this.id,
     required this.isActive,
-    required this.createdAt,
-    required this.createdBy,
     required this.userId,
     required this.conversationId,
-    required this.updatedAt,
-    required this.updatedBy,
     required this.adderId,
+    required this.userDetail,
   });
 
   @JsonKey(name: "_id")
@@ -23,10 +20,7 @@ class ConversationUser extends Equatable {
   final String userId;
   final String adderId;
   final String conversationId;
-  final String createdBy;
-  final String createdAt;
-  final String updatedBy;
-  final String updatedAt;
+  final Map<String, String> userDetail;
 
   factory ConversationUser.fromJson(Map<String, dynamic> json) =>
       _$ConversationUserFromJson(json);
@@ -36,11 +30,8 @@ class ConversationUser extends Equatable {
         id,
         isActive,
         userId,
-        createdAt,
-        createdBy,
-        updatedAt,
-        updatedBy,
         adderId,
         conversationId,
+        userDetail,
       ];
 }

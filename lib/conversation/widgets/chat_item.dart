@@ -1,36 +1,33 @@
+import 'package:conversation_repository/conversation_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/shared/utils/time.dart';
 import 'package:tctt_mobile/widgets/images.dart';
 import 'package:tctt_mobile/widgets/label_text.dart';
 
-enum MessageOrigin { fromOther, fromSelf }
+enum MessageSide { otherSide, mySide }
 
-extension MessageOriginX on MessageOrigin {
-  bool get isFromOther => this == MessageOrigin.fromOther;
+extension MessageOriginX on MessageSide {
+  bool get isFromOther => this == MessageSide.otherSide;
 }
 
 class ChatItem extends StatelessWidget {
-  const ChatItem({
-    super.key,
-    this.senderName,
-    this.text,
-    this.attachmentUrl,
-    required this.time,
-    required this.origin,
-  });
-
-  final String? senderName;
-  final String? text;
-  final String? attachmentUrl;
-  final String time;
-  final MessageOrigin origin;
+  const ChatItem(this.message, {super.key});
+  final Message message;
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
+    final otherSide = context.select(
+        (AuthenticationBloc bloc) => bloc.state.user.id != message.createdBy);
+
+    final senderName = message.userData['name'];
+
     final List<TextSpan> headTextSpans = [
       TextSpan(
-        text: '${origin.isFromOther ? senderName : 'Bạn'}',
+        text: otherSide ? senderName : 'Bạn',
         style: Theme.of(context)
             .textTheme
             .labelLarge
@@ -38,7 +35,7 @@ class ChatItem extends StatelessWidget {
       ),
       const TextSpan(text: '   '),
       TextSpan(
-        text: time,
+        text: TimeUtils.formatTime(message.createdAt),
         style: const TextStyle(
           fontSize: 12,
           fontStyle: FontStyle.italic,
@@ -52,13 +49,12 @@ class ChatItem extends StatelessWidget {
       const SizedBox(width: 8),
       Expanded(
         child: RichText(
-          textAlign: origin.isFromOther ? TextAlign.left : TextAlign.right,
+          textAlign: otherSide ? TextAlign.left : TextAlign.right,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           text: TextSpan(
-            children: origin.isFromOther
-                ? headTextSpans
-                : headTextSpans.reversed.toList(),
+            children:
+                otherSide ? headTextSpans : headTextSpans.reversed.toList(),
           ),
         ),
       )
@@ -67,23 +63,20 @@ class ChatItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
-        crossAxisAlignment: origin.isFromOther
-            ? CrossAxisAlignment.start
-            : CrossAxisAlignment.end,
+        crossAxisAlignment:
+            otherSide ? CrossAxisAlignment.start : CrossAxisAlignment.end,
         children: [
           Row(
-            mainAxisAlignment: origin.isFromOther
-                ? MainAxisAlignment.start
-                : MainAxisAlignment.end,
-            children:
-                origin.isFromOther ? itemHeader : itemHeader.reversed.toList(),
+            mainAxisAlignment:
+                otherSide ? MainAxisAlignment.start : MainAxisAlignment.end,
+            children: otherSide ? itemHeader : itemHeader.reversed.toList(),
           ),
           const SizedBox(height: 8),
           ContentChatContainer(
               screenSize: screenSize,
-              origin: origin,
-              text: text,
-              attachmentUrl: attachmentUrl),
+              origin: otherSide ? MessageSide.otherSide : MessageSide.mySide,
+              text: message.content,
+              attachmentUrl: null),
         ],
       ),
     );
@@ -100,31 +93,38 @@ class ContentChatContainer extends StatelessWidget {
   });
 
   final Size screenSize;
-  final MessageOrigin origin;
+  final MessageSide origin;
   final String? text;
   final String? attachmentUrl;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: screenSize.width * 0.8,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: origin.isFromOther
-            ? Colors.white
-            : Theme.of(context).primaryColor.withOpacity(0.2),
-        borderRadius: BorderRadius.only(
-          topLeft: origin.isFromOther
-              ? const Radius.circular(2)
-              : const Radius.circular(12),
-          topRight: !origin.isFromOther
-              ? const Radius.circular(2)
-              : const Radius.circular(12),
-          bottomLeft: const Radius.circular(12),
-          bottomRight: const Radius.circular(12),
-        ),
+    return Padding(
+      padding: EdgeInsets.only(
+        left: origin.isFromOther ? 0 : screenSize.width * 0.15,
+        right: !origin.isFromOther ? 0 : screenSize.width * 0.15,
       ),
-      child: (attachmentUrl != null) ? const ChatFileItem() : Text(text ?? ''),
+      child: Container(
+        // width: screenSize.width * 0.8,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: origin.isFromOther
+              ? Colors.white
+              : Theme.of(context).primaryColor.withOpacity(0.2),
+          borderRadius: BorderRadius.only(
+            topLeft: origin.isFromOther
+                ? const Radius.circular(2)
+                : const Radius.circular(12),
+            topRight: !origin.isFromOther
+                ? const Radius.circular(2)
+                : const Radius.circular(12),
+            bottomLeft: const Radius.circular(12),
+            bottomRight: const Radius.circular(12),
+          ),
+        ),
+        child:
+            (attachmentUrl != null) ? const ChatFileItem() : Text(text ?? ''),
+      ),
     );
   }
 }

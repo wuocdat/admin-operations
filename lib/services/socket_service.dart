@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:conversation_repository/conversation_repository.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:tctt_mobile/services/token_service.dart';
 import 'package:tctt_mobile/shared/utils/constants.dart';
@@ -6,10 +7,12 @@ import 'package:tctt_mobile/shared/utils/constants.dart';
 class EventNames {
   static const joinEvent = "joinConv";
   static const joinedConversationEvent = "joinedConversation";
+  static const messageEvent = "message";
+  static const sendMessageEvent = "sendMsg";
 }
 
-class SocketIOService {
-  SocketIOService()
+class CreatingConversationSocketIOService {
+  CreatingConversationSocketIOService()
       : _socket = IO.io(
           socketUrl,
           IO.OptionBuilder()
@@ -51,6 +54,73 @@ class SocketIOService {
     print('sent');
     _socket.emit(EventNames.joinEvent, [
       {"userId": otherUserId}
+    ]);
+  }
+}
+
+class CommunicationSocketIOService {
+  CommunicationSocketIOService({required String conversationId})
+      : _conversationId = conversationId,
+        _socket = IO.io(
+          socketUrl,
+          IO.OptionBuilder()
+              .setTransports(['websocket'])
+              .disableAutoConnect()
+              .build(),
+        ) {
+    _socket.onConnect((_) {
+      print('communication socket connected');
+      joinToConversation();
+    });
+
+    _socket.on(EventNames.joinedConversationEvent,
+        (data) => print('joined to conversation ${data['conversationId']}'));
+
+    _socket.on(EventNames.messageEvent, (data) {
+      print('received message');
+      addResponse(Message.fromJson(data));
+    });
+
+    _socket.onDisconnect((_) => print('communication socket disconnect'));
+
+    _socket.onError((data) => print(data));
+  }
+
+  Future<void> connect() async {
+    final token = await TokenService.getToken();
+
+    _socket.io.options?['extraHeaders'] = {'Authorization': 'Bearer $token'};
+    _socket.connect();
+  }
+
+  final _socketResponse = StreamController<Message>();
+
+  final IO.Socket _socket;
+
+  final String _conversationId;
+
+  void Function(Message) get addResponse => _socketResponse.sink.add;
+
+  Stream<Message> get getResponse => _socketResponse.stream;
+
+  void dispose() {
+    _socketResponse.close();
+    _socket.disconnect();
+  }
+
+  void joinToConversation() {
+    _socket.emit(EventNames.joinEvent, [
+      {"id": _conversationId}
+    ]);
+  }
+
+  void sendMessage(String content) {
+    print('sent message $content');
+    _socket.emit(EventNames.sendMessageEvent, [
+      {
+        "conversationId": _conversationId,
+        "content": content,
+      }
     ]);
   }
 }

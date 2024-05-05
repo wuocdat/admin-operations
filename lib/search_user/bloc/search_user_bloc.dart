@@ -13,7 +13,7 @@ part 'search_user_state.dart';
 class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
   SearchUserBloc({required UserRepository userRepository})
       : _repository = userRepository,
-        _socketIOService = SocketIOService(),
+        _socketIOService = CreatingConversationSocketIOService(),
         super(const SearchUserState()) {
     on<SearchInputChangeEvent>(
       _onSearchInputChange,
@@ -31,7 +31,7 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
   }
 
   final UserRepository _repository;
-  final SocketIOService _socketIOService;
+  final CreatingConversationSocketIOService _socketIOService;
   late StreamSubscription<String> _conversationIdSubscription;
 
   @override

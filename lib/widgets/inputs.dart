@@ -158,6 +158,7 @@ class BorderInput extends StatelessWidget {
     int? maxLength,
     String? errorText,
     InputFormat? format,
+    TextEditingController? controller,
     ValueChanged<String>? onChanged,
   })  : _autoFocus = autoFocus,
         _labelText = labelText,
@@ -166,6 +167,7 @@ class BorderInput extends StatelessWidget {
         _minLines = minLines,
         _maxLength = maxLength,
         _errorText = errorText,
+        _controller = controller,
         _format = format ?? InputFormat.text,
         _onChanged = onChanged;
 
@@ -176,6 +178,7 @@ class BorderInput extends StatelessWidget {
   final int? _maxLines;
   final int? _minLines;
   final int? _maxLength;
+  final TextEditingController? _controller;
   final InputFormat _format;
   final ValueChanged<String>? _onChanged;
 
@@ -183,6 +186,7 @@ class BorderInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return TextField(
+      controller: _controller,
       autofocus: _autoFocus ?? false,
       obscureText: false,
       keyboardType: _format.keyboardType,

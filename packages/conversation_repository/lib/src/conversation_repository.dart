@@ -14,4 +14,11 @@ class ConversationRepository {
 
     return jsonList.map((e) => Conversation.fromJson(e)).toList();
   }
+
+  Future<List<Message>> fetchMessages(String conversationId) async {
+    final jsonList =
+        await _apiClient.getMessagesByConversationId(conversationId);
+
+    return jsonList.map((e) => Message.fromJson(e)).toList();
+  }
 }

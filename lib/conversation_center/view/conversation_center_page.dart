@@ -2,6 +2,7 @@ import 'package:conversation_repository/conversation_repository.dart'
     hide Conversation;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/conversation/view/conversation_page.dart';
 import 'package:tctt_mobile/conversation_center/cubit/conversation_center_cubit.dart';
 import 'package:tctt_mobile/search_user/view/search_user_page.dart';
@@ -50,9 +51,10 @@ class ConversationCenter extends StatelessWidget {
                     ),
                     ...state.conversations.map(
                       (e) => ConversationItem(
-                        name: e.name.isEmpty
-                            ? "New Conversation"
-                            : e.name.capitalize(),
+                        name: e
+                            .getName(context.select((AuthenticationBloc bloc) =>
+                                bloc.state.user.id))
+                            .capitalize(),
                         onTap: () => Navigator.of(context)
                             .push(Conversation.route(e.id)),
                       ),

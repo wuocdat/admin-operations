@@ -1,8 +1,11 @@
 import 'package:api_client/src/api_config.dart';
+import 'package:api_client/src/common/handlers.dart';
 import 'package:api_client/src/conversation/path.dart';
 import 'package:dio/dio.dart';
 
 class ConversationNotFoundFailure implements Exception {}
+
+class MessagesNotFoundFailure implements Exception {}
 
 class ConversationApiClient {
   ConversationApiClient({Dio? dio})
@@ -19,5 +22,19 @@ class ConversationApiClient {
     final data = response.data as List;
 
     return data;
+  }
+
+  Future<List> getMessagesByConversationId(String id) async {
+    final response = await _dio.get(ConversationUrl.messages, queryParameters: {
+      "_id": id,
+    });
+
+    final jsonResult = Handler.parseResponse(response) as Map<String, dynamic>;
+
+    if (!jsonResult.containsKey('messages')) throw MessagesNotFoundFailure();
+
+    final messages = jsonResult['messages'] as List;
+
+    return messages;
   }
 }

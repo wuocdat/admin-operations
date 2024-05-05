@@ -1,14 +1,24 @@
+import 'package:conversation_repository/conversation_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/conversation/bloc/conversation_bloc.dart';
 import 'package:tctt_mobile/conversation/widgets/chat_item.dart';
-import 'package:tctt_mobile/shared/utils/constants.dart';
 import 'package:tctt_mobile/widgets/inputs.dart';
+import 'package:tctt_mobile/widgets/rich_list_view.dart';
 
 class Conversation extends StatelessWidget {
   const Conversation(this.conversationId, {super.key});
 
   static MaterialPageRoute route(String conversationId) {
     return MaterialPageRoute(
-      builder: (context) => Conversation(conversationId),
+      builder: (context) => BlocProvider(
+        create: (context) => ConversationBloc(
+          conversationRepository:
+              RepositoryProvider.of<ConversationRepository>(context),
+          conversationId: conversationId,
+        )..add(const DataFetchedEvent()),
+        child: Conversation(conversationId),
+      ),
     );
   }
 
@@ -67,55 +77,74 @@ class Conversation extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 color: Theme.of(context).primaryColor.withOpacity(0.1),
-                child: const Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ChatItem(
-                      senderName: "Lăng Kỳ Thiên",
-                      time: '8:16 PM',
-                      origin: MessageOrigin.fromOther,
-                      text: mockMessageText,
-                    ),
-                    ChatItem(
-                      time: '8:16 PM',
-                      origin: MessageOrigin.fromSelf,
-                      text: mockMessageText,
-                    ),
-                    ChatItem(
-                      time: '8:16 PM',
-                      origin: MessageOrigin.fromSelf,
-                      attachmentUrl: mockMessageText,
-                    ),
-                  ],
+                child: BlocBuilder<ConversationBloc, ConversationState>(
+                  builder: (context, state) {
+                    return RichListView(
+                        reverse: true,
+                        hasReachedMax: true,
+                        itemCount: state.messages.length,
+                        itemBuilder: (index) => ChatItem(state.messages[index]),
+                        onReachedEnd: () {});
+                  },
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              color: Colors.white,
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.attach_file),
-                  ),
-                  const SizedBox(width: 8),
-                  const Expanded(
-                    child: BorderInput(
-                      hintText: 'Tin nhắn',
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.send),
-                  ),
-                ],
-              ),
-            )
+            BottomActionContainer()
           ],
         ),
+      ),
+    );
+  }
+}
+
+class BottomActionContainer extends StatelessWidget {
+  BottomActionContainer({
+    super.key,
+  });
+
+  final controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      color: Colors.white,
+      child: BlocBuilder<ConversationBloc, ConversationState>(
+        builder: (context, state) {
+          return Row(
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.attach_file),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: BorderInput(
+                  controller: controller,
+                  hintText: 'Tin nhắn',
+                  onChanged: (value) => context
+                      .read<ConversationBloc>()
+                      .add(MessageTextInputChangedEvent(value)),
+                ),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: state.messageTextInput.value.isNotEmpty
+                    ? () {
+                        controller.clear();
+                        context
+                            .read<ConversationBloc>()
+                            .add(const MessageSentEvent());
+                        context
+                            .read<ConversationBloc>()
+                            .add(const MessageTextInputChangedEvent(""));
+                      }
+                    : null,
+                icon: const Icon(Icons.send),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
