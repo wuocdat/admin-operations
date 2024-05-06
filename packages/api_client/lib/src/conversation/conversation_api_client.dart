@@ -24,9 +24,12 @@ class ConversationApiClient {
     return data;
   }
 
-  Future<List> getMessagesByConversationId(String id) async {
+  Future<List> getMessagesByConversationId(String id, int limit,
+      [int currentPage = 1]) async {
     final response = await _dio.get(ConversationUrl.messages, queryParameters: {
       "_id": id,
+      'limit': limit,
+      "page": currentPage,
     });
 
     final jsonResult = Handler.parseResponse(response) as Map<String, dynamic>;

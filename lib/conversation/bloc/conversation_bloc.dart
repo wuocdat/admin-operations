@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:conversation_repository/conversation_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tctt_mobile/services/socket_service.dart';
+import 'package:tctt_mobile/shared/debounce.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 
 part 'conversation_event.dart';
@@ -18,7 +19,10 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
         _socketIOService =
             CommunicationSocketIOService(conversationId: conversationId),
         super(const ConversationState()) {
-    on<DataFetchedEvent>(_onDataFetched);
+    on<DataFetchedEvent>(
+      _onDataFetched,
+      transformer: throttleDroppable(throttleDuration),
+    );
     on<MessageSentEvent>(_onMessageSent);
     on<MessageTextInputChangedEvent>(_onMessageTextInputChanged);
     on<_NewMessageReceivedEvent>(_onNewMessageReceived);
@@ -43,16 +47,24 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
 
   Future<void> _onDataFetched(
       DataFetchedEvent event, Emitter<ConversationState> emit) async {
+    if (state.hasReachedMax) return;
+
     emit(state.copyWith(status: FetchDataStatus.loading));
 
     try {
-      final messages =
-          await _conversationRepository.fetchMessages(_conversationId);
+      final messages = await _conversationRepository.fetchMessages(
+          _conversationId, state.messages.length);
 
-      emit(state.copyWith(
-        status: FetchDataStatus.success,
-        messages: messages.reversed.toList(),
-      ));
+      messages.isEmpty
+          ? emit(state.copyWith(
+              hasReachedMax: true,
+              status: FetchDataStatus.success,
+              messages: List.of(state.messages)..addAll(messages),
+            ))
+          : emit(state.copyWith(
+              status: FetchDataStatus.success,
+              messages: List.of(state.messages)..addAll(messages),
+            ));
     } catch (_) {
       emit(state.copyWith(status: FetchDataStatus.failure));
     }

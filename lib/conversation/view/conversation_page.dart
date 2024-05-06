@@ -75,16 +75,19 @@ class Conversation extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 color: Theme.of(context).primaryColor.withOpacity(0.1),
                 child: BlocBuilder<ConversationBloc, ConversationState>(
                   builder: (context, state) {
                     return RichListView(
-                        reverse: true,
-                        hasReachedMax: true,
-                        itemCount: state.messages.length,
-                        itemBuilder: (index) => ChatItem(state.messages[index]),
-                        onReachedEnd: () {});
+                      reverse: true,
+                      hasReachedMax: state.hasReachedMax,
+                      itemCount: state.messages.length,
+                      itemBuilder: (index) => ChatItem(state.messages[index]),
+                      onReachedEnd: () => context
+                          .read<ConversationBloc>()
+                          .add(const DataFetchedEvent()),
+                    );
                   },
                 ),
               ),

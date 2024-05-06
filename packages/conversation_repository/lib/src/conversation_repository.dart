@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:api_client/api_client.dart';
 import 'package:conversation_repository/src/models/models.dart';
 
+const messageLimit = 10;
+
 class ConversationRepository {
   ConversationRepository({ConversationApiClient? conversationApiClient})
       : _apiClient = conversationApiClient ?? ConversationApiClient();
@@ -15,10 +17,22 @@ class ConversationRepository {
     return jsonList.map((e) => Conversation.fromJson(e)).toList();
   }
 
-  Future<List<Message>> fetchMessages(String conversationId) async {
-    final jsonList =
-        await _apiClient.getMessagesByConversationId(conversationId);
+  Future<List<Message>> fetchMessages(String conversationId,
+      [int length = 0]) async {
+    var page = (length / messageLimit).ceil() + 1;
 
-    return jsonList.map((e) => Message.fromJson(e)).toList();
+    if ((length % messageLimit) != 0) {
+      page -= 1;
+    }
+    final jsonList = await _apiClient.getMessagesByConversationId(
+      conversationId,
+      messageLimit,
+      page,
+    );
+
+    return jsonList
+        .sublist(length % messageLimit)
+        .map((e) => Message.fromJson(e))
+        .toList();
   }
 }
