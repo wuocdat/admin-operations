@@ -1,4 +1,5 @@
 import 'package:api_client/src/api_config.dart';
+import 'package:api_client/src/common/handlers.dart';
 import 'package:dio/dio.dart';
 
 class UserRequestFailure implements Exception {}
@@ -11,6 +12,7 @@ class UserApiClient {
           ..interceptors.add(ApiInterceptors());
 
   static const userUrl = "/auth/current";
+  static const searchUser = "/users/all";
 
   final Dio _dio;
 
@@ -24,5 +26,16 @@ class UserApiClient {
     if (!data.containsKey("data")) throw UserNotFoundFailure();
 
     return data['data'] as Map<String, dynamic>;
+  }
+
+  Future<List> searchUsers(String username) async {
+    final response = await _dio.get(
+      searchUser,
+      queryParameters: {"username": username},
+    );
+
+    final result = Handler.parseResponse(response) as List;
+
+    return result.length > 10 ? result.sublist(0, 10) : result;
   }
 }
