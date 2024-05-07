@@ -78,13 +78,14 @@ class SearchUser extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       )
-                    : TextButton(
-                        onPressed: !state.creatingStatus.isLoading
-                            ? () => context
-                                .read<SearchUserBloc>()
-                                .add(const ModeChangedEvent())
-                            : null,
-                        child: const Text('Tạo nhóm'),
+                    : const TextButton(
+                        // onPressed: !state.creatingStatus.isLoading
+                        //     ? () => context
+                        //         .read<SearchUserBloc>()
+                        //         .add(const ModeChangedEvent())
+                        //     : null,
+                        onPressed: null,
+                        child: Text('Tạo nhóm'),
                       ),
               );
             },
@@ -153,7 +154,7 @@ class SearchUser extends StatelessWidget {
                       isLoading: state.status.isLoading ||
                           state.creatingStatus.isLoading,
                       child: RichListView(
-                        hasReachedMax: true,
+                        hasReachedMax: state.hasReachedMax,
                         itemCount: state.users.length,
                         itemBuilder: (index) {
                           final currentUser = state.users[index];
@@ -163,7 +164,9 @@ class SearchUser extends StatelessWidget {
                             isPicked: state.pickedUsers.contains(currentUser),
                           );
                         },
-                        onReachedEnd: () {},
+                        onReachedEnd: () => context
+                            .read<SearchUserBloc>()
+                            .add(const UserFetchedEvent()),
                       ),
                     ),
                   ),

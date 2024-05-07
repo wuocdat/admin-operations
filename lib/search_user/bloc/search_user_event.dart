@@ -50,3 +50,10 @@ class _ConversationIdReceivedEvent extends SearchUserEvent {
   @override
   List<Object> get props => [conversationId];
 }
+
+final class UserFetchedEvent extends SearchUserEvent {
+  const UserFetchedEvent();
+
+  @override
+  List<Object> get props => [];
+}

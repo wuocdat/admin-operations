@@ -23,6 +23,10 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
     on<CheckBoxStatusChangeEvent>(_onCheckboxStatusChanged);
     on<OneByOneConversationCreatedEvent>(_onOneByOneConversationCreated);
     on<_ConversationIdReceivedEvent>(_onConversationIdReceived);
+    on<UserFetchedEvent>(
+      _onUserFetched,
+      transformer: throttleDroppable(throttleDuration),
+    );
 
     _socketIOService.connect();
 
@@ -45,20 +49,57 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
       SearchInputChangeEvent event, Emitter<SearchUserState> emit) async {
     if (event.value.isEmpty) {
       emit(state.copyWith(
+        searchValue: "",
         status: FetchDataStatus.success,
         users: List.empty(),
+        hasReachedMax: true,
       ));
 
       return;
     }
 
     try {
-      emit(state.copyWith(status: FetchDataStatus.loading));
+      emit(state.copyWith(
+        status: FetchDataStatus.loading,
+        searchValue: event.value,
+        users: List<ShortProfile>.empty(),
+        hasReachedMax: true,
+      ));
 
       final users = await _repository.searchUsers(event.value);
 
-      emit(state.copyWith(status: FetchDataStatus.success, users: users));
+      emit(state.copyWith(
+          status: FetchDataStatus.success,
+          users: users,
+          hasReachedMax: users.length < userLimit));
     } catch (_) {
+      emit(state.copyWith(
+          status: FetchDataStatus.failure, users: List<ShortProfile>.empty()));
+    }
+  }
+
+  Future<void> _onUserFetched(
+    UserFetchedEvent event,
+    Emitter<SearchUserState> emit,
+  ) async {
+    if (state.hasReachedMax) return;
+
+    emit(state.copyWith(status: FetchDataStatus.loading));
+
+    try {
+      final users = await _repository.searchUsers(state.searchValue);
+
+      users.length < userLimit
+          ? emit(state.copyWith(
+              hasReachedMax: true,
+              status: FetchDataStatus.success,
+              users: List.of(state.users)..addAll(users),
+            ))
+          : emit(state.copyWith(
+              status: FetchDataStatus.success,
+              users: List.of(state.users)..addAll(users),
+            ));
+    } catch (e) {
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }

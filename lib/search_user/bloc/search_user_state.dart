@@ -16,6 +16,8 @@ class SearchUserState extends Equatable {
     this.groupMode = false,
     this.creatingStatus = CreateConversationStatus.initial,
     this.conversationId,
+    this.hasReachedMax = true,
+    this.searchValue = "",
   });
 
   final List<ShortProfile> users;
@@ -24,6 +26,8 @@ class SearchUserState extends Equatable {
   final List<ShortProfile> pickedUsers;
   final CreateConversationStatus creatingStatus;
   final String? conversationId;
+  final bool hasReachedMax;
+  final String searchValue;
 
   SearchUserState copyWith({
     List<ShortProfile>? users,
@@ -32,6 +36,8 @@ class SearchUserState extends Equatable {
     bool? groupMode,
     CreateConversationStatus? creatingStatus,
     String? conversationId,
+    bool? hasReachedMax,
+    String? searchValue,
   }) {
     return SearchUserState(
       users: users ?? this.users,
@@ -40,6 +46,8 @@ class SearchUserState extends Equatable {
       pickedUsers: pickedUsers ?? this.pickedUsers,
       creatingStatus: creatingStatus ?? this.creatingStatus,
       conversationId: conversationId ?? this.conversationId,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      searchValue: searchValue ?? this.searchValue,
     );
   }
 
@@ -51,5 +59,7 @@ class SearchUserState extends Equatable {
         pickedUsers,
         creatingStatus,
         conversationId,
+        hasReachedMax,
+        searchValue,
       ];
 }
