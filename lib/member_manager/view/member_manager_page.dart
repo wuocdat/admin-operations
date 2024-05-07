@@ -7,12 +7,9 @@ class CustomContainer extends StatelessWidget {
     required String name,
     required String role,
     required VoidCallback? onPressed,
-  })
-      : _name = name,
-        _role = role,
-        _onPressed = onPressed;
+  })  : _name = name,
+        _role = role;
 
-  final VoidCallback? _onPressed;
   final String _name;
   final String _role;
 
@@ -95,93 +92,99 @@ class MemberManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              automaticallyImplyLeading: false,
-              leading: BackButton(
-                color: Colors.black,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              title: const Text(
-                'Thành viên',
-                style: TextStyle(
-                  fontFamily: 'Urbanest',
-                  letterSpacing: 0,
-                ),
-              ),
-            ),
-            body: Container(
-              color: Colors.white,
-              child: SafeArea(
-                child: Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.vertical,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        leading: BackButton(
+          color: Colors.black,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text(
+          'Thành viên',
+          style: TextStyle(
+            fontFamily: 'Urbanest',
+            letterSpacing: 0,
+          ),
+        ),
+      ),
+      body: Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
+              child: ListView(
+                padding: EdgeInsets.zero,
+                scrollDirection: Axis.vertical,
+                children: [
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 4),
+                    child: Text(
+                      'Thành phố Đà Nẵng',
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 16,
+                        letterSpacing: 0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
                       children: [
-                        const Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 4),
-                          child: Text(
-                            'Thành phố Đà Nẵng',
-                            style: TextStyle(
-                              fontFamily: 'Plus Jakarta Sans',
-                              fontSize: 16,
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                          child: Icon(
+                            Icons.person_add_rounded,
+                            color: Color(0xFF14181B),
+                            size: 20,
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
+                            child: Text(
+                              'Thêm thành viên',
+                              style: TextStyle(
+                                fontFamily: 'Plus Jakarta Sans',
+                                color: Color(0xFF14181B),
+                                fontSize: 14,
+                                letterSpacing: 0,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                                child: Icon(
-                                  Icons.person_add_rounded,
-                                  color: Color(0xFF14181B),
-                                  size: 20,
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-                                  child: Text(
-                                    'Thêm thành viên',
-                                    style: TextStyle(
-                                      fontFamily: 'Plus Jakarta Sans',
-                                      color: Color(0xFF14181B),
-                                      fontSize: 14,
-                                      letterSpacing: 0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Divider(
-                          height: 1,
-                          thickness: 1,
-                          color: Colors.grey,
-                        ),
-                        CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
-                        CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
-                        CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
-                        CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
-                        CustomContainer(name: 'Nguyen Van A',role: 'admin', onPressed: () {}),
                       ],
                     ),
                   ),
-                ),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Colors.grey,
+                  ),
+                  CustomContainer(
+                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
+                  CustomContainer(
+                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
+                  CustomContainer(
+                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
+                  CustomContainer(
+                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
+                  CustomContainer(
+                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
+                ],
               ),
             ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 }
