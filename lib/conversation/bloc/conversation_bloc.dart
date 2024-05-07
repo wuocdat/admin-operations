@@ -74,13 +74,15 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       final messages = await _conversationRepository.fetchMessages(
           _conversationId, state.messages.length);
 
-      messages.isEmpty
+      messages.isEmpty ||
+              (messages.length < messageLimit && state.messages.isEmpty)
           ? emit(state.copyWith(
               hasReachedMax: true,
               status: FetchDataStatus.success,
               messages: List.of(state.messages)..addAll(messages),
             ))
           : emit(state.copyWith(
+              hasReachedMax: false,
               status: FetchDataStatus.success,
               messages: List.of(state.messages)..addAll(messages),
             ));
