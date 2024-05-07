@@ -24,6 +24,16 @@ class ConversationApiClient {
     return data;
   }
 
+  Future<Map<String, dynamic>> getConversationById(String id) async {
+    final response = await _dio.get('${ConversationUrl.base}/$id');
+
+    if (response.statusCode != 200) throw ConversationNotFoundFailure();
+
+    final data = response.data as Map<String, dynamic>;
+
+    return data;
+  }
+
   Future<List> getMessagesByConversationId(String id, int limit,
       [int currentPage = 1]) async {
     final response = await _dio.get(ConversationUrl.messages, queryParameters: {

@@ -17,6 +17,12 @@ class ConversationRepository {
     return jsonList.map((e) => Conversation.fromJson(e)).toList();
   }
 
+  Future<Conversation> getConversationById(String id) async {
+    final jsonConversation = await _apiClient.getConversationById(id);
+
+    return Conversation.fromJson(jsonConversation);
+  }
+
   Future<List<Message>> fetchMessages(String conversationId,
       [int length = 0]) async {
     var page = (length / messageLimit).ceil() + 1;

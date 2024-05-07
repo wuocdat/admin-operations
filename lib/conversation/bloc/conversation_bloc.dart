@@ -26,6 +26,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     on<MessageSentEvent>(_onMessageSent);
     on<MessageTextInputChangedEvent>(_onMessageTextInputChanged);
     on<_NewMessageReceivedEvent>(_onNewMessageReceived);
+    on<ConversationInfoFetchedEvent>(_onConversationInfoFetched);
 
     _socketIOService.connect();
 
@@ -43,6 +44,23 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     _streamSubscription.cancel();
     _socketIOService.dispose();
     return super.close();
+  }
+
+  Future<void> _onConversationInfoFetched(
+    ConversationInfoFetchedEvent event,
+    Emitter<ConversationState> emit,
+  ) async {
+    emit(state.copyWith(status: FetchDataStatus.loading));
+
+    try {
+      final conversation =
+          await _conversationRepository.getConversationById(_conversationId);
+
+      emit(state.copyWith(
+          conversationInfo: conversation, status: FetchDataStatus.success));
+    } catch (_) {
+      emit(state.copyWith(status: FetchDataStatus.failure));
+    }
   }
 
   Future<void> _onDataFetched(

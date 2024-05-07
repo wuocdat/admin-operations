@@ -45,7 +45,7 @@ class ChatItem extends StatelessWidget {
     ];
 
     final List<Widget> itemHeader = [
-      const DemoAvatar(size: 35),
+      SmartAvatar(text: message.userData['name'] ?? 'N'),
       const SizedBox(width: 8),
       Expanded(
         child: RichText(

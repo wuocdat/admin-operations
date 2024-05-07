@@ -38,3 +38,10 @@ final class _NewMessageReceivedEvent extends ConversationEvent {
   @override
   List<Object> get props => [message];
 }
+
+final class ConversationInfoFetchedEvent extends ConversationEvent {
+  const ConversationInfoFetchedEvent();
+
+  @override
+  List<Object> get props => [];
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tctt_mobile/shared/utils/extensions.dart';
 
 class DemoAvatar extends StatelessWidget {
   const DemoAvatar({super.key, this.size = 50});
@@ -48,7 +49,7 @@ class SmartAvatar extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
               child: Center(
                 child: Text(
-                  name,
+                  name.capitalize(),
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.w900),
                 ),

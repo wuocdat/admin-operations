@@ -17,6 +17,8 @@ class Conversation extends Equatable {
   final String? name;
   final List<ConversationUser> conversationUsers;
 
+  static const empty = Conversation(id: "", conversationUsers: []);
+
   factory Conversation.fromJson(Map<String, dynamic> json) =>
       _$ConversationFromJson(json);
 

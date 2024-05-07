@@ -1,8 +1,10 @@
 import 'package:conversation_repository/conversation_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/conversation/bloc/conversation_bloc.dart';
 import 'package:tctt_mobile/conversation/widgets/chat_item.dart';
+import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/widgets/inputs.dart';
 import 'package:tctt_mobile/widgets/rich_list_view.dart';
 
@@ -16,7 +18,9 @@ class Conversation extends StatelessWidget {
           conversationRepository:
               RepositoryProvider.of<ConversationRepository>(context),
           conversationId: conversationId,
-        )..add(const DataFetchedEvent()),
+        )
+          ..add(const DataFetchedEvent())
+          ..add(const ConversationInfoFetchedEvent()),
         child: Conversation(conversationId),
       ),
     );
@@ -40,22 +44,31 @@ class Conversation extends StatelessWidget {
         ),
         title: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-          title: const Text(
-            'Lăng Kỳ Thiên',
-            style: TextStyle(
-              fontSize: 18,
-              fontFamily: 'Urbanist',
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0,
-            ),
+          title: BlocBuilder<ConversationBloc, ConversationState>(
+            builder: (context, state) {
+              return Text(
+                state.conversationInfo.id.isNotEmpty
+                    ? state.conversationInfo
+                        .getName(context.select(
+                            (AuthenticationBloc bloc) => bloc.state.user.id))
+                        .capitalize()
+                    : "",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Urbanist',
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0,
+                ),
+              );
+            },
           ),
-          subtitle: Text(
-            'Ngũ Hành Sơn, Đà Nẵng $conversationId',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 12,
-            ),
-          ),
+          // subtitle: Text(
+          //   'Ngũ Hành Sơn, Đà Nẵng $conversationId',
+          //   style: TextStyle(
+          //     color: Colors.grey[600],
+          //     fontSize: 12,
+          //   ),
+          // ),
         ),
         actions: [
           Padding(
