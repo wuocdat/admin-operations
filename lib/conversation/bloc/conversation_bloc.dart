@@ -50,16 +50,17 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     ConversationInfoFetchedEvent event,
     Emitter<ConversationState> emit,
   ) async {
-    emit(state.copyWith(status: FetchDataStatus.loading));
+    emit(state.copyWith(headerStatus: FetchDataStatus.loading));
 
     try {
       final conversation =
           await _conversationRepository.getConversationById(_conversationId);
 
       emit(state.copyWith(
-          conversationInfo: conversation, status: FetchDataStatus.success));
+          conversationInfo: conversation,
+          headerStatus: FetchDataStatus.success));
     } catch (_) {
-      emit(state.copyWith(status: FetchDataStatus.failure));
+      emit(state.copyWith(headerStatus: FetchDataStatus.failure));
     }
   }
 

@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/conversation/bloc/conversation_bloc.dart';
 import 'package:tctt_mobile/conversation/widgets/chat_item.dart';
+import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/widgets/inputs.dart';
+import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/rich_list_view.dart';
 
 class Conversation extends StatelessWidget {
@@ -44,22 +46,32 @@ class Conversation extends StatelessWidget {
         ),
         title: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-          title: BlocBuilder<ConversationBloc, ConversationState>(
+          title: BlocConsumer<ConversationBloc, ConversationState>(
+            listenWhen: (previous, current) =>
+                previous.status != current.status,
+            listener: (context, state) {
+              if (state.status.isFailure || state.headerStatus.isFailure) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                      const SnackBar(content: Text('Đã xảy ra lỗi')));
+              }
+            },
             builder: (context, state) {
-              return Text(
-                state.conversationInfo.id.isNotEmpty
-                    ? state.conversationInfo
-                        .getName(context.select(
-                            (AuthenticationBloc bloc) => bloc.state.user.id))
-                        .capitalize()
-                    : "",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontFamily: 'Urbanist',
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0,
-                ),
-              );
+              return !state.headerStatus.isSuccess
+                  ? const Loader(size: 20, strokeWith: 2)
+                  : Text(
+                      state.conversationInfo
+                          .getName(context.select(
+                              (AuthenticationBloc bloc) => bloc.state.user.id))
+                          .capitalize(),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0,
+                      ),
+                    );
             },
           ),
           // subtitle: Text(
