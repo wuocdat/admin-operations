@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:conversation_repository/conversation_repository.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:tctt_mobile/services/token_service.dart';
-import 'package:tctt_mobile/shared/utils/constants.dart';
 
 class EventNames {
   static const joinEvent = "joinConv";
@@ -14,7 +14,7 @@ class EventNames {
 class CreatingConversationSocketIOService {
   CreatingConversationSocketIOService()
       : _socket = IO.io(
-          socketUrl,
+          dotenv.env['SOCKET_IO_URL'],
           IO.OptionBuilder()
               .setTransports(['websocket'])
               .disableAutoConnect()
@@ -62,7 +62,7 @@ class CommunicationSocketIOService {
   CommunicationSocketIOService({required String conversationId})
       : _conversationId = conversationId,
         _socket = IO.io(
-          socketUrl,
+          dotenv.env['SOCKET_IO_URL'],
           IO.OptionBuilder()
               .setTransports(['websocket'])
               .disableAutoConnect()
