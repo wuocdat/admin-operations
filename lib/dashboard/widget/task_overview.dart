@@ -14,7 +14,7 @@ class TaskOverview extends StatelessWidget {
     return BlocBuilder<DashboardBloc, DashboardState>(
       builder: (context, state) {
         return Overview(
-          title: 'Nhiệm Vụ',
+          title: 'Nhiệm vụ',
           subtitle: 'Nhiệm vụ nhận trong ngày',
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 8),

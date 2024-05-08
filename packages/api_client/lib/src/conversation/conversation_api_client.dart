@@ -15,7 +15,7 @@ class ConversationApiClient {
   final Dio _dio;
 
   Future<List> getConversations() async {
-    final response = await _dio.get(ConversationUrl.base);
+    final response = await _dio.get(ConversationUrl.list);
 
     if (response.statusCode != 200) throw ConversationNotFoundFailure();
 

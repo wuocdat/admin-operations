@@ -10,8 +10,8 @@ import 'package:tctt_mobile/widgets/inputs.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/rich_list_view.dart';
 
-class Conversation extends StatelessWidget {
-  const Conversation(this.conversationId, {super.key});
+class ConversationPage extends StatelessWidget {
+  const ConversationPage(this.conversationId, {super.key});
 
   static MaterialPageRoute route(String conversationId) {
     return MaterialPageRoute(
@@ -23,7 +23,7 @@ class Conversation extends StatelessWidget {
         )
           ..add(const DataFetchedEvent())
           ..add(const ConversationInfoFetchedEvent()),
-        child: Conversation(conversationId),
+        child: ConversationPage(conversationId),
       ),
     );
   }

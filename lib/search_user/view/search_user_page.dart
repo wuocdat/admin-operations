@@ -98,7 +98,7 @@ class SearchUser extends StatelessWidget {
             if (state.creatingStatus.isSuccess &&
                 state.conversationId != null) {
               Navigator.pushReplacement(
-                  context, Conversation.route(state.conversationId!));
+                  context, ConversationPage.route(state.conversationId!));
             }
           },
           builder: (context, state) {

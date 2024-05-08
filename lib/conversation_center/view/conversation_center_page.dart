@@ -1,5 +1,4 @@
-import 'package:conversation_repository/conversation_repository.dart'
-    hide Conversation;
+import 'package:conversation_repository/conversation_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
@@ -8,6 +7,7 @@ import 'package:tctt_mobile/conversation_center/cubit/conversation_center_cubit.
 import 'package:tctt_mobile/search_user/view/search_user_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/utils/extensions.dart';
+import 'package:tctt_mobile/shared/utils/time.dart';
 import 'package:tctt_mobile/widgets/images.dart';
 import 'package:tctt_mobile/widgets/label_text.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
@@ -50,14 +50,27 @@ class ConversationCenter extends StatelessWidget {
                       ),
                     ),
                     ...state.conversations.map(
-                      (e) => ConversationItem(
-                        name: e
-                            .getName(context.select((AuthenticationBloc bloc) =>
-                                bloc.state.user.id))
-                            .capitalize(),
-                        onTap: () => Navigator.of(context)
-                            .push(Conversation.route(e.id)),
-                      ),
+                      (e) => e.lastestMessage != null
+                          ? ConversationItem(
+                              name: e
+                                  .getName(context.select(
+                                      (AuthenticationBloc bloc) =>
+                                          bloc.state.user.id))
+                                  .capitalize(),
+                              lastMessageContent: e.lastMessageContent,
+                              lastMessageTime: e.lastMessageTime,
+                              onTap: () async {
+                                await Navigator.of(context)
+                                    .push(ConversationPage.route(e.id));
+
+                                if (!context.mounted) return;
+
+                                context
+                                    .read<ConversationCenterCubit>()
+                                    .fetchConversations();
+                              },
+                            )
+                          : Container(),
                     ),
                   ],
                 );
@@ -76,9 +89,13 @@ class ConversationItem extends StatelessWidget {
     this.isLast = false,
     this.onTap,
     required this.name,
+    this.lastMessageContent,
+    this.lastMessageTime,
   });
 
   final String name;
+  final String? lastMessageContent;
+  final String? lastMessageTime;
   final bool lastIsImage;
   final bool isLast;
   final void Function()? onTap;
@@ -115,15 +132,15 @@ class ConversationItem extends StatelessWidget {
                     Text('Photo'),
                   ],
                 )
-              : const Text(
-                  'Gửi đồng chí thông tin về đối tượng Nguyễn Lân Thắng',
+              : Text(
+                  lastMessageContent ?? "",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
           trailing: Column(
             children: [
               Text(
-                '10:30',
+                lastMessageTime ?? "",
                 style: theme.textTheme.titleSmall?.copyWith(
                   color: theme.primaryColor,
                   fontWeight: FontWeight.bold,
@@ -135,4 +152,12 @@ class ConversationItem extends StatelessWidget {
       ),
     );
   }
+}
+
+extension on Conversation {
+  String get lastMessageContent => lastestMessage?['content'] ?? "";
+
+  String get lastMessageTime => lastMessageCreatedAt != null
+      ? TimeUtils.convertTimeToReadableFormat(lastMessageCreatedAt!)
+      : "";
 }
