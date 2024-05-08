@@ -1,5 +1,6 @@
 import 'package:conversation_repository/conversation_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/conversation/view/conversation_page.dart';
@@ -24,59 +25,63 @@ class ConversationCenter extends StatelessWidget {
         conversationRepository:
             RepositoryProvider.of<ConversationRepository>(context),
       )..fetchConversations(),
-      child: SingleChildScrollView(
-        child: BlocBuilder<ConversationCenterCubit, ConversationCenterState>(
-          builder: (context, state) {
-            switch (state.status) {
-              case FetchDataStatus.loading:
-                return const SizedBox(height: 200, child: Loader());
-              default:
-                return Column(
-                  children: [
-                    InkWell(
-                      onTap: () =>
-                          Navigator.of(context).push(SearchUser.route()),
-                      child: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        color: theme.primaryColor.withOpacity(0.1),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.search),
-                            SizedBox(width: 8),
-                            Text('Tìm kiếm tên người dùng hoặc số điện thoại'),
-                          ],
-                        ),
+      child: BlocBuilder<ConversationCenterCubit, ConversationCenterState>(
+        builder: (context, state) {
+          switch (state.status) {
+            case FetchDataStatus.loading:
+              return const Loader();
+            default:
+              return Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  InkWell(
+                    onTap: () => Navigator.of(context).push(SearchUser.route()),
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      color: theme.primaryColor.withOpacity(0.1),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.search),
+                          SizedBox(width: 8),
+                          Text('Tìm kiếm tên người dùng hoặc số điện thoại'),
+                        ],
                       ),
                     ),
-                    ...state.conversations.map(
-                      (e) => e.lastestMessage != null
-                          ? ConversationItem(
-                              name: e
-                                  .getName(context.select(
-                                      (AuthenticationBloc bloc) =>
-                                          bloc.state.user.id))
-                                  .capitalize(),
-                              lastMessageContent: e.lastMessageContent,
-                              lastMessageTime: e.lastMessageTime,
-                              onTap: () async {
-                                await Navigator.of(context)
-                                    .push(ConversationPage.route(e.id));
+                  ),
+                  Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: () => context
+                          .read<ConversationCenterCubit>()
+                          .fetchConversations(),
+                      child: ListView.builder(
+                        itemCount: state.conversations.length,
+                        itemBuilder: (_, index) {
+                          final conversation = state.conversations[index];
+                          return conversation.lastestMessage != null
+                              ? ConversationItem(
+                                  conversation: conversation,
+                                  onTap: () async {
+                                    await Navigator.of(context).push(
+                                        ConversationPage.route(
+                                            conversation.id));
 
-                                if (!context.mounted) return;
+                                    if (!context.mounted) return;
 
-                                context
-                                    .read<ConversationCenterCubit>()
-                                    .fetchConversations();
-                              },
-                            )
-                          : Container(),
+                                    context
+                                        .read<ConversationCenterCubit>()
+                                        .fetchConversations();
+                                  },
+                                )
+                              : Container();
+                        },
+                      ),
                     ),
-                  ],
-                );
-            }
-          },
-        ),
+                  ),
+                ],
+              );
+          }
+        },
       ),
     );
   }
@@ -88,14 +93,10 @@ class ConversationItem extends StatelessWidget {
     this.lastIsImage = false,
     this.isLast = false,
     this.onTap,
-    required this.name,
-    this.lastMessageContent,
-    this.lastMessageTime,
+    required this.conversation,
   });
 
-  final String name;
-  final String? lastMessageContent;
-  final String? lastMessageTime;
+  final Conversation conversation;
   final bool lastIsImage;
   final bool isLast;
   final void Function()? onTap;
@@ -115,39 +116,47 @@ class ConversationItem extends StatelessWidget {
                 ),
               )
             : null,
-        child: ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-          leading: SmartAvatar(text: name),
-          title: MediumLabelText(
-            name,
-            color: theme.primaryColor,
-          ),
-          subtitle: lastIsImage
-              ? const Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.camera_alt_rounded, size: 16),
-                    SizedBox(width: 8),
-                    Text('Photo'),
-                  ],
-                )
-              : Text(
-                  lastMessageContent ?? "",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-          trailing: Column(
-            children: [
-              Text(
-                lastMessageTime ?? "",
-                style: theme.textTheme.titleSmall?.copyWith(
-                  color: theme.primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
+        child: BlocSelector<AuthenticationBloc, AuthenticationState, String>(
+          selector: (state) {
+            return state.user.id;
+          },
+          builder: (context, userId) {
+            final name = conversation.getName(userId).capitalize();
+            return ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              leading: SmartAvatar(text: name),
+              title: MediumLabelText(
+                name,
+                color: theme.primaryColor,
               ),
-            ],
-          ),
+              subtitle: lastIsImage
+                  ? const Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.camera_alt_rounded, size: 16),
+                        SizedBox(width: 8),
+                        Text('Photo'),
+                      ],
+                    )
+                  : Text(
+                      conversation.lastMessageContent,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+              trailing: Column(
+                children: [
+                  Text(
+                    conversation.lastMessageTime,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
