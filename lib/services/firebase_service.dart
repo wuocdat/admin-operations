@@ -19,7 +19,22 @@ class FirebaseService {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    await FirebaseMessaging.instance.setAutoInitEnabled(true);
+
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    await messaging.setAutoInitEnabled(true);
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    log(settings.authorizationStatus.name);
 
     await _handleMessagesFromFCM();
   }
