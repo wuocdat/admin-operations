@@ -93,43 +93,41 @@ class SentTasks extends StatelessWidget {
                         );
                       }
                       return RichListView(
-                          hasReachedMax: state.hasReachedMax,
-                          itemCount: state.tasks.length,
-                          itemBuilder: (index) => MessageItem(
-                                name: state.tasks[index].unitSent.name,
-                                time: state.tasks[index].createdAt,
-                                title: state.tasks[index].name,
-                                content: state.tasks[index].content,
-                                isImportant: state.tasks[index].important,
-                                tag: SimpleTag(
-                                  text: state.tasks[index].type.name,
-                                  color:
-                                      state.tasks[index].type.toTaskTypeE.color,
-                                ),
-                                onTap: () async {
-                                  final needToReload =
-                                      await Navigator.of(context).push(
-                                    SentTaskDetailPage.route(
-                                        state.tasks[index].id),
-                                  );
-                                  if (!context.mounted ||
-                                      needToReload != true) {
-                                    return;
-                                  }
-                                  context
-                                      .read<SenderBloc>()
-                                      .add(const SentTaskRefetched());
-                                },
-                              ),
-                          onReachedEnd: () {
+                        hasReachedMax: state.hasReachedMax,
+                        itemCount: state.tasks.length,
+                        itemBuilder: (index) => MessageItem(
+                          name: state.tasks[index].unitSent.name,
+                          time: state.tasks[index].createdAt,
+                          title: state.tasks[index].name,
+                          content: state.tasks[index].content,
+                          isImportant: state.tasks[index].important,
+                          tag: SimpleTag(
+                            text: state.tasks[index].type.name,
+                            color: state.tasks[index].type.toTaskTypeE.color,
+                          ),
+                          onTap: () async {
+                            final needToReload =
+                                await Navigator.of(context).push(
+                              SentTaskDetailPage.route(state.tasks[index].id),
+                            );
+                            if (!context.mounted || needToReload != true) {
+                              return;
+                            }
                             context
                                 .read<SenderBloc>()
-                                .add(const SenderFetchedEvent());
-                          });
+                                .add(const SentTaskRefetched());
+                          },
+                        ),
+                        onReachedEnd: () {
+                          context
+                              .read<SenderBloc>()
+                              .add(const SenderFetchedEvent());
+                        },
+                      );
                   }
                 },
               ),
-            )
+            ),
           ],
         ),
       ),
