@@ -28,14 +28,19 @@ class UserApiClient {
     return data['data'] as Map<String, dynamic>;
   }
 
-  Future<List> searchUsers(String username) async {
+  Future<List> searchUsers(String username, int limit,
+      [int currentPage = 1]) async {
     final response = await _dio.get(
       searchUser,
-      queryParameters: {"username": username},
+      queryParameters: {
+        "username": username,
+        'limit': limit,
+        'page': currentPage,
+      },
     );
 
     final result = Handler.parseResponse(response) as List;
 
-    return result.length > 10 ? result.sublist(0, 10) : result;
+    return result;
   }
 }

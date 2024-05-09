@@ -14,8 +14,10 @@ class ParameterItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
     return Container(
-      width: 200,
+      width: screenSize.width * 0.5 - 24,
       decoration: BoxDecoration(
         // color: FlutterFlowTheme.of(context).secondaryBackground,
         borderRadius: BorderRadius.circular(8),

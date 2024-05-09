@@ -1,16 +1,34 @@
+import 'package:conversation_repository/conversation_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/conversation/bloc/conversation_bloc.dart';
 import 'package:tctt_mobile/conversation/widgets/chat_item.dart';
-import 'package:tctt_mobile/shared/utils/constants.dart';
+import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/widgets/inputs.dart';
+import 'package:tctt_mobile/widgets/loader.dart';
+import 'package:tctt_mobile/widgets/rich_list_view.dart';
 
-class Conversation extends StatelessWidget {
-  const Conversation({super.key});
+class ConversationPage extends StatelessWidget {
+  const ConversationPage(this.conversationId, {super.key});
 
   static MaterialPageRoute route(String conversationId) {
     return MaterialPageRoute(
-      builder: (context) => const Conversation(),
+      builder: (context) => BlocProvider(
+        create: (context) => ConversationBloc(
+          conversationRepository:
+              RepositoryProvider.of<ConversationRepository>(context),
+          conversationId: conversationId,
+        )
+          ..add(const DataFetchedEvent())
+          ..add(const ConversationInfoFetchedEvent()),
+        child: ConversationPage(conversationId),
+      ),
     );
   }
+
+  final String conversationId;
 
   @override
   Widget build(BuildContext context) {
@@ -28,22 +46,41 @@ class Conversation extends StatelessWidget {
         ),
         title: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-          title: const Text(
-            'Lăng Kỳ Thiên',
-            style: TextStyle(
-              fontSize: 18,
-              fontFamily: 'Urbanist',
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0,
-            ),
+          title: BlocConsumer<ConversationBloc, ConversationState>(
+            listenWhen: (previous, current) =>
+                previous.status != current.status,
+            listener: (context, state) {
+              if (state.status.isFailure || state.headerStatus.isFailure) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                      const SnackBar(content: Text('Đã xảy ra lỗi')));
+              }
+            },
+            builder: (context, state) {
+              return !state.headerStatus.isSuccess
+                  ? const Loader(size: 20, strokeWith: 2)
+                  : Text(
+                      state.conversationInfo
+                          .getName(context.select(
+                              (AuthenticationBloc bloc) => bloc.state.user.id))
+                          .capitalize(),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0,
+                      ),
+                    );
+            },
           ),
-          subtitle: Text(
-            'Ngũ Hành Sơn, Đà Nẵng',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 12,
-            ),
-          ),
+          // subtitle: Text(
+          //   'Ngũ Hành Sơn, Đà Nẵng $conversationId',
+          //   style: TextStyle(
+          //     color: Colors.grey[600],
+          //     fontSize: 12,
+          //   ),
+          // ),
         ),
         actions: [
           Padding(
@@ -63,57 +100,79 @@ class Conversation extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 color: Theme.of(context).primaryColor.withOpacity(0.1),
-                child: const Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ChatItem(
-                      senderName: "Lăng Kỳ Thiên",
-                      time: '8:16 PM',
-                      origin: MessageOrigin.fromOther,
-                      text: mockMessageText,
-                    ),
-                    ChatItem(
-                      time: '8:16 PM',
-                      origin: MessageOrigin.fromSelf,
-                      text: mockMessageText,
-                    ),
-                    ChatItem(
-                      time: '8:16 PM',
-                      origin: MessageOrigin.fromSelf,
-                      attachmentUrl: mockMessageText,
-                    ),
-                  ],
+                child: BlocBuilder<ConversationBloc, ConversationState>(
+                  builder: (context, state) {
+                    return RichListView(
+                      reverse: true,
+                      hasReachedMax: state.hasReachedMax,
+                      itemCount: state.messages.length,
+                      itemBuilder: (index) => ChatItem(state.messages[index]),
+                      onReachedEnd: () => context
+                          .read<ConversationBloc>()
+                          .add(const DataFetchedEvent()),
+                    );
+                  },
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              color: Colors.white,
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.attach_file),
-                  ),
-                  const SizedBox(width: 8),
-                  const Expanded(
-                    child: BorderInput(
-                      hintText: 'Tin nhắn',
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.send),
-                  ),
-                ],
-              ),
-            )
+            BottomActionContainer()
           ],
         ),
+      ),
+    );
+  }
+}
+
+class BottomActionContainer extends StatelessWidget {
+  BottomActionContainer({
+    super.key,
+  });
+
+  final controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      color: Colors.white,
+      child: BlocBuilder<ConversationBloc, ConversationState>(
+        builder: (context, state) {
+          return Row(
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.attach_file),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: BorderInput(
+                  controller: controller,
+                  hintText: 'Tin nhắn',
+                  onChanged: (value) => context
+                      .read<ConversationBloc>()
+                      .add(MessageTextInputChangedEvent(value)),
+                ),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: state.currentInputText.isNotEmpty
+                    ? () {
+                        controller.clear();
+                        context
+                            .read<ConversationBloc>()
+                            .add(const MessageSentEvent());
+                        context
+                            .read<ConversationBloc>()
+                            .add(const MessageTextInputChangedEvent(""));
+                      }
+                    : null,
+                icon: const Icon(Icons.send),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

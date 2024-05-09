@@ -19,7 +19,22 @@ class FirebaseService {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    await FirebaseMessaging.instance.setAutoInitEnabled(true);
+
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    await messaging.setAutoInitEnabled(true);
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    log(settings.authorizationStatus.name);
 
     await _handleMessagesFromFCM();
   }
@@ -127,7 +142,27 @@ class FirebaseService {
         break;
 
       case ENotificationType.chat:
-        // Handle chat notification
+        final senderName = message.data['title'] as String;
+        final notificationId = DateTime.now().hashCode;
+        final conversationId = message.data['conversationId'];
+        final body = message.data['body'] as String;
+        final title = "Tin nhắn mới từ $senderName";
+
+        plugin.show(
+          notificationId,
+          title,
+          body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              icon: 'app_icon',
+              // other properties...
+            ),
+          ),
+          payload: conversationId,
+        );
         break;
     }
   }

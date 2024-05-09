@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tctt_mobile/shared/utils/extensions.dart';
 
 class DemoAvatar extends StatelessWidget {
   const DemoAvatar({super.key, this.size = 50});
@@ -15,6 +16,45 @@ class DemoAvatar extends StatelessWidget {
         height: size,
         fit: BoxFit.cover,
       ),
+    );
+  }
+}
+
+class SmartAvatar extends StatelessWidget {
+  SmartAvatar({
+    super.key,
+    this.size = 50,
+    this.imageUrl,
+    required String text,
+  }) : name = text.isEmpty ? "N" : text[0];
+
+  final double size;
+  final String? imageUrl;
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(size),
+      child: imageUrl != null
+          ? Image.network(
+              imageUrl!,
+              width: size,
+              height: size,
+              fit: BoxFit.cover,
+            )
+          : Container(
+              width: size,
+              height: size,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              child: Center(
+                child: Text(
+                  name.capitalize(),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w900),
+                ),
+              ),
+            ),
     );
   }
 }

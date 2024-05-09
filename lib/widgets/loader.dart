@@ -3,11 +3,21 @@ import 'package:flutter/material.dart';
 class Loader extends StatelessWidget {
   const Loader({
     super.key,
+    this.size = 40,
+    this.strokeWith = 4,
   });
+
+  final double size;
+  final double strokeWith;
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: CircularProgressIndicator());
+    return Center(
+        child: SizedBox(
+      height: size,
+      width: size,
+      child: CircularProgressIndicator(strokeWidth: strokeWith),
+    ));
   }
 }
 

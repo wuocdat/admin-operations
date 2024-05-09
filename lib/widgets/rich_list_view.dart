@@ -8,10 +8,12 @@ class RichListView<T> extends StatefulWidget {
     required this.itemCount,
     required this.itemBuilder,
     required this.onReachedEnd,
+    this.reverse = false,
   });
 
   final bool hasReachedMax;
   final int itemCount;
+  final bool reverse;
   final void Function() onReachedEnd;
   final Widget Function(int) itemBuilder;
 
@@ -52,6 +54,7 @@ class _RichListViewState extends State<RichListView> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      reverse: widget.reverse,
       itemBuilder: (context, index) {
         return index >= widget.itemCount
             ? const BottomLoader()

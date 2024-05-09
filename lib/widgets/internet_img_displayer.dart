@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:tctt_mobile/shared/utils/constants.dart';
 import 'package:tctt_mobile/shared/utils/file.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 
@@ -37,7 +37,7 @@ class _InternetImgDisplayerState extends State<InternetImgDisplayer> {
     return _token != null
         ? Image.network(
             headers: {"cookie": "token=$_token"},
-            '$baseUrl/${widget.url}',
+            '${dotenv.env['BASE_API_URL']}/${widget.url}',
             errorBuilder: (context, error, stackTrace) =>
                 const Center(child: Text('Đã xảy ra lỗi')),
             fit: BoxFit.cover,
