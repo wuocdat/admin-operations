@@ -8,5 +8,5 @@ final ThemeData theme = ThemeData(
     seedColor: AppColors.primary,
     background: AppColors.primaryBackground,
   ),
-  textTheme: GoogleFonts.urbanistTextTheme(),
+  textTheme: GoogleFonts.robotoTextTheme(),
 );

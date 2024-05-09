@@ -1,3 +1,4 @@
+import 'package:conversation_repository/conversation_repository.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:user_repository/user_repository.dart';
@@ -41,5 +42,18 @@ extension UserX on User {
 
   bool hasPermission(List<ERole> roles) {
     return roles.contains(roleE);
+  }
+}
+
+extension ConversationX on Conversation {
+  String getName(String currentUserId) {
+    if (conversationUsers.length > 2) {
+      return name ??
+          conversationUsers.map((e) => e.userDetail['name']).join(", ");
+    } else {
+      return currentUserId == conversationUsers[0].userId
+          ? conversationUsers[1].userDetail['name']!
+          : conversationUsers[0].userDetail['name']!;
+    }
   }
 }

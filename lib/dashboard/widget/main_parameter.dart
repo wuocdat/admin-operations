@@ -13,9 +13,10 @@ class MainParameter extends StatelessWidget {
         color: Colors.white,
       ),
       padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 16, 12),
+      width: double.infinity,
       child: Wrap(
-        spacing: 12,
         runSpacing: 8,
+        alignment: WrapAlignment.spaceBetween,
         children: [
           ParameterItem(
             parameterValue:

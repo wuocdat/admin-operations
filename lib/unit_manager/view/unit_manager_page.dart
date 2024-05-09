@@ -7,10 +7,8 @@ class CustomPadding extends StatelessWidget {
     super.key,
     required String text,
     required VoidCallback? onPressed,
-  }) : _text = text,
-       _onPressed = onPressed;
+  }) : _text = text;
 
-  final VoidCallback? _onPressed;
   final String _text;
 
   @override
@@ -32,7 +30,7 @@ class CustomPadding extends StatelessWidget {
           shape: BoxShape.rectangle,
         ),
         child: Padding(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -76,10 +74,8 @@ class WhiteCustomtButton extends StatelessWidget {
     required IconData icon,
     required VoidCallback? onPressed,
   })  : _text = text,
-        _icon = icon,
-        _onPressed = onPressed;
+        _icon = icon;
 
-  final VoidCallback? _onPressed;
   final String _text;
   final IconData _icon;
 
@@ -102,7 +98,8 @@ class WhiteCustomtButton extends StatelessWidget {
             backgroundColor: Colors.white,
             foregroundColor: AppColors.primary,
             minimumSize: const Size(0, 28),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -127,71 +124,77 @@ class UnitManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              automaticallyImplyLeading: false,
-              leading: BackButton(
-                color: Colors.black,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              title: const Text(
-                'Danh bạ đơn vị',
-                style: TextStyle(
-                  fontFamily: 'Urbanest',
-                  letterSpacing: 0,
-                ),
-              ),
-            ),
-            body: Container(
-              color: Colors.white,
-              child: SafeArea(
-                child: Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.vertical,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        leading: BackButton(
+          color: Colors.black,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text(
+          'Danh bạ đơn vị',
+          style: TextStyle(
+            fontFamily: 'Urbanest',
+            letterSpacing: 0,
+          ),
+        ),
+      ),
+      body: Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
+              child: ListView(
+                padding: EdgeInsets.zero,
+                scrollDirection: Axis.vertical,
+                children: [
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
+                    child: Text(
+                      'Thành phố Đà Nẵng',
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 16,
+                        letterSpacing: 0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 12),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        const Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
-                          child: Text(
-                            'Thành phố Đà Nẵng',
-                            style: TextStyle(
-                              fontFamily: 'Plus Jakarta Sans',
-                              fontSize: 16,
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 12),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              WhiteCustomtButton(text: 'Thành viên', icon: Icons.group, onPressed: () {}),
-                              const SizedBox(width: 16),
-                              CustomButton(text: 'Thêm đơn vị', icon: Icons.add, onPressed: () {}),
-                            ],
-                          ),
-                        ),
-                        CustomPadding(text: 'Quận Hải  Châu', onPressed: () {} ),
-                        CustomPadding(text: 'Quận Ngũ Hành Sơn', onPressed: () {} ),
-                        CustomPadding(text: 'Quận Cẩm Lệ', onPressed: () {} ),
-                        CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {} ),
-                        CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {} ),
-                        CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {} ),
-                        CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {} )
+                        WhiteCustomtButton(
+                            text: 'Thành viên',
+                            icon: Icons.group,
+                            onPressed: () {}),
+                        const SizedBox(width: 16),
+                        CustomButton(
+                            text: 'Thêm đơn vị',
+                            icon: Icons.add,
+                            onPressed: () {}),
                       ],
                     ),
                   ),
-                ),
+                  CustomPadding(text: 'Quận Hải  Châu', onPressed: () {}),
+                  CustomPadding(text: 'Quận Ngũ Hành Sơn', onPressed: () {}),
+                  CustomPadding(text: 'Quận Cẩm Lệ', onPressed: () {}),
+                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {}),
+                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {}),
+                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {}),
+                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {})
+                ],
               ),
             ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 }

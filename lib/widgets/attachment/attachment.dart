@@ -68,9 +68,7 @@ class Attachment extends StatelessWidget {
             if (withoutTitle != true) const MediumLabelText('Tệp đính kèm'),
             const SizedBox(height: 8),
             ...filePaths.map(
-              (filePath) => FileItem(
-                path: filePath,
-              ),
+              (filePath) => FileItem(path: filePath),
             ),
           ],
         ),
@@ -185,7 +183,7 @@ class DownloadProgressDialog extends StatelessWidget {
                   child: Text(
                     state.receivedPerTotal,
                   ),
-                )
+                ),
               ],
             );
           },

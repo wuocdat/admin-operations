@@ -1,0 +1,2 @@
+BASE_API_URL='http://192.168.0.12:3200'
+SOCKET_IO_URL='ws://192.168.0.12:3200/chats'

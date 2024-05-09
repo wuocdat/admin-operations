@@ -32,3 +32,28 @@ class CheckBoxStatusChangeEvent extends SearchUserEvent {
   @override
   List<Object> get props => [checked, user];
 }
+
+class OneByOneConversationCreatedEvent extends SearchUserEvent {
+  const OneByOneConversationCreatedEvent(this.otherUserId);
+
+  final String otherUserId;
+
+  @override
+  List<Object> get props => [otherUserId];
+}
+
+class _ConversationIdReceivedEvent extends SearchUserEvent {
+  const _ConversationIdReceivedEvent(this.conversationId);
+
+  final String conversationId;
+
+  @override
+  List<Object> get props => [conversationId];
+}
+
+final class UserFetchedEvent extends SearchUserEvent {
+  const UserFetchedEvent();
+
+  @override
+  List<Object> get props => [];
+}

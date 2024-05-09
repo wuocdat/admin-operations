@@ -54,8 +54,9 @@ dependencies:
     path: packages/mail_repository
   target_repository:
     path: packages/target_repository
+  conversation_repository:
+    path: packages/conversation_repository
   json_theme: ^6.4.1
-  getwidget: ^4.0.0
   bloc_concurrency: ^0.2.5
   stream_transform: ^2.1.0
   flutter_tree: ^2.0.3
@@ -67,6 +68,9 @@ dependencies:
   flutter_local_notifications: ^17.1.0
   animated_tree_view: ^2.2.0
   fl_chart: ^0.67.0
+  socket_io_client: ^2.0.3+1
+  intl: ^0.19.0
+  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +84,20 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   build_runner: ^2.4.8
   json_serializable: ^6.7.1
+  flutter_launcher_icons: "^0.13.1"
+  flutter_native_splash: ^2.4.0
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/splash_icon.png
+  android_12:
+    color: "#8BC34A"
+    image: assets/images/splash_icon_12.png
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -94,6 +112,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/appainter_theme.json
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

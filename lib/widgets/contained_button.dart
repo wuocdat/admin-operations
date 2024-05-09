@@ -71,7 +71,8 @@ class CustomButton extends StatelessWidget {
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
             minimumSize: const Size(0, 28),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -95,11 +96,9 @@ class CustomElevatedButton extends StatelessWidget {
     super.key,
     required String text,
     required VoidCallback? onPressed,
-  })  : _text = text,
-        _onPressed = onPressed;
+  }) : _onPressed = onPressed;
 
   final VoidCallback? _onPressed;
-  final String _text;
 
   @override
   Widget build(BuildContext context) {
@@ -125,8 +124,7 @@ class CustomElevatedButton extends StatelessWidget {
               fontFamily: 'Plus Jakarta Sans',
               letterSpacing: 0,
               fontSize: 16,
-              color: Colors.black
-          ),
+              color: Colors.black),
         ),
       ),
     );

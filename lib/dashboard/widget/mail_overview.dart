@@ -11,7 +11,7 @@ class MailOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Overview(
-      title: 'Hòm Thư',
+      title: 'Hòm thư',
       subtitle: 'Tổng quan về gửi nhận thư của đơn vị',
       child: BlocBuilder<DashboardBloc, DashboardState>(
         builder: (context, state) {
