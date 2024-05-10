@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:api_client/src/api_config.dart';
 import 'package:api_client/src/common/handlers.dart';
 import 'package:api_client/src/target/path.dart';
@@ -20,5 +22,18 @@ class TargetApiClient {
     if (!result.containsKey('subject')) throw TargetNotFoundFailure();
 
     return result['subject'] as Map<String, dynamic>;
+  }
+
+  Future<List> fetchSubject(int limit, [int page = 1]) async {
+    final response = await _dio.get(TargetUrl.list, queryParameters: {
+      'typeAc': 0,
+      'pageSize': limit,
+      'currentPage': page,
+      'sortBy': jsonEncode({'name': 1})
+    });
+
+    final result = Handler.parseResponse(response) as List;
+
+    return result;
   }
 }

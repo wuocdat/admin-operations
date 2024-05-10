@@ -6,3 +6,7 @@ sealed class SubjectListEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+final class SubjectListFetched extends SubjectListEvent {
+  const SubjectListFetched();
+}

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:target_repository/target_repository.dart';
+import 'package:tctt_mobile/shared/utils/url_launcher.dart';
+import 'package:tctt_mobile/target/cubit/target_cubit.dart';
+import 'package:tctt_mobile/target/widgets/subject_list/bloc/subject_list_bloc.dart';
 import 'package:tctt_mobile/theme/colors.dart';
 import 'package:tctt_mobile/widgets/rich_list_view.dart';
 
@@ -7,17 +12,56 @@ class SubjectList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichListView(
-      hasReachedMax: false,
-      itemCount: 1,
-      itemBuilder: (index) => const SubjectItem(),
-      onReachedEnd: () {},
+    return BlocProvider(
+      create: (context) => SubjectListBloc(
+          targetRepository: RepositoryProvider.of<TargetRepository>(context))
+        ..add(const SubjectListFetched()),
+      child: BlocBuilder<SubjectListBloc, SubjectListState>(
+        builder: (context, state) {
+          return RichListView(
+            hasReachedMax: state.hasReachedMax,
+            itemCount: state.subjects.length,
+            itemBuilder: (index) {
+              final currentSubject = state.subjects[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: SubjectItem(
+                  name: currentSubject.name,
+                  facebookName: currentSubject.informalName,
+                  uid: currentSubject.uid,
+                  addedAt: currentSubject.createdAt.split(' ').last,
+                  type: currentSubject.type.fbPageType,
+                  isTracking: currentSubject.isTracking,
+                ),
+              );
+            },
+            onReachedEnd: () {
+              context.read<SubjectListBloc>().add(const SubjectListFetched());
+            },
+          );
+        },
+      ),
     );
   }
 }
 
 class SubjectItem extends StatelessWidget {
-  const SubjectItem({super.key});
+  const SubjectItem({
+    super.key,
+    String? name,
+    this.facebookName,
+    required this.uid,
+    required this.addedAt,
+    required this.type,
+    required this.isTracking,
+  }) : _name = name ?? facebookName ?? uid;
+
+  final String? facebookName;
+  final String uid;
+  final String addedAt;
+  final FbPageType type;
+  final bool isTracking;
+  final String _name;
 
   @override
   Widget build(BuildContext context) {
@@ -45,43 +89,59 @@ class SubjectItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'An-Nam Yakukohaiyo',
-              style: TextStyle(
+            Text(
+              _name,
+              style: const TextStyle(
                 color: Color(0xFF14181B),
                 fontSize: 24,
                 letterSpacing: 0,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const Text('Trang cá nhân'),
+            Text(type.title),
             const SizedBox(height: 2),
-            const Text('Tên facebook: An-Nam Yakukohaiyo'),
+            if (facebookName != null) Text('Tên facebook: $facebookName'),
             const SizedBox(height: 2),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'UID: ',
-                    style: DefaultTextStyle.of(context).style,
-                  ),
-                  TextSpan(
-                    text: '100008683980651',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
+            InkWell(
+              onTap: () => launchLink('https://facebook.com/$uid'),
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'UID: ',
+                      style: DefaultTextStyle.of(context).style,
                     ),
-                  )
-                ],
+                    TextSpan(
+                      text: uid,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 2),
-            const Text('Theo dõi'),
+            Text(isTracking ? 'Theo dõi' : 'Không theo dõi'),
             const SizedBox(height: 2),
-            const Text('Được thêm từ ngày 28/11/2021'),
+            Text('Được thêm từ ngày ${addedAt}'),
           ],
         ),
       ),
     );
+  }
+}
+
+extension on String {
+  FbPageType get fbPageType {
+    switch (this) {
+      case '1':
+        return FbPageType.fanpage;
+      case '2':
+        return FbPageType.openGroup;
+      default:
+        return FbPageType.personalPage;
+    }
   }
 }

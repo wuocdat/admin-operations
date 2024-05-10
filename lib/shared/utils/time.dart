@@ -17,4 +17,10 @@ final class TimeUtils {
         ? DateFormat.jm().format(inputDate)
         : inputYMD;
   }
+
+  static String formatByYMD(String iso) {
+    final date = DateTime.parse(iso);
+
+    return DateFormat.yMd().format(date);
+  }
 }
