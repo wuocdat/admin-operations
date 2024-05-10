@@ -10,3 +10,7 @@ sealed class SubjectListEvent extends Equatable {
 final class SubjectListFetched extends SubjectListEvent {
   const SubjectListFetched();
 }
+
+final class SubjectReFetchedEvent extends SubjectListEvent {
+  const SubjectReFetchedEvent();
+}

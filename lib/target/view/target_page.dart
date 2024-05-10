@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/new_subject/new_subject_page.dart';
 import 'package:tctt_mobile/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/target/widgets/bad_subject/bad_subject.dart';
 import 'package:tctt_mobile/target/widgets/media_chanel/media_chanel.dart';
@@ -23,7 +23,7 @@ class TargetPage extends StatelessWidget {
           return Column(
             children: [
               HeadBar<TargetOptions>(
-                label: "Đối tượng và Kênh truyền thông của ta",
+                label: "Đối tượng và Kênh ta",
                 hideSearchBar: true,
                 selectedOption: state.selectedOption,
                 options: TargetOptions.values
@@ -39,14 +39,42 @@ class TargetPage extends StatelessWidget {
                       .read<TargetCubit>()
                       .changeOption(value ?? TargetOptions.subject);
                 },
-                action: FilterButton(
-                  onTap: () {
-                    showModalBottomSheet<void>(
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return FilterContent();
-                      },
+                action: BlocSelector<AuthenticationBloc, AuthenticationState,
+                    String>(
+                  selector: (state) {
+                    return state.user.unit.id;
+                  },
+                  builder: (context, unitId) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () async {
+                            await Navigator.push(
+                              context,
+                              NewSubjectPage.route(unitId),
+                            );
+                            // if (!context.mounted) return;
+                            // context
+                            //     .read<TaskBloc>()
+                            //     .add(const ReloadIncreasedEvent());
+                          },
+                          icon: const Icon(Icons.add),
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        const SizedBox(width: 8),
+                        FilterButton(
+                          onTap: () {
+                            showModalBottomSheet<void>(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return const FilterContent();
+                              },
+                            );
+                          },
+                        ),
+                      ],
                     );
                   },
                 ),

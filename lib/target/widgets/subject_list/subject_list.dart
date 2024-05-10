@@ -19,26 +19,33 @@ class SubjectList extends StatelessWidget {
         ..add(const SubjectListFetched()),
       child: BlocBuilder<SubjectListBloc, SubjectListState>(
         builder: (context, state) {
-          return RichListView(
-            hasReachedMax: state.hasReachedMax,
-            itemCount: state.subjects.length,
-            itemBuilder: (index) {
-              final currentSubject = state.subjects[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: SubjectItem(
-                  name: currentSubject.name,
-                  facebookName: currentSubject.informalName,
-                  uid: currentSubject.uid,
-                  addedAt: currentSubject.createdAt.split(' ').last,
-                  type: currentSubject.type.fbPageType,
-                  isTracking: currentSubject.isTracking,
-                ),
-              );
+          return RefreshIndicator(
+            onRefresh: () async {
+              context
+                  .read<SubjectListBloc>()
+                  .add(const SubjectReFetchedEvent());
             },
-            onReachedEnd: () {
-              context.read<SubjectListBloc>().add(const SubjectListFetched());
-            },
+            child: RichListView(
+              hasReachedMax: state.hasReachedMax,
+              itemCount: state.subjects.length,
+              itemBuilder: (index) {
+                final currentSubject = state.subjects[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: SubjectItem(
+                    name: currentSubject.name,
+                    facebookName: currentSubject.informalName,
+                    uid: currentSubject.uid,
+                    addedAt: currentSubject.createdAt.split(' ').last,
+                    type: currentSubject.type.fbPageType,
+                    isTracking: currentSubject.isTracking,
+                  ),
+                );
+              },
+              onReachedEnd: () {
+                context.read<SubjectListBloc>().add(const SubjectListFetched());
+              },
+            ),
           );
         },
       ),

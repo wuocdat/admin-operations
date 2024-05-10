@@ -15,9 +15,34 @@ class SubjectListBloc extends Bloc<SubjectListEvent, SubjectListState> {
       _onSubjectFetched,
       transformer: throttleDroppable(throttleDuration),
     );
+    on<SubjectReFetchedEvent>(_onSubjectRefetched);
   }
 
   final TargetRepository _targetRepository;
+
+  Future<void> _onSubjectRefetched(
+    SubjectReFetchedEvent event,
+    Emitter<SubjectListState> emit,
+  ) async {
+    emit(const SubjectListState(status: FetchDataStatus.loading));
+
+    try {
+      final subjects = await _targetRepository.fetchSubject();
+
+      subjects.length < subjectLimit
+          ? emit(state.copyWith(
+              hasReachedMax: true,
+              status: FetchDataStatus.success,
+              subjects: subjects,
+            ))
+          : emit(state.copyWith(
+              status: FetchDataStatus.success,
+              subjects: subjects,
+            ));
+    } catch (_) {
+      emit(state.copyWith(status: FetchDataStatus.failure));
+    }
+  }
 
   Future<void> _onSubjectFetched(
     SubjectListEvent event,

@@ -7,6 +7,8 @@ import 'package:dio/dio.dart';
 
 class TargetNotFoundFailure implements Exception {}
 
+class NewTargetFailure implements Exception {}
+
 class TargetApiClient {
   TargetApiClient({Dio? dio})
       : _dio = dio ?? Dio(ApiConfig.options)
@@ -35,5 +37,17 @@ class TargetApiClient {
     final result = Handler.parseResponse(response) as List;
 
     return result;
+  }
+
+  Future<void> createSubject(
+      String infoName, String type, String typeAc, String uid) async {
+    final response = await _dio.post(TargetUrl.list, data: {
+      "informalName": infoName,
+      "type": type,
+      "typeAc": typeAc,
+      "uid": uid,
+    });
+
+    if (response.statusCode != 201) throw NewTargetFailure();
   }
 }

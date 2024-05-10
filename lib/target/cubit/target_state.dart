@@ -15,6 +15,17 @@ extension FbPageTypeX on FbPageType {
         return 'Trang cá nhân';
     }
   }
+
+  String get strId {
+    switch (this) {
+      case FbPageType.fanpage:
+        return '1';
+      case FbPageType.openGroup:
+        return '2';
+      case FbPageType.personalPage:
+        return '0';
+    }
+  }
 }
 
 extension TargetOptionsX on TargetOptions {
@@ -22,7 +33,7 @@ extension TargetOptionsX on TargetOptions {
     if (this == TargetOptions.subject) {
       return "Đối tượng";
     } else {
-      return "Kênh truyền thông";
+      return "Kênh ta";
     }
   }
 

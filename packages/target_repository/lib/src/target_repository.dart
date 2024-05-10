@@ -23,4 +23,9 @@ class TargetRepository {
 
     return result.map((e) => Subject.fromJson(e)).toList();
   }
+
+  Future<void> createSubject(
+      String infoName, String type, String typeAc, String uid) async {
+    await _targetApiClient.createSubject(infoName, type, typeAc, uid);
+  }
 }
