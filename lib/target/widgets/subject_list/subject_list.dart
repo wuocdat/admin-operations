@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:target_repository/target_repository.dart';
+import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/shared/utils/url_launcher.dart';
 import 'package:tctt_mobile/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/target/widgets/subject_list/bloc/subject_list_bloc.dart';
@@ -48,20 +49,20 @@ class SubjectList extends StatelessWidget {
 class SubjectItem extends StatelessWidget {
   const SubjectItem({
     super.key,
-    String? name,
+    this.name,
     this.facebookName,
     required this.uid,
     required this.addedAt,
     required this.type,
     required this.isTracking,
-  }) : _name = name ?? facebookName ?? uid;
+  });
 
   final String? facebookName;
   final String uid;
   final String addedAt;
   final FbPageType type;
   final bool isTracking;
-  final String _name;
+  final String? name;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +91,7 @@ class SubjectItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              _name,
+              name?.noBlank ?? facebookName?.noBlank ?? uid,
               style: const TextStyle(
                 color: Color(0xFF14181B),
                 fontSize: 24,
