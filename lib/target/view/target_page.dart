@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/new_subject/new_subject_page.dart';
+import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/target/widgets/bad_subject/bad_subject.dart';
 import 'package:tctt_mobile/target/widgets/media_chanel/media_chanel.dart';
 import 'package:tctt_mobile/target/widgets/unit_selector/unit_selector.dart';
 import 'package:tctt_mobile/target/widgets/wrap_options.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
+import 'package:tctt_mobile/widgets/has_permission.dart';
 import 'package:tctt_mobile/widgets/head_bar.dart';
 import 'package:tctt_mobile/widgets/inputs.dart';
 
@@ -48,19 +50,22 @@ class TargetPage extends StatelessWidget {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        IconButton(
-                          onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              NewSubjectPage.route(unitId),
-                            );
-                            // if (!context.mounted) return;
-                            // context
-                            //     .read<TaskBloc>()
-                            //     .add(const ReloadIncreasedEvent());
-                          },
-                          icon: const Icon(Icons.add),
-                          color: Theme.of(context).primaryColor,
+                        CreatingPermission(
+                          feature: ProtectedFeature.fbSubjects,
+                          child: IconButton(
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                NewSubjectPage.route(unitId),
+                              );
+                              // if (!context.mounted) return;
+                              // context
+                              //     .read<TaskBloc>()
+                              //     .add(const ReloadIncreasedEvent());
+                            },
+                            icon: const Icon(Icons.add),
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         FilterButton(

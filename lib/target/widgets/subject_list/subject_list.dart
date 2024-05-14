@@ -15,8 +15,8 @@ class SubjectList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SubjectListBloc(
-          targetRepository: RepositoryProvider.of<TargetRepository>(context))
-        ..add(const SubjectListFetched()),
+        targetRepository: RepositoryProvider.of<TargetRepository>(context),
+      )..add(const SubjectListFetched()),
       child: BlocBuilder<SubjectListBloc, SubjectListState>(
         builder: (context, state) {
           return RefreshIndicator(
