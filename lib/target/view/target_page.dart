@@ -3,15 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/new_subject/new_subject_page.dart';
 import 'package:tctt_mobile/target/cubit/target_cubit.dart';
-import 'package:tctt_mobile/target/widgets/bad_subject/bad_subject.dart';
+import 'package:tctt_mobile/target/widgets/subject_actions/subject_actions.dart';
+import 'package:tctt_mobile/target/widgets/subject_list/subject_list.dart';
 import 'package:tctt_mobile/target/widgets/unit_selector/unit_selector.dart';
 import 'package:tctt_mobile/target/widgets/wrap_options.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
 import 'package:tctt_mobile/widgets/head_bar.dart';
 import 'package:tctt_mobile/widgets/inputs.dart';
+import 'package:tctt_mobile/widgets/toggle_options.dart';
 
 class TargetPage extends StatelessWidget {
   const TargetPage({super.key});
+
+  static const List<Widget> _widgetOptions = [
+    SubjectList(),
+    SubjectActions(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +86,29 @@ class TargetPage extends StatelessWidget {
                   },
                 ),
               ),
-              const Expanded(child: BadSubject()),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Center(
+                        child: ToggleOptions(
+                          selectedIndex: state.viewIndex,
+                          items: SubjectViewOption.values
+                              .map((e) => Text(e.title))
+                              .toList(),
+                          onPressed: (int index) {
+                            context.read<TargetCubit>().changeViewIndex(index);
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(child: _widgetOptions.elementAt(state.viewIndex)),
+                  ],
+                ),
+              ),
             ],
           );
         },

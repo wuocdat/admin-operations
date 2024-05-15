@@ -9,4 +9,8 @@ class TargetCubit extends Cubit<TargetState> {
   void changeOption(TargetOptions option) {
     emit(state.copyWith(selectedOption: option));
   }
+
+  void changeViewIndex(int index) {
+    emit(state.copyWith(viewIndex: index));
+  }
 }

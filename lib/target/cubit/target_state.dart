@@ -1,5 +1,18 @@
 part of 'target_cubit.dart';
 
+enum SubjectViewOption { list, actions }
+
+extension SubjectViewOptionX on SubjectViewOption {
+  String get title {
+    switch (this) {
+      case SubjectViewOption.list:
+        return "Danh sách";
+      case SubjectViewOption.actions:
+        return "Hoạt động";
+    }
+  }
+}
+
 enum TargetOptions { subject, chanel }
 
 enum FbPageType { fanpage, personalPage, openGroup }
@@ -52,6 +65,7 @@ extension TargetOptionsX on TargetOptions {
 class TargetState extends Equatable {
   const TargetState._({
     this.selectedOption = TargetOptions.subject,
+    this.viewIndex = 0,
   });
 
   const TargetState.subject() : this._();
@@ -60,14 +74,18 @@ class TargetState extends Equatable {
 
   final TargetOptions selectedOption;
 
+  final int viewIndex;
+
   TargetState copyWith({
     TargetOptions? selectedOption,
+    int? viewIndex,
   }) {
     return TargetState._(
       selectedOption: selectedOption ?? this.selectedOption,
+      viewIndex: viewIndex ?? this.viewIndex,
     );
   }
 
   @override
-  List<Object> get props => [selectedOption];
+  List<Object> get props => [selectedOption, viewIndex];
 }
