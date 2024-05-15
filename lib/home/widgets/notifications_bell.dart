@@ -34,7 +34,10 @@ class _NotificationBellState extends State<NotificationBell>
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {},
+      onPressed: () => ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+            const SnackBar(content: Text('Tính năng đang được phát triển'))),
       icon: Badge(
         label: Text('${widget.count}'),
         isLabelVisible: widget.count > 0,

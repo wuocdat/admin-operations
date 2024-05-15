@@ -86,9 +86,10 @@ class ConversationPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
             child: IconButton(
-              onPressed: () {
-                // navigate to settings page
-              },
+              onPressed: () => ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(const SnackBar(
+                    content: Text('Tính năng đang được phát triển'))),
               icon: const Icon(Icons.more_horiz),
               iconSize: 30,
             ),
@@ -142,7 +143,10 @@ class BottomActionContainer extends StatelessWidget {
           return Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () => ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(const SnackBar(
+                      content: Text('Tính năng đang được phát triển'))),
                 icon: const Icon(Icons.attach_file),
               ),
               const SizedBox(width: 8),

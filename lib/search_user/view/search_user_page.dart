@@ -78,14 +78,17 @@ class SearchUser extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       )
-                    : const TextButton(
+                    : TextButton(
                         // onPressed: !state.creatingStatus.isLoading
                         //     ? () => context
                         //         .read<SearchUserBloc>()
                         //         .add(const ModeChangedEvent())
                         //     : null,
-                        onPressed: null,
-                        child: Text('Tạo nhóm'),
+                        onPressed: () => ScaffoldMessenger.of(context)
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(const SnackBar(
+                              content: Text('Tính năng đang được phát triển'))),
+                        child: const Text('Tạo nhóm'),
                       ),
               );
             },
