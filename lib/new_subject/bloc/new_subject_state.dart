@@ -32,5 +32,5 @@ class NewSubjectState extends Equatable {
   }
 
   @override
-  List<Object> get props => [status, name, fbPageType, status, isValid];
+  List<Object> get props => [status, name, fbPageType, status, isValid, uid];
 }
