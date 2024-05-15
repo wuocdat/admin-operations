@@ -98,6 +98,7 @@ class SentTasks extends StatelessWidget {
                               .read<SenderBloc>()
                               .add(const SentTaskRefetched());
                         },
+                        physics: const AlwaysScrollableScrollPhysics(),
                         hasReachedMax: state.hasReachedMax,
                         itemCount: state.tasks.length,
                         itemBuilder: (index) => MessageItem(

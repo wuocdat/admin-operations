@@ -26,6 +26,8 @@ class _InputState extends State<Input> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      enableSuggestions: !widget.isPassword,
+      autocorrect: !widget.isPassword,
       onChanged: widget.onChanged,
       obscureText: passwordVisibility,
       decoration: InputDecoration(

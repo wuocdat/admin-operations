@@ -152,6 +152,7 @@ class _TasksViewState extends State<TasksView> {
             context.read<ReceiverBloc>().add(const ReceiverResetEvent());
           },
           child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               return index >= state.tasks.length
                   ? const BottomLoader()
