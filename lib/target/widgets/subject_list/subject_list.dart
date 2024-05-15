@@ -33,54 +33,48 @@ class SubjectList extends StatelessWidget {
         },
         child: BlocBuilder<SubjectListBloc, SubjectListState>(
           builder: (context, state) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                context
-                    .read<SubjectListBloc>()
-                    .add(SubjectReFetchedEvent(typeAc: typeAc));
-              },
-              child: Builder(
-                builder: (context) {
-                  switch (state.status) {
-                    case FetchDataStatus.initial:
-                      return const Loader();
-                    default:
-                      if (state.status.isLoading && state.subjects.isEmpty) {
-                        return const Loader();
-                      }
-                      if (state.subjects.isEmpty) {
-                        return const EmptyListMessage(
-                          message: "Không có mục nào",
-                        );
-                      }
-                      return RichListView(
-                        physicsl: const AlwaysScrollableScrollPhysics(),
-                        hasReachedMax: state.hasReachedMax,
-                        itemCount: state.subjects.length,
-                        itemBuilder: (index) {
-                          final currentSubject = state.subjects[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
-                            child: SubjectItem(
-                              name: currentSubject.name,
-                              facebookName: currentSubject.informalName,
-                              uid: currentSubject.uid,
-                              addedAt: currentSubject.createdAt.split(' ').last,
-                              type: currentSubject.type.fbPageType,
-                              isTracking: currentSubject.isTracking,
-                            ),
-                          );
-                        },
-                        onReachedEnd: () {
-                          context
-                              .read<SubjectListBloc>()
-                              .add(SubjectListFetched(typeAc: typeAc));
-                        },
-                      );
-                  }
-                },
-              ),
-            );
+            switch (state.status) {
+              case FetchDataStatus.initial:
+                return const Loader();
+              default:
+                if (state.status.isLoading && state.subjects.isEmpty) {
+                  return const Loader();
+                }
+                if (state.subjects.isEmpty) {
+                  return const EmptyListMessage(
+                    message: "Không có mục nào",
+                  );
+                }
+                return RichListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  hasReachedMax: state.hasReachedMax,
+                  itemCount: state.subjects.length,
+                  onRefresh: () async {
+                    context
+                        .read<SubjectListBloc>()
+                        .add(SubjectReFetchedEvent(typeAc: typeAc));
+                  },
+                  itemBuilder: (index) {
+                    final currentSubject = state.subjects[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: SubjectItem(
+                        name: currentSubject.name,
+                        facebookName: currentSubject.informalName,
+                        uid: currentSubject.uid,
+                        addedAt: currentSubject.createdAt.split(' ').last,
+                        type: currentSubject.type.fbPageType,
+                        isTracking: currentSubject.isTracking,
+                      ),
+                    );
+                  },
+                  onReachedEnd: () {
+                    context
+                        .read<SubjectListBloc>()
+                        .add(SubjectListFetched(typeAc: typeAc));
+                  },
+                );
+            }
           },
         ),
       ),

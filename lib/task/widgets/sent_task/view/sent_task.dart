@@ -93,6 +93,11 @@ class SentTasks extends StatelessWidget {
                         );
                       }
                       return RichListView(
+                        onRefresh: () async {
+                          context
+                              .read<SenderBloc>()
+                              .add(const SentTaskRefetched());
+                        },
                         hasReachedMax: state.hasReachedMax,
                         itemCount: state.tasks.length,
                         itemBuilder: (index) => MessageItem(

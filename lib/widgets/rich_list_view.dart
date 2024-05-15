@@ -9,15 +9,17 @@ class RichListView<T> extends StatefulWidget {
     required this.itemBuilder,
     required this.onReachedEnd,
     this.reverse = false,
-    this.physicsl,
+    this.physics,
+    this.onRefresh,
   });
 
   final bool hasReachedMax;
   final int itemCount;
   final bool reverse;
-  final ScrollPhysics? physicsl;
+  final ScrollPhysics? physics;
   final void Function() onReachedEnd;
   final Widget Function(int) itemBuilder;
+  final Future<void> Function()? onRefresh;
 
   @override
   State<RichListView> createState() => _RichListViewState();
@@ -55,20 +57,24 @@ class _RichListViewState extends State<RichListView> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: widget.physicsl,
-      reverse: widget.reverse,
-      itemBuilder: (context, index) {
-        return index >= widget.itemCount
-            ? const BottomLoader()
-            : widget.itemBuilder(index);
-      },
-      itemCount: widget.hasReachedMax ? widget.itemCount : widget.itemCount + 1,
-      controller: _scrollController,
-      padding: const EdgeInsetsDirectional.only(
-        start: 12,
-        end: 12,
-        bottom: 8,
+    return RefreshIndicator(
+      onRefresh: widget.onRefresh ?? () async {},
+      child: ListView.builder(
+        physics: widget.physics,
+        reverse: widget.reverse,
+        itemBuilder: (context, index) {
+          return index >= widget.itemCount
+              ? const BottomLoader()
+              : widget.itemBuilder(index);
+        },
+        itemCount:
+            widget.hasReachedMax ? widget.itemCount : widget.itemCount + 1,
+        controller: _scrollController,
+        padding: const EdgeInsetsDirectional.only(
+          start: 12,
+          end: 12,
+          bottom: 8,
+        ),
       ),
     );
   }
