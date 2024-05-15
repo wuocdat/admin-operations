@@ -108,3 +108,5 @@ extension ENotificationTypeX on ENotificationType {
     }
   }
 }
+
+enum ProtectedFeature { users, units, fbSubjects }

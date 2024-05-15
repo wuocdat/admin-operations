@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/new_subject/new_subject_page.dart';
+import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/target/widgets/subject_actions/subject_actions.dart';
 import 'package:tctt_mobile/target/widgets/subject_list/subject_list.dart';
 import 'package:tctt_mobile/target/widgets/unit_selector/unit_selector.dart';
 import 'package:tctt_mobile/target/widgets/wrap_options.dart';
 import 'package:tctt_mobile/widgets/border_container.dart';
+import 'package:tctt_mobile/widgets/has_permission.dart';
 import 'package:tctt_mobile/widgets/head_bar.dart';
 import 'package:tctt_mobile/widgets/inputs.dart';
 import 'package:tctt_mobile/widgets/toggle_options.dart';
@@ -54,20 +56,23 @@ class TargetPage extends StatelessWidget {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        IconButton(
-                          onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              NewSubjectPage.route(
-                                  unitId, state.selectedOption),
-                            );
-                            // if (!context.mounted) return;
-                            // context
-                            //     .read<TaskBloc>()
-                            //     .add(const ReloadIncreasedEvent());
-                          },
-                          icon: const Icon(Icons.add),
-                          color: Theme.of(context).primaryColor,
+                        CreatingPermission(
+                          feature: ProtectedFeature.fbSubjects,
+                          child: IconButton(
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                NewSubjectPage.route(
+                                    unitId, state.selectedOption),
+                              );
+                              // if (!context.mounted) return;
+                              // context
+                              //     .read<TaskBloc>()
+                              //     .add(const ReloadIncreasedEvent());
+                            },
+                            icon: const Icon(Icons.add),
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         FilterButton(
