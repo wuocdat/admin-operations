@@ -8,9 +8,19 @@ sealed class SubjectListEvent extends Equatable {
 }
 
 final class SubjectListFetched extends SubjectListEvent {
-  const SubjectListFetched();
+  const SubjectListFetched({required this.typeAc});
+
+  final int typeAc;
+
+  @override
+  List<Object> get props => [typeAc];
 }
 
 final class SubjectReFetchedEvent extends SubjectListEvent {
-  const SubjectReFetchedEvent();
+  const SubjectReFetchedEvent({required this.typeAc});
+
+  final int typeAc;
+
+  @override
+  List<Object> get props => [typeAc];
 }

@@ -11,20 +11,22 @@ import 'package:tctt_mobile/widgets/inputs.dart';
 import 'package:tctt_mobile/widgets/loading_overlay.dart';
 
 class NewSubjectPage extends StatelessWidget {
-  const NewSubjectPage({super.key, required this.unitId});
+  const NewSubjectPage({super.key, required this.unitId, required this.typeAc});
 
-  static Route<void> route(String unitId) {
+  static Route<void> route(String unitId, TargetOptions typeAc) {
     return MaterialPageRoute<void>(
       builder: (_) => BlocProvider(
         create: (context) => NewSubjectBloc(
           targetRepository: RepositoryProvider.of<TargetRepository>(context),
+          typeAc: typeAc.typeAc,
         ),
-        child: NewSubjectPage(unitId: unitId),
+        child: NewSubjectPage(unitId: unitId, typeAc: typeAc),
       ),
     );
   }
 
   final String unitId;
+  final TargetOptions typeAc;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,7 @@ class NewSubjectPage extends StatelessWidget {
                 },
               ),
               title: Text(
-                'Thêm đối tượng',
+                'Thêm ${typeAc.title.toLowerCase()}',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontFamily: 'Urbanist',
                       letterSpacing: 0,
@@ -81,19 +83,19 @@ class NewSubjectPage extends StatelessWidget {
                 decoration: const BoxDecoration(
                   color: Colors.white,
                 ),
-                child: const SingleChildScrollView(
+                child: SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.only(top: 8.0),
                     child: Column(
                       children: [
-                        SubjectName(),
-                        SizedBox(height: 16),
-                        SubjectUid(),
-                        SizedBox(height: 32),
-                        FbPageTypeSelector(),
-                        SizedBox(height: 32),
-                        SubmitButton(),
-                        SizedBox(height: 32),
+                        SubjectName(titleName: typeAc.title),
+                        const SizedBox(height: 16),
+                        SubjectUid(titleName: typeAc.title),
+                        const SizedBox(height: 32),
+                        const FbPageTypeSelector(),
+                        const SizedBox(height: 32),
+                        const SubmitButton(),
+                        const SizedBox(height: 32),
                       ],
                     ),
                   ),
@@ -110,7 +112,10 @@ class NewSubjectPage extends StatelessWidget {
 class SubjectName extends StatelessWidget {
   const SubjectName({
     super.key,
+    required this.titleName,
   });
+
+  final String titleName;
 
   @override
   Widget build(BuildContext context) {
@@ -118,8 +123,8 @@ class SubjectName extends StatelessWidget {
       buildWhen: (previous, current) => previous.name != current.name,
       builder: (context, state) {
         return BorderInput(
-          labelText: 'Tên đối tượng',
-          hintText: 'Tên đối tượng',
+          labelText: 'Tên ${titleName.toLowerCase()}',
+          hintText: 'Tên ${titleName.toLowerCase()}',
           // autoFocus: true,
           onChanged: (value) =>
               context.read<NewSubjectBloc>().add(NameChangedEvent(value)),
@@ -165,7 +170,10 @@ class FbPageTypeSelector extends StatelessWidget {
 class SubjectUid extends StatelessWidget {
   const SubjectUid({
     super.key,
+    required this.titleName,
   });
+
+  final String titleName;
 
   @override
   Widget build(BuildContext context) {
@@ -173,8 +181,8 @@ class SubjectUid extends StatelessWidget {
       buildWhen: (previous, current) => previous.uid != current.uid,
       builder: (context, state) {
         return BorderInput(
-          labelText: 'UID của đối tượng (facebook.com/uid)',
-          hintText: 'UID của đối tượng',
+          labelText: 'UID của ${titleName.toLowerCase()} (facebook.com/uid)',
+          hintText: 'UID của ${titleName.toLowerCase()}',
           onChanged: (value) =>
               context.read<NewSubjectBloc>().add(UidChangedEvent(value)),
           errorText: state.uid.displayError?.errorMessage,

@@ -15,8 +15,9 @@ class TargetRepository {
     return TargetOverall.fromJson(result);
   }
 
-  Future<List<Subject>> fetchSubject([int length = 0]) async {
+  Future<List<Subject>> fetchSubject(int typeAc, [int length = 0]) async {
     final result = await _targetApiClient.fetchSubject(
+      typeAc,
       subjectLimit,
       (length / subjectLimit).ceil() + 1,
     );

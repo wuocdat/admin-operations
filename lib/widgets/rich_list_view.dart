@@ -9,11 +9,13 @@ class RichListView<T> extends StatefulWidget {
     required this.itemBuilder,
     required this.onReachedEnd,
     this.reverse = false,
+    this.physicsl,
   });
 
   final bool hasReachedMax;
   final int itemCount;
   final bool reverse;
+  final ScrollPhysics? physicsl;
   final void Function() onReachedEnd;
   final Widget Function(int) itemBuilder;
 
@@ -54,6 +56,7 @@ class _RichListViewState extends State<RichListView> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: widget.physicsl,
       reverse: widget.reverse,
       itemBuilder: (context, index) {
         return index >= widget.itemCount

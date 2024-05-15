@@ -9,8 +9,10 @@ part 'new_subject_event.dart';
 part 'new_subject_state.dart';
 
 class NewSubjectBloc extends Bloc<NewSubjectEvent, NewSubjectState> {
-  NewSubjectBloc({required TargetRepository targetRepository})
+  NewSubjectBloc(
+      {required TargetRepository targetRepository, required int typeAc})
       : _targetRepository = targetRepository,
+        _typeAc = typeAc,
         super(const NewSubjectState()) {
     on<NameChangedEvent>(_onNameChanged);
     on<UidChangedEvent>(_onUidChanged);
@@ -19,6 +21,7 @@ class NewSubjectBloc extends Bloc<NewSubjectEvent, NewSubjectState> {
   }
 
   final TargetRepository _targetRepository;
+  final int _typeAc;
 
   void _onNameChanged(
     NameChangedEvent event,
@@ -55,8 +58,8 @@ class NewSubjectBloc extends Bloc<NewSubjectEvent, NewSubjectState> {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
 
       try {
-        await _targetRepository.createSubject(
-            state.name.value, state.fbPageType.strId, "0", state.uid.value);
+        await _targetRepository.createSubject(state.name.value,
+            state.fbPageType.strId, "$_typeAc", state.uid.value);
         emit(state.copyWith(status: FormzSubmissionStatus.success));
       } catch (_) {
         emit(state.copyWith(status: FormzSubmissionStatus.failure));

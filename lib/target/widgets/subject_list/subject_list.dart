@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:target_repository/target_repository.dart';
+import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/shared/utils/url_launcher.dart';
 import 'package:tctt_mobile/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/target/widgets/subject_list/bloc/subject_list_bloc.dart';
 import 'package:tctt_mobile/theme/colors.dart';
+import 'package:tctt_mobile/widgets/empty_list_message.dart';
+import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/rich_list_view.dart';
 
 class SubjectList extends StatelessWidget {
@@ -13,41 +16,73 @@ class SubjectList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final typeAc = context
+        .select((TargetCubit cubit) => cubit.state.selectedOption.typeAc);
+
     return BlocProvider(
       create: (context) => SubjectListBloc(
           targetRepository: RepositoryProvider.of<TargetRepository>(context))
-        ..add(const SubjectListFetched()),
-      child: BlocBuilder<SubjectListBloc, SubjectListState>(
-        builder: (context, state) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              context
-                  .read<SubjectListBloc>()
-                  .add(const SubjectReFetchedEvent());
-            },
-            child: RichListView(
-              hasReachedMax: state.hasReachedMax,
-              itemCount: state.subjects.length,
-              itemBuilder: (index) {
-                final currentSubject = state.subjects[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: SubjectItem(
-                    name: currentSubject.name,
-                    facebookName: currentSubject.informalName,
-                    uid: currentSubject.uid,
-                    addedAt: currentSubject.createdAt.split(' ').last,
-                    type: currentSubject.type.fbPageType,
-                    isTracking: currentSubject.isTracking,
-                  ),
-                );
-              },
-              onReachedEnd: () {
-                context.read<SubjectListBloc>().add(const SubjectListFetched());
-              },
-            ),
-          );
+        ..add(SubjectListFetched(typeAc: typeAc)),
+      child: BlocListener<TargetCubit, TargetState>(
+        listenWhen: (previous, current) =>
+            previous.selectedOption != current.selectedOption,
+        listener: (context, state) {
+          context
+              .read<SubjectListBloc>()
+              .add(SubjectReFetchedEvent(typeAc: state.selectedOption.typeAc));
         },
+        child: BlocBuilder<SubjectListBloc, SubjectListState>(
+          builder: (context, state) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                context
+                    .read<SubjectListBloc>()
+                    .add(SubjectReFetchedEvent(typeAc: typeAc));
+              },
+              child: Builder(
+                builder: (context) {
+                  switch (state.status) {
+                    case FetchDataStatus.initial:
+                      return const Loader();
+                    default:
+                      if (state.status.isLoading && state.subjects.isEmpty) {
+                        return const Loader();
+                      }
+                      if (state.subjects.isEmpty) {
+                        return const EmptyListMessage(
+                          message: "Không có mục nào",
+                        );
+                      }
+                      return RichListView(
+                        physicsl: const AlwaysScrollableScrollPhysics(),
+                        hasReachedMax: state.hasReachedMax,
+                        itemCount: state.subjects.length,
+                        itemBuilder: (index) {
+                          final currentSubject = state.subjects[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: SubjectItem(
+                              name: currentSubject.name,
+                              facebookName: currentSubject.informalName,
+                              uid: currentSubject.uid,
+                              addedAt: currentSubject.createdAt.split(' ').last,
+                              type: currentSubject.type.fbPageType,
+                              isTracking: currentSubject.isTracking,
+                            ),
+                          );
+                        },
+                        onReachedEnd: () {
+                          context
+                              .read<SubjectListBloc>()
+                              .add(SubjectListFetched(typeAc: typeAc));
+                        },
+                      );
+                  }
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

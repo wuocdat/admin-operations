@@ -37,6 +37,15 @@ extension TargetOptionsX on TargetOptions {
     }
   }
 
+  int get typeAc {
+    switch (this) {
+      case TargetOptions.subject:
+        return 0;
+      case TargetOptions.chanel:
+        return 1;
+    }
+  }
+
   bool get isSubject => this == TargetOptions.subject;
 }
 

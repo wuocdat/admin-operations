@@ -26,9 +26,9 @@ class TargetApiClient {
     return result['subject'] as Map<String, dynamic>;
   }
 
-  Future<List> fetchSubject(int limit, [int page = 1]) async {
+  Future<List> fetchSubject(int typeAct, int limit, [int page = 1]) async {
     final response = await _dio.get(TargetUrl.list, queryParameters: {
-      'typeAc': 0,
+      'typeAc': typeAct,
       'pageSize': limit,
       'currentPage': page,
       'sortBy': jsonEncode({'name': 1})

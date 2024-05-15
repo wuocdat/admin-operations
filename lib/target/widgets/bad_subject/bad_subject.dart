@@ -37,9 +37,7 @@ class BadSubject extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                child: _widgetOptions.elementAt(currentSelectedIndex),
-              ),
+              Expanded(child: _widgetOptions.elementAt(currentSelectedIndex)),
             ],
           );
         },
