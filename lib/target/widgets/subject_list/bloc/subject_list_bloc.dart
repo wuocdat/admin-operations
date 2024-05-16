@@ -27,7 +27,7 @@ class SubjectListBloc extends Bloc<SubjectListEvent, SubjectListState> {
     emit(const SubjectListState(status: FetchDataStatus.loading));
 
     try {
-      final subjects = await _targetRepository.fetchSubject(event.typeAc);
+      final subjects = await _targetRepository.fetchSubjects(event.typeAc);
 
       subjects.length < subjectLimit
           ? emit(state.copyWith(
@@ -53,7 +53,7 @@ class SubjectListBloc extends Bloc<SubjectListEvent, SubjectListState> {
     emit(state.copyWith(status: FetchDataStatus.loading));
 
     try {
-      final subjects = await _targetRepository.fetchSubject(
+      final subjects = await _targetRepository.fetchSubjects(
           event.typeAc, state.subjects.length);
 
       subjects.length < subjectLimit

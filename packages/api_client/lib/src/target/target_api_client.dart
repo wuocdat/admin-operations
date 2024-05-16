@@ -26,7 +26,7 @@ class TargetApiClient {
     return result['subject'] as Map<String, dynamic>;
   }
 
-  Future<List> fetchSubject(int typeAct, int limit, [int page = 1]) async {
+  Future<List> fetchSubjects(int typeAct, int limit, [int page = 1]) async {
     final response = await _dio.get(TargetUrl.list, queryParameters: {
       'typeAc': typeAct,
       'pageSize': limit,
@@ -35,6 +35,14 @@ class TargetApiClient {
     });
 
     final result = Handler.parseResponse(response) as List;
+
+    return result;
+  }
+
+  Future<Map<String, dynamic>> fetchSubjectById(String subjectId) async {
+    final response = await _dio.get('${TargetUrl.list}/$subjectId');
+
+    final result = Handler.parseResponse(response) as Map<String, dynamic>;
 
     return result;
   }
@@ -49,5 +57,18 @@ class TargetApiClient {
     });
 
     if (response.statusCode != 201) throw NewTargetFailure();
+  }
+
+  Future<List> fetchPosts(String subjectId, int limit, [int page = 1]) async {
+    final response = await _dio.get(TargetUrl.posts, queryParameters: {
+      'fbSubject': subjectId,
+      'pageSize': limit,
+      'currentPage': page,
+      'sortBy': jsonEncode({'time': -1})
+    });
+
+    final result = Handler.parseResponse(response) as List;
+
+    return result;
   }
 }

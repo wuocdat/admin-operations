@@ -11,6 +11,10 @@ class RichListView<T> extends StatefulWidget {
     this.reverse = false,
     this.physics,
     this.onRefresh,
+    this.startPadding = 12,
+    this.endPadding = 12,
+    this.bottomPadding = 8,
+    this.topPadding = 0,
   });
 
   final bool hasReachedMax;
@@ -20,6 +24,10 @@ class RichListView<T> extends StatefulWidget {
   final void Function() onReachedEnd;
   final Widget Function(int) itemBuilder;
   final Future<void> Function()? onRefresh;
+  final double startPadding;
+  final double endPadding;
+  final double topPadding;
+  final double bottomPadding;
 
   @override
   State<RichListView> createState() => _RichListViewState();
@@ -70,10 +78,11 @@ class _RichListViewState extends State<RichListView> {
         itemCount:
             widget.hasReachedMax ? widget.itemCount : widget.itemCount + 1,
         controller: _scrollController,
-        padding: const EdgeInsetsDirectional.only(
-          start: 12,
-          end: 12,
-          bottom: 8,
+        padding: EdgeInsetsDirectional.only(
+          start: widget.startPadding,
+          end: widget.endPadding,
+          bottom: widget.bottomPadding,
+          top: widget.topPadding,
         ),
       ),
     );

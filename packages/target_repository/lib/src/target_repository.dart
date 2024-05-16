@@ -15,8 +15,8 @@ class TargetRepository {
     return TargetOverall.fromJson(result);
   }
 
-  Future<List<Subject>> fetchSubject(int typeAc, [int length = 0]) async {
-    final result = await _targetApiClient.fetchSubject(
+  Future<List<Subject>> fetchSubjects(int typeAc, [int length = 0]) async {
+    final result = await _targetApiClient.fetchSubjects(
       typeAc,
       subjectLimit,
       (length / subjectLimit).ceil() + 1,
@@ -25,8 +25,24 @@ class TargetRepository {
     return result.map((e) => Subject.fromJson(e)).toList();
   }
 
+  Future<Subject> fetchSubjectById(String subjectId) async {
+    final result = await _targetApiClient.fetchSubjectById(subjectId);
+
+    return Subject.fromJson(result);
+  }
+
   Future<void> createSubject(
       String infoName, String type, String typeAc, String uid) async {
     await _targetApiClient.createSubject(infoName, type, typeAc, uid);
+  }
+
+  Future<List<Post>> fetchPosts(String subjectId, [int length = 0]) async {
+    final result = await _targetApiClient.fetchPosts(
+      subjectId,
+      subjectLimit,
+      (length / subjectLimit).ceil() + 1,
+    );
+
+    return result.map((e) => Post.fromJson(e)).toList();
   }
 }
