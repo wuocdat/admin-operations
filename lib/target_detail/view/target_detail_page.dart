@@ -4,6 +4,7 @@ import 'package:target_repository/target_repository.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/target_detail/bloc/target_detail_bloc.dart';
+import 'package:tctt_mobile/theme/colors.dart';
 import 'package:tctt_mobile/widgets/empty_list_message.dart';
 import 'package:tctt_mobile/widgets/images.dart';
 import 'package:tctt_mobile/widgets/label_text.dart';
@@ -157,7 +158,7 @@ class PostContainer extends StatelessWidget {
             ),
             Text(content),
             const SizedBox(height: 8),
-            const Divider(),
+            Divider(color: AppColors.secondaryBackground.withOpacity(0.3)),
             Row(
               children: [
                 Expanded(child: InfoBox(title: 'lượt thích', amount: like)),
