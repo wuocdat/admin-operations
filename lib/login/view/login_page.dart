@@ -14,6 +14,8 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -24,39 +26,44 @@ class LoginPage extends StatelessWidget {
               authenticationRepository:
                   RepositoryProvider.of<AuthenticationRepository>(context),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: 140,
-                  child: Center(
-                    child: Text(
-                      "MTTN",
-                      style: theme.textTheme.displayMedium
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: bottom),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 140,
+                      child: Center(
+                        child: Text(
+                          "MTTN",
+                          style: theme.textTheme.displayMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "Đăng nhập",
+                      style: theme.textTheme.headlineMedium
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
-                  ),
+                    const Padding(padding: EdgeInsets.all(2)),
+                    const Text("Hệ thống hỗ trợ chỉ đạo điều hành MTTN"),
+                    const Padding(padding: EdgeInsets.all(12)),
+                    const LoginForm(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Row(
+                        children: [
+                          Checkbox(value: true, onChanged: (newValue) {}),
+                          const Text('Nhớ mật khẩu?')
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  "Đăng nhập",
-                  style: theme.textTheme.headlineMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const Padding(padding: EdgeInsets.all(2)),
-                const Text("Hệ thống hỗ trợ chỉ đạo điều hành MTTN"),
-                const Padding(padding: EdgeInsets.all(12)),
-                const LoginForm(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Row(
-                    children: [
-                      Checkbox(value: true, onChanged: (newValue) {}),
-                      const Text('Nhớ mật khẩu?')
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

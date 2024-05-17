@@ -26,6 +26,8 @@ class _InputState extends State<Input> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      enableSuggestions: !widget.isPassword,
+      autocorrect: !widget.isPassword,
       onChanged: widget.onChanged,
       obscureText: passwordVisibility,
       decoration: InputDecoration(
@@ -160,6 +162,7 @@ class BorderInput extends StatelessWidget {
     InputFormat? format,
     TextEditingController? controller,
     ValueChanged<String>? onChanged,
+    Widget? prefix,
   })  : _autoFocus = autoFocus,
         _labelText = labelText,
         _hintText = hintText,
@@ -169,7 +172,8 @@ class BorderInput extends StatelessWidget {
         _errorText = errorText,
         _controller = controller,
         _format = format ?? InputFormat.text,
-        _onChanged = onChanged;
+        _onChanged = onChanged,
+        _prefix = prefix;
 
   final bool? _autoFocus;
   final String? _labelText;
@@ -181,6 +185,7 @@ class BorderInput extends StatelessWidget {
   final TextEditingController? _controller;
   final InputFormat _format;
   final ValueChanged<String>? _onChanged;
+  final Widget? _prefix;
 
   @override
   Widget build(BuildContext context) {
@@ -193,6 +198,7 @@ class BorderInput extends StatelessWidget {
       inputFormatters: _format.formatter,
       onChanged: _onChanged,
       decoration: InputDecoration(
+        prefixIcon: _prefix,
         hintText: _hintText,
         labelText: _labelText,
         errorText: _errorText,

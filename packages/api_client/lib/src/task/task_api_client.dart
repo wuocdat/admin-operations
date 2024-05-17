@@ -185,9 +185,11 @@ class TaskApiClient {
   Future<Map<String, dynamic>?> fetchResultStatistic(String taskId) async {
     final response = await _dio.get('${TaskUrl.statistic}/$taskId');
 
-    final result = Handler.parseResponse(response);
+    if (response.statusCode != 200) throw RequestFailure();
 
-    return result;
+    final data = response.data as Map<String, dynamic>;
+
+    return data['data'];
   }
 
   Future<List> fetchProgresses(String taskId, String unitId, int limit,

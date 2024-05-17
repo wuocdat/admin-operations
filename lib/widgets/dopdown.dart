@@ -6,22 +6,25 @@ class BorderDropdown<T> extends StatelessWidget {
       {super.key,
       required List<DropdownMenuEntry<T>> items,
       required T initialSelection,
+      required String labelText,
       void Function(T?)? onSelected})
       : _dropdownMenuEntries = items,
         _initialSelection = initialSelection,
-        _onSelected = onSelected;
+        _onSelected = onSelected,
+        _labelText = labelText;
 
   final List<DropdownMenuEntry<T>> _dropdownMenuEntries;
   final T _initialSelection;
   final void Function(T?)? _onSelected;
+  final String _labelText;
 
   @override
   Widget build(BuildContext context) {
     return DropdownMenu(
       initialSelection: _initialSelection,
       onSelected: _onSelected,
-      hintText: "Loại nhiệm vụ",
-      label: const Text("Loại nhiệm vụ"),
+      hintText: _labelText,
+      label: Text(_labelText),
       dropdownMenuEntries: _dropdownMenuEntries,
       expandedInsets: const EdgeInsets.symmetric(horizontal: 0),
       inputDecorationTheme: InputDecorationTheme(

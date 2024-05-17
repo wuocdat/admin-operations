@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyApIcRXNrhWyHnGPMxQxMTh9eMCJZjt44o',
-    appId: '1:351685453356:android:592a1db74d9b6a4eb01389',
+    appId: '1:351685453356:android:8a017e183fd32fa0b01389',
     messagingSenderId: '351685453356',
     projectId: 'tctt-moible',
     storageBucket: 'tctt-moible.appspot.com',

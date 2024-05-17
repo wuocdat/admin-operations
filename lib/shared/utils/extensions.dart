@@ -10,6 +10,13 @@ extension StringExtension on String {
     }
     return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
+
+  String? get noBlank {
+    if (isEmpty) {
+      return null;
+    }
+    return this;
+  }
 }
 
 extension TaskTypeExtension on TaskType {

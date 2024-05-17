@@ -7,7 +7,6 @@ import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/task/bloc/task_bloc.dart';
 import 'package:tctt_mobile/task/widgets/received_task/bloc/receiver_bloc.dart';
 import 'package:tctt_mobile/widgets/bottom_loader.dart';
-import 'package:tctt_mobile/widgets/empty_list_message.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/msg_item.dart';
 import 'package:tctt_mobile/widgets/tags.dart';
@@ -87,11 +86,6 @@ class ReceivedTasks extends StatelessWidget {
                       if (state.status.isLoading && state.tasks.isEmpty) {
                         return const Loader();
                       }
-                      if (state.tasks.isEmpty) {
-                        return const EmptyListMessage(
-                          message: "Không có nhiệm vụ nào",
-                        );
-                      }
                       return const TasksView();
                   }
                 },
@@ -147,39 +141,46 @@ class _TasksViewState extends State<TasksView> {
   Widget build(BuildContext context) {
     return BlocBuilder<ReceiverBloc, ReceiverState>(
       builder: (context, state) {
-        return ListView.builder(
-          itemBuilder: (context, index) {
-            return index >= state.tasks.length
-                ? const BottomLoader()
-                : MessageItem(
-                    name: state.tasks[index].unitSent.name,
-                    time: state.tasks[index].createdAt,
-                    title: state.tasks[index].name,
-                    content: state.tasks[index].content,
-                    isImportant: state.tasks[index].important,
-                    highlighted: state.tasks[index].progress == null,
-                    tag: SimpleTag(
-                      text: state.tasks[index].type.name,
-                      color: state.tasks[index].type.toTaskTypeE.color,
-                    ),
-                    onTap: () async {
-                      await Navigator.of(context).push(
-                        ReceivedTaskDetailPage.route(state.tasks[index].id),
-                      );
-                      if (!context.mounted) return;
-                      context
-                          .read<ReceiverBloc>()
-                          .add(const ReceiverResetEvent());
-                    },
-                  );
+        return RefreshIndicator(
+          onRefresh: () async {
+            context.read<ReceiverBloc>().add(const ReceiverResetEvent());
           },
-          itemCount:
-              state.hasReachedMax ? state.tasks.length : state.tasks.length + 1,
-          controller: _scrollController,
-          padding: const EdgeInsetsDirectional.only(
-            start: 12,
-            end: 12,
-            bottom: 8,
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return index >= state.tasks.length
+                  ? const BottomLoader()
+                  : MessageItem(
+                      name: state.tasks[index].unitSent.name,
+                      time: state.tasks[index].createdAt,
+                      title: state.tasks[index].name,
+                      content: state.tasks[index].content,
+                      isImportant: state.tasks[index].important,
+                      highlighted: state.tasks[index].progress == null,
+                      tag: SimpleTag(
+                        text: state.tasks[index].type.name,
+                        color: state.tasks[index].type.toTaskTypeE.color,
+                      ),
+                      onTap: () async {
+                        await Navigator.of(context).push(
+                          ReceivedTaskDetailPage.route(state.tasks[index].id),
+                        );
+                        if (!context.mounted) return;
+                        context
+                            .read<ReceiverBloc>()
+                            .add(const ReceiverResetEvent());
+                      },
+                    );
+            },
+            itemCount: state.hasReachedMax
+                ? state.tasks.length
+                : state.tasks.length + 1,
+            controller: _scrollController,
+            padding: const EdgeInsetsDirectional.only(
+              start: 12,
+              end: 12,
+              bottom: 8,
+            ),
           ),
         );
       },

@@ -154,6 +154,7 @@ class TypeSelector extends StatelessWidget {
       buildWhen: (previous, current) => previous.type != current.type,
       builder: (context, state) {
         return BorderDropdown(
+          labelText: "Loại nhiệm vụ",
           items: TaskTypeE.values
               .map(
                 (e) => DropdownMenuEntry(

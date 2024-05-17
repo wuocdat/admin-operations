@@ -25,3 +25,25 @@ class HasPermission extends StatelessWidget {
     return otherwise ?? Container();
   }
 }
+
+class CreatingPermission extends StatelessWidget {
+  final ProtectedFeature feature;
+  final Widget child;
+  final Widget? otherwise;
+
+  const CreatingPermission({
+    super.key,
+    required this.feature,
+    required this.child,
+    this.otherwise,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
+    if (user.permissions[feature.name]?.create ?? false) {
+      return child;
+    }
+    return otherwise ?? Container();
+  }
+}
