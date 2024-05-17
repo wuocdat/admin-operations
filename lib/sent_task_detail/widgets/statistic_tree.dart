@@ -32,7 +32,7 @@ class StatisticTree extends StatelessWidget {
             const SizedBox(height: 8),
             if (state.statistic == null && !state.status.isLoading)
               const Text(
-                'Không có dữ liệu thống kê',
+                'Chưa có báo cáo nào',
                 style: TextStyle(fontStyle: FontStyle.italic),
               )
             else
