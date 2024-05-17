@@ -16,6 +16,7 @@ class SubjectListBloc extends Bloc<SubjectListEvent, SubjectListState> {
       transformer: throttleDroppable(throttleDuration),
     );
     on<SubjectReFetchedEvent>(_onSubjectRefetched);
+    on<SubjectDeletedEvent>(_onSubjectDeleted);
   }
 
   final TargetRepository _targetRepository;
@@ -69,6 +70,19 @@ class SubjectListBloc extends Bloc<SubjectListEvent, SubjectListState> {
     } catch (e) {
       print(e);
       emit(state.copyWith(status: FetchDataStatus.failure));
+    }
+  }
+
+  Future<void> _onSubjectDeleted(
+      SubjectDeletedEvent event, Emitter<SubjectListState> emit) async {
+    emit(state.copyWith(deleteStatus: FetchDataStatus.loading));
+
+    try {
+      await _targetRepository.deleteSubject(event.subjectId);
+
+      emit(state.copyWith(deleteStatus: FetchDataStatus.success));
+    } catch (_) {
+      emit(state.copyWith(deleteStatus: FetchDataStatus.failure));
     }
   }
 }

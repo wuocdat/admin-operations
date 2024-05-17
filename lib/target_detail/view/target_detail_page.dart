@@ -4,7 +4,6 @@ import 'package:target_repository/target_repository.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/target_detail/bloc/target_detail_bloc.dart';
-import 'package:tctt_mobile/widgets/empty_list_message.dart';
 import 'package:tctt_mobile/widgets/label_text.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/post_container.dart';
@@ -82,11 +81,6 @@ class TargetDetailPage extends StatelessWidget {
                     default:
                       if (state.status.isLoading && state.posts.isEmpty) {
                         return const Loader();
-                      }
-                      if (state.posts.isEmpty) {
-                        return const EmptyListMessage(
-                          message: "Không có mục nào",
-                        );
                       }
                       return RichListView(
                         physics: const AlwaysScrollableScrollPhysics(),

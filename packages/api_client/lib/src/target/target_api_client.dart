@@ -9,6 +9,8 @@ class TargetNotFoundFailure implements Exception {}
 
 class NewTargetFailure implements Exception {}
 
+class DeleteTargetFailure implements Exception {}
+
 class TargetApiClient {
   TargetApiClient({Dio? dio})
       : _dio = dio ?? Dio(ApiConfig.options)
@@ -57,6 +59,12 @@ class TargetApiClient {
     });
 
     if (response.statusCode != 201) throw NewTargetFailure();
+  }
+
+  Future<void> deleteSubject(String subjectId) async {
+    final response = await _dio.delete('${TargetUrl.list}/$subjectId');
+
+    if (response.statusCode != 200) throw DeleteTargetFailure();
   }
 
   Future<List> fetchPostsBySubjectId(String subjectId, int limit,

@@ -61,4 +61,8 @@ class TargetRepository {
 
     return result.map((e) => Post.fromJson(e)).toList();
   }
+
+  Future<void> deleteSubject(String subjectId) async {
+    await _targetApiClient.deleteSubject(subjectId);
+  }
 }

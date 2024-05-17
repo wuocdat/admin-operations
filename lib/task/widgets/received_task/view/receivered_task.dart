@@ -7,7 +7,6 @@ import 'package:tctt_mobile/shared/utils/extensions.dart';
 import 'package:tctt_mobile/task/bloc/task_bloc.dart';
 import 'package:tctt_mobile/task/widgets/received_task/bloc/receiver_bloc.dart';
 import 'package:tctt_mobile/widgets/bottom_loader.dart';
-import 'package:tctt_mobile/widgets/empty_list_message.dart';
 import 'package:tctt_mobile/widgets/loader.dart';
 import 'package:tctt_mobile/widgets/msg_item.dart';
 import 'package:tctt_mobile/widgets/tags.dart';
@@ -86,11 +85,6 @@ class ReceivedTasks extends StatelessWidget {
                     default:
                       if (state.status.isLoading && state.tasks.isEmpty) {
                         return const Loader();
-                      }
-                      if (state.tasks.isEmpty) {
-                        return const EmptyListMessage(
-                          message: "Không có nhiệm vụ nào",
-                        );
                       }
                       return const TasksView();
                   }

@@ -24,3 +24,12 @@ final class SubjectReFetchedEvent extends SubjectListEvent {
   @override
   List<Object> get props => [typeAc];
 }
+
+final class SubjectDeletedEvent extends SubjectListEvent {
+  const SubjectDeletedEvent({required this.subjectId});
+
+  final String subjectId;
+
+  @override
+  List<Object> get props => [subjectId];
+}

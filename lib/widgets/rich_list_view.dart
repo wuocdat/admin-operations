@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tctt_mobile/widgets/bottom_loader.dart';
+import 'package:tctt_mobile/widgets/empty_list_message.dart';
 
 class RichListView<T> extends StatefulWidget {
   const RichListView({
@@ -65,26 +66,41 @@ class _RichListViewState extends State<RichListView> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: widget.onRefresh ?? () async {},
-      child: ListView.builder(
-        physics: widget.physics,
-        reverse: widget.reverse,
-        itemBuilder: (context, index) {
-          return index >= widget.itemCount
-              ? const BottomLoader()
-              : widget.itemBuilder(index);
-        },
-        itemCount:
-            widget.hasReachedMax ? widget.itemCount : widget.itemCount + 1,
-        controller: _scrollController,
-        padding: EdgeInsetsDirectional.only(
-          start: widget.startPadding,
-          end: widget.endPadding,
-          bottom: widget.bottomPadding,
-          top: widget.topPadding,
-        ),
-      ),
-    );
+    return widget.itemCount != 0
+        ? RefreshIndicator(
+            onRefresh: widget.onRefresh ?? () async {},
+            child: ListView.builder(
+              physics: widget.physics,
+              reverse: widget.reverse,
+              itemBuilder: (context, index) {
+                return index >= widget.itemCount
+                    ? const BottomLoader()
+                    : widget.itemBuilder(index);
+              },
+              itemCount: widget.hasReachedMax
+                  ? widget.itemCount
+                  : widget.itemCount + 1,
+              controller: _scrollController,
+              padding: EdgeInsetsDirectional.only(
+                start: widget.startPadding,
+                end: widget.endPadding,
+                bottom: widget.bottomPadding,
+                top: widget.topPadding,
+              ),
+            ),
+          )
+        : Stack(
+            children: [
+              const EmptyListMessage(message: "Không có mục nào"),
+              RefreshIndicator(
+                onRefresh: widget.onRefresh ?? () async {},
+                child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemBuilder: (context, index) => Container(),
+                  itemCount: 0,
+                ),
+              )
+            ],
+          );
   }
 }
