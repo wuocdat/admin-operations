@@ -76,11 +76,11 @@ class SettingPage extends StatelessWidget {
               const Spacer(),
               const Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
-                child: MediumLabelText("©2024 c3c6"),
+                child: MediumLabelText("© 2024 c3c6"),
               ),
               const Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(16, 4, 0, 0),
-                child: MediumLabelText("v0.0.1"),
+                child: MediumLabelText("v1.0.0"),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(14, 0, 0, 8),
