@@ -59,12 +59,31 @@ class TargetApiClient {
     if (response.statusCode != 201) throw NewTargetFailure();
   }
 
-  Future<List> fetchPosts(String subjectId, int limit, [int page = 1]) async {
+  Future<List> fetchPostsBySubjectId(String subjectId, int limit,
+      [int page = 1]) async {
     final response = await _dio.get(TargetUrl.posts, queryParameters: {
       'fbSubject': subjectId,
       'pageSize': limit,
       'currentPage': page,
       'sortBy': jsonEncode({'time': -1})
+    });
+
+    final result = Handler.parseResponse(response) as List;
+
+    return result;
+  }
+
+  Future<List> fetchPostsByType(
+      int typeAc, String unitId, String startDate, String endDate, int limit,
+      [int page = 1]) async {
+    final response = await _dio.get(TargetUrl.posts, queryParameters: {
+      'typeAc': typeAc,
+      'pageSize': limit,
+      'currentPage': page,
+      'sortBy': jsonEncode({'time': -1}),
+      'unit': unitId,
+      'startDate': startDate,
+      'endDate': endDate,
     });
 
     final result = Handler.parseResponse(response) as List;

@@ -4,37 +4,34 @@ import 'package:target_repository/target_repository.dart';
 import 'package:tctt_mobile/shared/debounce.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 
-part 'target_detail_event.dart';
-part 'target_detail_state.dart';
+part 'subject_action_event.dart';
+part 'subject_action_state.dart';
 
-class TargetDetailBloc extends Bloc<TargetDetailEvent, TargetDetailState> {
-  TargetDetailBloc(
-      {required TargetRepository targetRepository, required String targetId})
+class SubjectActionBloc extends Bloc<SubjectActionEvent, SubjectActionState> {
+  SubjectActionBloc(
+      {required TargetRepository targetRepository, required String unitId})
       : _targetRepository = targetRepository,
-        _targetId = targetId,
-        super(const TargetDetailState()) {
+        _unitId = unitId,
+        super(const SubjectActionState()) {
     on<PostsFetchedEvent>(
       _onPostsFetched,
       transformer: throttleDroppable(throttleDuration),
     );
     on<PostsReFetchedEvent>(_onPostsRefetched);
-    on<TargetInfoFetchedEvent>(_onTargetInfoFetched);
   }
 
   final TargetRepository _targetRepository;
-  final String _targetId;
+  final String _unitId;
 
   Future<void> _onPostsRefetched(
     PostsReFetchedEvent event,
-    Emitter<TargetDetailState> emit,
+    Emitter<SubjectActionState> emit,
   ) async {
-    emit(TargetDetailState(
-      status: FetchDataStatus.loading,
-      target: state.target,
-    ));
+    emit(const SubjectActionState(status: FetchDataStatus.loading));
 
     try {
-      final posts = await _targetRepository.fetchPostsBySubjectId(_targetId);
+      final posts = await _targetRepository.fetchPostsByUnit(
+          event.typeAc, _unitId, '2021-05-17', '2021-05-31');
 
       posts.length < subjectLimit
           ? emit(state.copyWith(
@@ -47,37 +44,22 @@ class TargetDetailBloc extends Bloc<TargetDetailEvent, TargetDetailState> {
               status: FetchDataStatus.success,
               posts: posts,
             ));
-    } catch (e) {
-      print(e);
-      emit(state.copyWith(status: FetchDataStatus.failure));
-    }
-  }
-
-  Future<void> _onTargetInfoFetched(
-    TargetInfoFetchedEvent event,
-    Emitter<TargetDetailState> emit,
-  ) async {
-    try {
-      final target = await _targetRepository.fetchSubjectById(_targetId);
-
-      emit(state.copyWith(target: target));
-    } catch (e) {
-      print(e);
+    } catch (_) {
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }
 
   Future<void> _onPostsFetched(
     PostsFetchedEvent event,
-    Emitter<TargetDetailState> emit,
+    Emitter<SubjectActionState> emit,
   ) async {
     if (state.hasReachedMax) return;
 
     emit(state.copyWith(status: FetchDataStatus.loading));
 
     try {
-      final posts = await _targetRepository.fetchPostsBySubjectId(
-          _targetId, state.posts.length);
+      final posts = await _targetRepository.fetchPostsByUnit(event.typeAc,
+          _unitId, '2021-05-17', '2021-05-31', state.posts.length);
 
       posts.length < subjectLimit
           ? emit(state.copyWith(
@@ -89,8 +71,7 @@ class TargetDetailBloc extends Bloc<TargetDetailEvent, TargetDetailState> {
               status: FetchDataStatus.success,
               posts: List.of(state.posts)..addAll(posts),
             ));
-    } catch (e) {
-      print(e);
+    } catch (_) {
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }

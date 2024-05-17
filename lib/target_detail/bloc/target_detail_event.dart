@@ -20,3 +20,10 @@ final class PostsReFetchedEvent extends TargetDetailEvent {
   @override
   List<Object> get props => [];
 }
+
+final class TargetInfoFetchedEvent extends TargetDetailEvent {
+  const TargetInfoFetchedEvent();
+
+  @override
+  List<Object> get props => [];
+}

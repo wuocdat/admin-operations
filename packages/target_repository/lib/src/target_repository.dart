@@ -36,9 +36,25 @@ class TargetRepository {
     await _targetApiClient.createSubject(infoName, type, typeAc, uid);
   }
 
-  Future<List<Post>> fetchPosts(String subjectId, [int length = 0]) async {
-    final result = await _targetApiClient.fetchPosts(
+  Future<List<Post>> fetchPostsBySubjectId(String subjectId,
+      [int length = 0]) async {
+    final result = await _targetApiClient.fetchPostsBySubjectId(
       subjectId,
+      subjectLimit,
+      (length / subjectLimit).ceil() + 1,
+    );
+
+    return result.map((e) => Post.fromJson(e)).toList();
+  }
+
+  Future<List<Post>> fetchPostsByUnit(
+      int typeAc, String unitId, String startDate, String endDate,
+      [int length = 0]) async {
+    final result = await _targetApiClient.fetchPostsByType(
+      typeAc,
+      unitId,
+      startDate,
+      endDate,
       subjectLimit,
       (length / subjectLimit).ceil() + 1,
     );
