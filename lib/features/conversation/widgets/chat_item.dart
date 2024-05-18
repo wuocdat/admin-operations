@@ -2,7 +2,7 @@ import 'package:conversation_repository/conversation_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
-import 'package:tctt_mobile/shared/utils/time.dart';
+import 'package:tctt_mobile/core/utils/time.dart';
 import 'package:tctt_mobile/shared/widgets/images.dart';
 import 'package:tctt_mobile/shared/widgets/label_text.dart';
 

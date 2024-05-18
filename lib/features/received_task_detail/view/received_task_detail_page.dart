@@ -5,7 +5,7 @@ import 'package:tctt_mobile/features/received_task_detail/cubit/received_task_de
 import 'package:tctt_mobile/features/received_task_detail/widgets/report_detail.dart';
 import 'package:tctt_mobile/features/received_task_detail/widgets/report_form/report_form.dart';
 import 'package:tctt_mobile/shared/enums.dart';
-import 'package:tctt_mobile/shared/utils/extensions.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/shared/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/shared/widgets/content_container.dart';
 import 'package:tctt_mobile/shared/widgets/tags.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tctt_mobile/shared/utils/extensions.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
 import 'package:tctt_mobile/shared/widgets/images.dart';
 

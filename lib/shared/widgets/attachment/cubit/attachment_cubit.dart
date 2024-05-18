@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:task_repository/task_repository.dart';
-import 'package:tctt_mobile/shared/utils/file.dart';
+import 'package:tctt_mobile/core/utils/file.dart';
 
 part 'attachment_state.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/features/sent_task_detail/cubit/sent_task_detail_cubit.dart';
 import 'package:tctt_mobile/features/sent_task_detail/widgets/statistic_tree.dart';
-import 'package:tctt_mobile/shared/utils/extensions.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/shared/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/widgets/content_container.dart';

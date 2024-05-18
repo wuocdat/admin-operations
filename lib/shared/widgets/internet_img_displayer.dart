@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:tctt_mobile/shared/utils/file.dart';
+import 'package:tctt_mobile/core/utils/file.dart';
 import 'package:tctt_mobile/shared/widgets/loader.dart';
 
 class InternetImgDisplayer extends StatefulWidget {

@@ -5,7 +5,7 @@ import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dar
 import 'package:tctt_mobile/features/conversation/bloc/conversation_bloc.dart';
 import 'package:tctt_mobile/features/conversation/widgets/chat_item.dart';
 import 'package:tctt_mobile/shared/enums.dart';
-import 'package:tctt_mobile/shared/utils/extensions.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/shared/widgets/inputs.dart';
 import 'package:tctt_mobile/shared/widgets/loader.dart';
 import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';

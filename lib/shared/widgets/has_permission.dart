@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/shared/enums.dart';
-import 'package:tctt_mobile/shared/utils/extensions.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
 
 class HasPermission extends StatelessWidget {
   final List<ERole> allowedRoles;

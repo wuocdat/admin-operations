@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/shared/widgets/attachment/cubit/attachment_cubit.dart';
-import 'package:tctt_mobile/shared/utils/file.dart';
+import 'package:tctt_mobile/core/utils/file.dart';
 import 'package:tctt_mobile/shared/widgets/label_text.dart';
 import 'package:tctt_mobile/shared/widgets/internet_img_displayer.dart';
 
