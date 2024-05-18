@@ -8,7 +8,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tctt_mobile/app.dart';
 import 'package:tctt_mobile/bloc_observer.dart';
-import 'package:tctt_mobile/services/firebase_service.dart';
+import 'package:tctt_mobile/core/services/firebase_service.dart';
 
 void main() async {
   runZonedGuarded(

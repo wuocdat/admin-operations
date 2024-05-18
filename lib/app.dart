@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mail_repository/mail_repository.dart';
 import 'package:target_repository/target_repository.dart';
 import 'package:task_repository/task_repository.dart';
-import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
-import 'package:tctt_mobile/home/home.dart';
-import 'package:tctt_mobile/login/login.dart';
-import 'package:tctt_mobile/splash/splash.dart';
-import 'package:tctt_mobile/theme/theme.dart';
+import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/features/home/home.dart';
+import 'package:tctt_mobile/features/login/login.dart';
+import 'package:tctt_mobile/features/splash/splash.dart';
+import 'package:tctt_mobile/core/theme/theme.dart';
 import 'package:units_repository/units_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
