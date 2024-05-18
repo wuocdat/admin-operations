@@ -166,9 +166,9 @@ class UnitManager extends StatelessWidget {
                   child: Padding(
                       padding:
                           const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-                      child: ListView(
-                        padding: EdgeInsets.zero,
-                        scrollDirection: Axis.vertical,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.max,
                         children: [
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
@@ -202,44 +202,38 @@ class UnitManager extends StatelessWidget {
                               ],
                             ),
                           ),
-                          // Column(
-                          //   crossAxisAlignment: CrossAxisAlignment.stretch,
-                          //   mainAxisSize: MainAxisSize.max,
-                          //   children: [
-                          BlocBuilder<UnitManagerBloc, UnitManagerState>(
-                              builder: (context, state) {
-                                switch (state.status) {
-                                  case FetchDataStatus.initial:
-                                    return const Loader();
-                                  default:
-                                    if (state.status.isLoading &&
-                                        state.units.isEmpty) {
-                                      return const Loader();
-                                    }
-                                    if (state.units.isEmpty) {
-                                      return const EmptyListMessage(
-                                        message: "co du lieu",
-                                      );
-                                    }
-                                    return RichListView(
-                                      hasReachedMax: state.hasReachedMax,
-                                      itemCount: state.units.length,
-                                      itemBuilder: (index) => CustomPadding(
-                                        text: state.units[index].name,
-                                        onPressed: () {},
-                                        // onPressed: () async {}
-                                      ),
-                                      onReachedEnd: () {
-                                        // context.read<UnitManagerBloc>().add(const UnitFetchedEvent(parentId));
-                                      },
-                                    );
+                          Expanded(child:
+                              BlocBuilder<UnitManagerBloc, UnitManagerState>(
+                                  builder: (context, state) {
+                            switch (state.status) {
+                              case FetchDataStatus.initial:
+                                return const Loader();
+                              default:
+                                if (state.status.isLoading &&
+                                    state.units.isEmpty) {
+                                  return const Loader();
                                 }
-                          })
+                                if (state.units.isEmpty) {
+                                  return const EmptyListMessage(
+                                    message: "co du lieu",
+                                  );
+                                }
+                                return RichListView(
+                                  hasReachedMax: state.hasReachedMax,
+                                  itemCount: state.units.length,
+                                  itemBuilder: (index) => CustomPadding(
+                                    text: state.units[index].name,
+                                    onPressed: () {},
+                                    // onPressed: () async {}
+                                  ),
+                                  onReachedEnd: () {
+                                    // context.read<UnitManagerBloc>().add(const UnitFetchedEvent(parentId));
+                                  },
+                                );
+                            }
+                          }))
                         ],
-                      )
-                      //   ],
-                      // ),
-                      ),
+                      )),
                 );
               },
             ),
