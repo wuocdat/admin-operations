@@ -1,10 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:logger/logger.dart';
 
 final class ApiConfig {
   static final options = BaseOptions(baseUrl: dotenv.env['BASE_API_URL'] ?? "");
 }
+
+var logger = Logger(printer: PrettyPrinter(methodCount: 0, printTime: true));
 
 class ApiInterceptors extends Interceptor {
   @override
@@ -20,14 +23,14 @@ class ApiInterceptors extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    print(
+    logger.i(
         'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
     super.onResponse(response, handler);
   }
 
   @override
   Future onError(DioException err, ErrorInterceptorHandler handler) async {
-    print(
+    logger.e(
         'ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
     super.onError(err, handler);
   }

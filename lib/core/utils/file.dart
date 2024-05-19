@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:tctt_mobile/core/utils/logger.dart';
 
 final class FileHelper {
   static String getFileNameFromUrl(String url) {
@@ -23,7 +24,7 @@ final class FileHelper {
         if (!await dir.exists()) dir = (await getExternalStorageDirectory())!;
       }
     } catch (err) {
-      print("Cannot get download folder path $err");
+      logger.i("Cannot get download folder path $err");
     }
     return "${dir?.path}$filename";
   }

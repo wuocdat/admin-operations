@@ -3,6 +3,7 @@ import 'package:conversation_repository/conversation_repository.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:tctt_mobile/core/services/token_service.dart';
+import 'package:tctt_mobile/core/utils/logger.dart';
 
 class EventNames {
   static const joinEvent = "joinConv";
@@ -20,14 +21,15 @@ class CreatingConversationSocketIOService {
               .disableAutoConnect()
               .build(),
         ) {
-    _socket.onConnect((_) => print('conversation creating socket connected'));
+    _socket
+        .onConnect((_) => logger.i('conversation creating socket connected'));
 
     _socket.on(EventNames.joinedConversationEvent,
         (data) => addResponse(data['conversationId']));
 
-    _socket.onDisconnect((_) => print('disconnect'));
+    _socket.onDisconnect((_) => logger.i('disconnect'));
 
-    _socket.onError((data) => print(data));
+    _socket.onError((data) => logger.i(data));
   }
 
   Future<void> connect() async {
@@ -51,7 +53,7 @@ class CreatingConversationSocketIOService {
   }
 
   void sendOneByOneConversationRequest(String otherUserId) {
-    print('sent');
+    logger.i('sent');
     _socket.emit(EventNames.joinEvent, [
       {"userId": otherUserId}
     ]);
@@ -69,21 +71,21 @@ class CommunicationSocketIOService {
               .build(),
         ) {
     _socket.onConnect((_) {
-      print('communication socket connected');
+      logger.i('communication socket connected');
       joinToConversation();
     });
 
     _socket.on(EventNames.joinedConversationEvent,
-        (data) => print('joined to conversation ${data['conversationId']}'));
+        (data) => logger.i('joined to conversation ${data['conversationId']}'));
 
     _socket.on(EventNames.messageEvent, (data) {
-      print('received message');
+      logger.i('received message');
       addResponse(Message.fromJson(data));
     });
 
-    _socket.onDisconnect((_) => print('communication socket disconnect'));
+    _socket.onDisconnect((_) => logger.i('communication socket disconnect'));
 
-    _socket.onError((data) => print(data));
+    _socket.onError((data) => logger.i(data));
   }
 
   Future<void> connect() async {
@@ -115,7 +117,7 @@ class CommunicationSocketIOService {
   }
 
   void sendMessage(String content) {
-    print('sent message $content');
+    logger.i('sent message $content');
     _socket.emit(EventNames.sendMessageEvent, [
       {
         "conversationId": _conversationId,

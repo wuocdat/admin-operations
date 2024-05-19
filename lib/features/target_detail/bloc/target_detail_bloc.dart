@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:target_repository/target_repository.dart';
+import 'package:tctt_mobile/core/utils/logger.dart';
 import 'package:tctt_mobile/shared/debounce.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 
@@ -48,7 +49,7 @@ class TargetDetailBloc extends Bloc<TargetDetailEvent, TargetDetailState> {
               posts: posts,
             ));
     } catch (e) {
-      print(e);
+      logger.e(e);
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }
@@ -62,7 +63,7 @@ class TargetDetailBloc extends Bloc<TargetDetailEvent, TargetDetailState> {
 
       emit(state.copyWith(target: target));
     } catch (e) {
-      print(e);
+      logger.e(e);
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }
@@ -90,7 +91,7 @@ class TargetDetailBloc extends Bloc<TargetDetailEvent, TargetDetailState> {
               posts: List.of(state.posts)..addAll(posts),
             ));
     } catch (e) {
-      print(e);
+      logger.e(e);
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }

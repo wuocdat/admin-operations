@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:target_repository/target_repository.dart';
+import 'package:tctt_mobile/core/utils/logger.dart';
 import 'package:tctt_mobile/shared/debounce.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 
@@ -68,7 +69,7 @@ class SubjectListBloc extends Bloc<SubjectListEvent, SubjectListState> {
               subjects: List.of(state.subjects)..addAll(subjects),
             ));
     } catch (e) {
-      print(e);
+      logger.e(e);
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }
