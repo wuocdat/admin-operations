@@ -31,7 +31,7 @@ class SubjectActionBloc extends Bloc<SubjectActionEvent, SubjectActionState> {
 
     try {
       final posts = await _targetRepository.fetchPostsByUnit(
-          event.typeAc, _unitId, '2021-05-17', '2021-05-31');
+          event.typeAc, _unitId, event.startDate, event.endDate);
 
       posts.length < subjectLimit
           ? emit(state.copyWith(
@@ -59,7 +59,7 @@ class SubjectActionBloc extends Bloc<SubjectActionEvent, SubjectActionState> {
 
     try {
       final posts = await _targetRepository.fetchPostsByUnit(event.typeAc,
-          _unitId, '2021-05-17', '2021-05-31', state.posts.length);
+          _unitId, event.startDate, event.endDate, state.posts.length);
 
       posts.length < subjectLimit
           ? emit(state.copyWith(

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:tctt_mobile/core/theme/colors.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/new_subject/new_subject_page.dart';
+import 'package:tctt_mobile/features/target/models/filter_data.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/features/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/features/target/widgets/subject_actions/subject_actions.dart';
@@ -25,7 +28,7 @@ class TargetPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => TargetCubit(),
+      create: (_) => TargetCubit()..resetTime(),
       child: BlocBuilder<TargetCubit, TargetState>(
         builder: (context, state) {
           return Column(
@@ -53,35 +56,54 @@ class TargetPage extends StatelessWidget {
                     return state.user.unit.id;
                   },
                   builder: (context, unitId) {
+                    final isListMode = context.select((TargetCubit cubit) =>
+                        cubit.state.viewIndex.isListMode);
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CreatingPermission(
-                          feature: ProtectedFeature.fbSubjects,
-                          child: IconButton(
-                            onPressed: () async {
-                              await Navigator.push(
-                                context,
-                                NewSubjectPage.route(
-                                    unitId, state.selectedOption),
-                              );
-                              // if (!context.mounted) return;
-                              // context
-                              //     .read<TaskBloc>()
-                              //     .add(const ReloadIncreasedEvent());
-                            },
-                            icon: const Icon(Icons.add),
+                        if (isListMode) ...[
+                          CreatingPermission(
+                            feature: ProtectedFeature.fbSubjects,
+                            child: IconButton(
+                              onPressed: () async {
+                                await Navigator.push(
+                                  context,
+                                  NewSubjectPage.route(
+                                      unitId, state.selectedOption),
+                                );
+                                // if (!context.mounted) return;
+                                // context
+                                //     .read<TaskBloc>()
+                                //     .add(const ReloadIncreasedEvent());
+                              },
+                              icon: const Icon(Icons.add),
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                        ],
+                        if (!isListMode) ...[
+                          IconButton(
+                            onPressed: () async {},
+                            icon: const Icon(Icons.file_download_outlined),
                             color: Theme.of(context).primaryColor,
                           ),
-                        ),
-                        const SizedBox(width: 8),
+                          const SizedBox(width: 8),
+                        ],
                         FilterButton(
                           onTap: () {
                             showModalBottomSheet<void>(
                               isScrollControlled: true,
                               context: context,
-                              builder: (BuildContext context) {
-                                return const FilterContent();
+                              builder: (_) {
+                                return FilterContent(
+                                  showTime: !isListMode,
+                                  initialEndDate: state.endDate,
+                                  initialStartDate: state.startDate,
+                                  onApplyFilterData: context
+                                      .read<TargetCubit>()
+                                      .updateFilterDataForActionView,
+                                );
                               },
                             );
                           },
@@ -122,10 +144,55 @@ class TargetPage extends StatelessWidget {
   }
 }
 
-class FilterContent extends StatelessWidget {
+class FilterContent extends StatefulWidget {
   const FilterContent({
     super.key,
+    required this.onApplyFilterData,
+    this.initialEndDate,
+    this.initialStartDate,
+    required this.showTime,
   });
+
+  final void Function(FilterData) onApplyFilterData;
+  final DateTime? initialStartDate;
+  final DateTime? initialEndDate;
+  final bool showTime;
+
+  @override
+  State<FilterContent> createState() => _FilterContentState();
+}
+
+class _FilterContentState extends State<FilterContent> {
+  late DateTime? _pickedStartDate;
+  late DateTime? _pickedEndDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _pickedStartDate = widget.initialStartDate;
+    _pickedEndDate = widget.initialEndDate;
+  }
+
+  void _setStartDate(DateTime date) {
+    setState(() {
+      _pickedStartDate = date;
+    });
+  }
+
+  void _setEndDate(DateTime date) {
+    setState(() {
+      _pickedEndDate = date;
+    });
+  }
+
+  void _handleApplyFilterData() {
+    final data = FilterData(
+      startDate:
+          _pickedStartDate ?? DateTime.now().subtract(const Duration(days: 1)),
+      endDate: _pickedEndDate ?? DateTime.now(),
+    );
+    widget.onApplyFilterData(data);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,41 +209,124 @@ class FilterContent extends StatelessWidget {
                   children: [
                     const Expanded(child: Text('Bộ lọc tìm kiếm')),
                     OutlinedButton(
-                      onPressed: () {},
-                      child: const Text('Thiết lập lại'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Thoát'),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _handleApplyFilterData();
+                        Navigator.of(context).pop();
+                      },
                       child: const Text('Áp dụng'),
                     ),
                   ],
                 ),
               ),
             ),
-            FilterSection(
-              name: 'Theo tên',
-              child: BaseInput(
-                hintText: 'Nhập tên đối tượng',
-                backgroundColor: Colors.grey[300],
-              ),
-            ),
-            FilterSection(
-              name: 'Theo dạng trang',
-              child: WrapOptions(
-                builderItem: (index) => SelectableContainer(
-                  content: FbPageType.values[index].title,
-                  isSelected: true,
+            if (widget.showTime)
+              FilterSection(
+                name: 'Theo thời gian',
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: DatePickerButton(
+                        title: 'Ngày bắt đầu',
+                        initialDate: _pickedStartDate,
+                        onPickDate: _setStartDate,
+                      ),
+                    ),
+                    Container(
+                      width: 30,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: const Divider(),
+                    ),
+                    Expanded(
+                      child: DatePickerButton(
+                        title: 'Ngày kết thúc',
+                        initialDate: _pickedEndDate,
+                        onPickDate: _setEndDate,
+                      ),
+                    ),
+                  ],
                 ),
-                length: FbPageType.values.length,
               ),
-            ),
+            if (!widget.showTime) ...[
+              FilterSection(
+                name: 'Theo tên',
+                child: BaseInput(
+                  hintText: 'Nhập tên đối tượng',
+                  backgroundColor: Colors.grey[300],
+                ),
+              ),
+              FilterSection(
+                name: 'Theo dạng trang',
+                child: WrapOptions(
+                  builderItem: (index) => SelectableContainer(
+                    content: FbPageType.values[index].title,
+                    isSelected: true,
+                  ),
+                  length: FbPageType.values.length,
+                ),
+              ),
+            ],
             const FilterSection(
               name: 'Theo đơn vị quản lý',
               child: UnitSelector(),
             ),
           ],
         ));
+  }
+}
+
+class DatePickerButton extends StatelessWidget {
+  const DatePickerButton({
+    super.key,
+    required this.title,
+    required this.onPickDate,
+    this.initialDate,
+  });
+
+  final String title;
+  final DateTime? initialDate;
+  final void Function(DateTime) onPickDate;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        helpText: 'Chọn ${title.toLowerCase()}',
+        context: context,
+        initialDate: initialDate,
+        firstDate: DateTime(2020),
+        lastDate: DateTime.now());
+
+    if (picked != null) {
+      onPickDate(picked);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasValue = initialDate != null;
+
+    return InkWell(
+      onTap: () => _selectDate(context),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: hasValue ? Colors.white : Colors.grey[300],
+          border: Border.all(
+            color: hasValue ? AppColors.primary : Colors.transparent,
+            width: 1.5,
+          ),
+        ),
+        child: Text(
+            initialDate != null ? DateFormat.yMd().format(initialDate!) : title,
+            textAlign: TextAlign.center),
+      ),
+    );
   }
 }
 
@@ -248,4 +398,8 @@ class FilterButton extends StatelessWidget {
       ),
     );
   }
+}
+
+extension on int {
+  bool get isListMode => this == 0;
 }

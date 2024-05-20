@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:target_repository/target_repository.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/target/cubit/target_cubit.dart';
@@ -18,19 +19,29 @@ class SubjectActions extends StatelessWidget {
         .select((TargetCubit cubit) => cubit.state.selectedOption.typeAc);
     final unitId =
         context.select((AuthenticationBloc bloc) => bloc.state.user.unit.id);
+    final startDate =
+        context.select((TargetCubit cubit) => cubit.state.startDate);
+    final endDate = context.select((TargetCubit cubit) => cubit.state.endDate);
 
     return BlocProvider(
       create: (context) => SubjectActionBloc(
         targetRepository: RepositoryProvider.of<TargetRepository>(context),
         unitId: unitId,
-      )..add(PostsFetchedEvent(typeAc: typeAc)),
+      )..add(PostsFetchedEvent(
+          typeAc: typeAc,
+          startDate: (startDate ?? DateTime.now()).stringFormat,
+          endDate: (endDate ?? DateTime.now()).stringFormat,
+        )),
       child: BlocListener<TargetCubit, TargetState>(
         listenWhen: (previous, current) =>
-            previous.selectedOption != current.selectedOption,
+            previous.selectedOption != current.selectedOption ||
+            previous.updateFilterCount != current.updateFilterCount,
         listener: (context, state) {
-          context
-              .read<SubjectActionBloc>()
-              .add(PostsReFetchedEvent(typeAc: state.selectedOption.typeAc));
+          context.read<SubjectActionBloc>().add(PostsReFetchedEvent(
+                typeAc: state.selectedOption.typeAc,
+                startDate: (state.startDate ?? DateTime.now()).stringFormat,
+                endDate: (state.endDate ?? DateTime.now()).stringFormat,
+              ));
         },
         child: BlocBuilder<SubjectActionBloc, SubjectActionState>(
           builder: (context, state) {
@@ -48,9 +59,11 @@ class SubjectActions extends StatelessWidget {
                   hasReachedMax: state.hasReachedMax,
                   itemCount: state.posts.length,
                   onRefresh: () async {
-                    context
-                        .read<SubjectActionBloc>()
-                        .add(PostsReFetchedEvent(typeAc: typeAc));
+                    context.read<SubjectActionBloc>().add(PostsReFetchedEvent(
+                          typeAc: typeAc,
+                          startDate: (startDate ?? DateTime.now()).stringFormat,
+                          endDate: (endDate ?? DateTime.now()).stringFormat,
+                        ));
                   },
                   itemBuilder: (index) {
                     final currentPost = state.posts[index];
@@ -67,9 +80,11 @@ class SubjectActions extends StatelessWidget {
                     );
                   },
                   onReachedEnd: () {
-                    context
-                        .read<SubjectActionBloc>()
-                        .add(PostsFetchedEvent(typeAc: typeAc));
+                    context.read<SubjectActionBloc>().add(PostsFetchedEvent(
+                          typeAc: typeAc,
+                          startDate: (startDate ?? DateTime.now()).stringFormat,
+                          endDate: (endDate ?? DateTime.now()).stringFormat,
+                        ));
                   },
                 );
             }
@@ -78,4 +93,8 @@ class SubjectActions extends StatelessWidget {
       ),
     );
   }
+}
+
+extension on DateTime {
+  String get stringFormat => DateFormat('yyyy-MM-dd').format(this);
 }

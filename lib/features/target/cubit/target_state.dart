@@ -66,6 +66,9 @@ class TargetState extends Equatable {
   const TargetState._({
     this.selectedOption = TargetOptions.subject,
     this.viewIndex = 0,
+    this.startDate,
+    this.endDate,
+    this.updateFilterCount = 0,
   });
 
   const TargetState.subject() : this._();
@@ -76,16 +79,34 @@ class TargetState extends Equatable {
 
   final int viewIndex;
 
+  final DateTime? startDate;
+
+  final DateTime? endDate;
+
+  final int updateFilterCount;
+
   TargetState copyWith({
     TargetOptions? selectedOption,
     int? viewIndex,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? updateFilterCount,
   }) {
     return TargetState._(
       selectedOption: selectedOption ?? this.selectedOption,
       viewIndex: viewIndex ?? this.viewIndex,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      updateFilterCount: updateFilterCount ?? this.updateFilterCount,
     );
   }
 
   @override
-  List<Object> get props => [selectedOption, viewIndex];
+  List<Object?> get props => [
+        selectedOption,
+        viewIndex,
+        startDate,
+        endDate,
+        updateFilterCount,
+      ];
 }
