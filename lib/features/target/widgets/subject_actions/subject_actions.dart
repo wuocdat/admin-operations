@@ -4,6 +4,8 @@ import 'package:target_repository/target_repository.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/features/target/widgets/subject_actions/bloc/subject_action_bloc.dart';
+import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/widgets/loader.dart';
 import 'package:tctt_mobile/shared/widgets/post_container.dart';
 import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
 
@@ -32,37 +34,45 @@ class SubjectActions extends StatelessWidget {
         },
         child: BlocBuilder<SubjectActionBloc, SubjectActionState>(
           builder: (context, state) {
-            return RichListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              startPadding: 0,
-              endPadding: 0,
-              hasReachedMax: state.hasReachedMax,
-              itemCount: state.posts.length,
-              onRefresh: () async {
-                context
-                    .read<SubjectActionBloc>()
-                    .add(PostsReFetchedEvent(typeAc: typeAc));
-              },
-              itemBuilder: (index) {
-                final currentPost = state.posts[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: PostContainer(
-                    comment: currentPost.commentTotal,
-                    content: currentPost.content,
-                    like: currentPost.reactionTotal,
-                    name: currentPost.fbSubject['name'],
-                    share: currentPost.shareTotal,
-                    time: currentPost.time,
-                  ),
+            switch (state.status) {
+              case FetchDataStatus.initial:
+                return const Loader();
+              default:
+                if (state.status.isLoading && state.posts.isEmpty) {
+                  return const Loader();
+                }
+                return RichListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  startPadding: 0,
+                  endPadding: 0,
+                  hasReachedMax: state.hasReachedMax,
+                  itemCount: state.posts.length,
+                  onRefresh: () async {
+                    context
+                        .read<SubjectActionBloc>()
+                        .add(PostsReFetchedEvent(typeAc: typeAc));
+                  },
+                  itemBuilder: (index) {
+                    final currentPost = state.posts[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: PostContainer(
+                        comment: currentPost.commentTotal,
+                        content: currentPost.content,
+                        like: currentPost.reactionTotal,
+                        name: currentPost.fbSubject['name'],
+                        share: currentPost.shareTotal,
+                        time: currentPost.time,
+                      ),
+                    );
+                  },
+                  onReachedEnd: () {
+                    context
+                        .read<SubjectActionBloc>()
+                        .add(PostsFetchedEvent(typeAc: typeAc));
+                  },
                 );
-              },
-              onReachedEnd: () {
-                context
-                    .read<SubjectActionBloc>()
-                    .add(PostsFetchedEvent(typeAc: typeAc));
-              },
-            );
+            }
           },
         ),
       ),
