@@ -14,3 +14,7 @@ final class TaskOverallSubscriptionRequested extends DashboardEvent {
 final class MailOverallSubscriptionRequested extends DashboardEvent {
   const MailOverallSubscriptionRequested();
 }
+
+final class OverallsReloaded extends DashboardEvent {
+  const OverallsReloaded();
+}
