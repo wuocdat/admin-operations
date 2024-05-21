@@ -95,6 +95,7 @@ class _LoginButton extends StatelessWidget {
         text: "Đăng nhập",
         onPressed: state.isValid
             ? () {
+                FocusManager.instance.primaryFocus?.unfocus();
                 context.read<LoginBloc>().add(const LoginSubmitted());
               }
             : null,
