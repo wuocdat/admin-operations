@@ -6,9 +6,9 @@ import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/features/task/bloc/task_bloc.dart';
 import 'package:tctt_mobile/features/task/widgets/received_task/bloc/receiver_bloc.dart';
-import 'package:tctt_mobile/shared/widgets/bottom_loader.dart';
 import 'package:tctt_mobile/shared/widgets/loader.dart';
 import 'package:tctt_mobile/shared/widgets/msg_item.dart';
+import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
 import 'package:tctt_mobile/shared/widgets/tags.dart';
 import 'package:tctt_mobile/shared/widgets/toggle_options.dart';
 
@@ -86,7 +86,48 @@ class ReceivedTasks extends StatelessWidget {
                       if (state.status.isLoading && state.tasks.isEmpty) {
                         return const Loader();
                       }
-                      return const TasksView();
+                      return RichListView(
+                        onRefresh: () async {
+                          context
+                              .read<ReceiverBloc>()
+                              .add(const ReceiverResetEvent());
+                        },
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        hasReachedMax: state.hasReachedMax,
+                        itemCount: state.tasks.length,
+                        itemBuilder: (index) {
+                          final currentTask = state.tasks[index];
+                          return currentTask.disable
+                              ? Container()
+                              : MessageItem(
+                                  name: currentTask.unitSent.name,
+                                  time: currentTask.createdAt,
+                                  title: currentTask.name,
+                                  content: currentTask.content,
+                                  isImportant: currentTask.important,
+                                  highlighted: currentTask.progress == null,
+                                  tag: SimpleTag(
+                                    text: currentTask.type.name,
+                                    color: currentTask.type.toTaskTypeE.color,
+                                  ),
+                                  onTap: () async {
+                                    await Navigator.of(context).push(
+                                      ReceivedTaskDetailPage.route(
+                                          currentTask.id),
+                                    );
+                                    if (!context.mounted) return;
+                                    context
+                                        .read<ReceiverBloc>()
+                                        .add(const ReceiverResetEvent());
+                                  },
+                                );
+                        },
+                        onReachedEnd: () {
+                          context
+                              .read<ReceiverBloc>()
+                              .add(const ReceiverFetchedEvent());
+                        },
+                      );
                   }
                 },
               ),
@@ -94,96 +135,6 @@ class ReceivedTasks extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class TasksView extends StatefulWidget {
-  const TasksView({
-    super.key,
-  });
-
-  @override
-  State<TasksView> createState() => _TasksViewState();
-}
-
-class _TasksViewState extends State<TasksView> {
-  final _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController
-      ..removeListener(_onScroll)
-      ..dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    if (_isBottom) {
-      context.read<ReceiverBloc>().add(const ReceiverFetchedEvent());
-    }
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.9);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ReceiverBloc, ReceiverState>(
-      builder: (context, state) {
-        return RefreshIndicator(
-          onRefresh: () async {
-            context.read<ReceiverBloc>().add(const ReceiverResetEvent());
-          },
-          child: ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return index >= state.tasks.length
-                  ? const BottomLoader()
-                  : MessageItem(
-                      name: state.tasks[index].unitSent.name,
-                      time: state.tasks[index].createdAt,
-                      title: state.tasks[index].name,
-                      content: state.tasks[index].content,
-                      isImportant: state.tasks[index].important,
-                      highlighted: state.tasks[index].progress == null,
-                      tag: SimpleTag(
-                        text: state.tasks[index].type.name,
-                        color: state.tasks[index].type.toTaskTypeE.color,
-                      ),
-                      onTap: () async {
-                        await Navigator.of(context).push(
-                          ReceivedTaskDetailPage.route(state.tasks[index].id),
-                        );
-                        if (!context.mounted) return;
-                        context
-                            .read<ReceiverBloc>()
-                            .add(const ReceiverResetEvent());
-                      },
-                    );
-            },
-            itemCount: state.hasReachedMax
-                ? state.tasks.length
-                : state.tasks.length + 1,
-            controller: _scrollController,
-            padding: const EdgeInsetsDirectional.only(
-              start: 12,
-              end: 12,
-              bottom: 8,
-            ),
-          ),
-        );
-      },
     );
   }
 }
