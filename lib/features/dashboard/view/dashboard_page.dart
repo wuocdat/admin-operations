@@ -8,6 +8,7 @@ import 'package:tctt_mobile/features/dashboard/widget/mail_overview.dart';
 import 'package:tctt_mobile/features/dashboard/widget/main_parameter.dart';
 import 'package:tctt_mobile/features/dashboard/widget/target_overview.dart';
 import 'package:tctt_mobile/features/dashboard/widget/task_overview.dart';
+import 'package:tctt_mobile/shared/widgets/loader.dart';
 
 class DashBoardPage extends StatelessWidget {
   const DashBoardPage({super.key});
@@ -22,19 +23,32 @@ class DashBoardPage extends StatelessWidget {
       )
         ..add(const TaskOverallSubscriptionRequested())
         ..add(const MailOverallSubscriptionRequested()),
-      child: const Scaffold(
-          body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            MainParameter(),
-            TaskOverview(),
-            MailOverview(),
-            TargetOverview(),
-            SizedBox(height: 16),
-          ],
-        ),
-      )),
+      child: BlocBuilder<DashboardBloc, DashboardState>(
+        builder: (context, state) {
+          if (state.status == DashboardStatus.initial ||
+              state.status == DashboardStatus.loading) {
+            return const Loader();
+          } else {
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<DashboardBloc>().add(const OverallsReloaded());
+              },
+              child: const SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    MainParameter(),
+                    TaskOverview(),
+                    MailOverview(),
+                    TargetOverview(),
+                    SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }

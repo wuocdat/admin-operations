@@ -18,6 +18,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         super(const DashboardState()) {
     on<TaskOverallSubscriptionRequested>(_onTaskOverallSubscriptionRequested);
     on<MailOverallSubscriptionRequested>(_onMailOverallSubscriptionRequested);
+    on<OverallsReloaded>(_onOverallsReloaded);
   }
 
   final TaskRepository _taskRepository;
@@ -43,11 +44,16 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     MailOverallSubscriptionRequested event,
     Emitter<DashboardState> emit,
   ) async {
+    emit(state.copyWith(status: DashboardStatus.loading));
     try {
       final newestMail = await _mailRepository.getNewestMail();
       final targetOverall = await _targetRepository.getOverall();
 
-      emit(state.copyWith(newestMail: newestMail, target: targetOverall));
+      emit(state.copyWith(
+        newestMail: newestMail,
+        target: targetOverall,
+        status: DashboardStatus.success,
+      ));
     } catch (_) {
       emit(state.copyWith(status: DashboardStatus.failure));
     }
@@ -61,5 +67,24 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         status: DashboardStatus.failure,
       ),
     );
+  }
+
+  Future<void> _onOverallsReloaded(
+    OverallsReloaded event,
+    Emitter<DashboardState> emit,
+  ) async {
+    emit(state.copyWith(status: DashboardStatus.loading));
+    try {
+      final newestMail = await _mailRepository.getNewestMail();
+      final targetOverall = await _targetRepository.getOverall();
+
+      emit(state.copyWith(
+        newestMail: newestMail,
+        target: targetOverall,
+        status: DashboardStatus.success,
+      ));
+    } catch (_) {
+      emit(state.copyWith(status: DashboardStatus.failure));
+    }
   }
 }

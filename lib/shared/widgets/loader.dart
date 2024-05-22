@@ -5,10 +5,12 @@ class Loader extends StatelessWidget {
     super.key,
     this.size = 40,
     this.strokeWith = 4,
+    this.color,
   });
 
   final double size;
   final double strokeWith;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,10 @@ class Loader extends StatelessWidget {
         child: SizedBox(
       height: size,
       width: size,
-      child: CircularProgressIndicator(strokeWidth: strokeWith),
+      child: CircularProgressIndicator(
+        strokeWidth: strokeWith,
+        color: color,
+      ),
     ));
   }
 }

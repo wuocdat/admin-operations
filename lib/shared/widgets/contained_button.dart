@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
+import 'package:tctt_mobile/shared/widgets/loader.dart';
 
 class ContainedButton extends StatelessWidget {
   const ContainedButton({
@@ -8,15 +9,18 @@ class ContainedButton extends StatelessWidget {
     VoidCallback? onPressed,
     double? width,
     double? height,
+    bool? loading,
   })  : _text = text,
         _onPressed = onPressed,
         _width = width ?? double.infinity,
-        _height = height ?? 48;
+        _height = height ?? 48,
+        _loading = loading ?? false;
 
   final VoidCallback? _onPressed;
   final String _text;
   final double? _width;
   final double? _height;
+  final bool _loading;
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +29,16 @@ class ContainedButton extends StatelessWidget {
       width: _width,
       child: ElevatedButton(
         key: const Key("loginForm_continue_RaisedButton"),
-        onPressed: _onPressed,
+        onPressed: _loading ? null : _onPressed,
         style: ElevatedButton.styleFrom(
           textStyle: const TextStyle(fontSize: 18),
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         ),
-        child: Text(_text),
+        child: _loading
+            ? const Loader(size: 20, strokeWith: 2, color: Colors.grey)
+            : Text(_text),
       ),
     );
   }

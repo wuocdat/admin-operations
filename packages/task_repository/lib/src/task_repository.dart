@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:api_client/api_client.dart';
 import 'package:task_repository/src/models/models.dart';
 
-const taskLimit = 10;
-const progressLimit = 10;
+const taskLimit = 20;
+const progressLimit = 20;
 
 class TaskRepository {
   TaskRepository({TaskApiClient? taskApiClient})

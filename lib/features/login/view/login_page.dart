@@ -52,15 +52,6 @@ class LoginPage extends StatelessWidget {
                     const Text("Hệ thống hỗ trợ chỉ đạo điều hành MTTN"),
                     const Padding(padding: EdgeInsets.all(12)),
                     const LoginForm(),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Row(
-                        children: [
-                          Checkbox(value: true, onChanged: (newValue) {}),
-                          const Text('Nhớ mật khẩu?')
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
