@@ -49,7 +49,7 @@ class TargetDetailBloc extends Bloc<TargetDetailEvent, TargetDetailState> {
               posts: posts,
             ));
     } catch (e) {
-      logger.e(e);
+      logger.severe(e);
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }
@@ -63,7 +63,7 @@ class TargetDetailBloc extends Bloc<TargetDetailEvent, TargetDetailState> {
 
       emit(state.copyWith(target: target));
     } catch (e) {
-      logger.e(e);
+      logger.severe(e);
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }
@@ -91,7 +91,7 @@ class TargetDetailBloc extends Bloc<TargetDetailEvent, TargetDetailState> {
               posts: List.of(state.posts)..addAll(posts),
             ));
     } catch (e) {
-      logger.e(e);
+      logger.severe(e);
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }

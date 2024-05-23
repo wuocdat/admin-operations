@@ -21,15 +21,15 @@ class CreatingConversationSocketIOService {
               .disableAutoConnect()
               .build(),
         ) {
-    _socket
-        .onConnect((_) => logger.i('conversation creating socket connected'));
+    _socket.onConnect(
+        (_) => logger.info('conversation creating socket connected'));
 
     _socket.on(EventNames.joinedConversationEvent,
         (data) => addResponse(data['conversationId']));
 
-    _socket.onDisconnect((_) => logger.i('disconnect'));
+    _socket.onDisconnect((_) => logger.info('disconnect'));
 
-    _socket.onError((data) => logger.i(data));
+    _socket.onError((data) => logger.info(data));
   }
 
   Future<void> connect() async {
@@ -53,7 +53,7 @@ class CreatingConversationSocketIOService {
   }
 
   void sendOneByOneConversationRequest(String otherUserId) {
-    logger.i('sent');
+    logger.info('sent');
     _socket.emit(EventNames.joinEvent, [
       {"userId": otherUserId}
     ]);
@@ -71,21 +71,23 @@ class CommunicationSocketIOService {
               .build(),
         ) {
     _socket.onConnect((_) {
-      logger.i('communication socket connected');
+      logger.info('communication socket connected');
       joinToConversation();
     });
 
-    _socket.on(EventNames.joinedConversationEvent,
-        (data) => logger.i('joined to conversation ${data['conversationId']}'));
+    _socket.on(
+        EventNames.joinedConversationEvent,
+        (data) =>
+            logger.info('joined to conversation ${data['conversationId']}'));
 
     _socket.on(EventNames.messageEvent, (data) {
-      logger.i('received message');
+      logger.info('received message');
       addResponse(Message.fromJson(data));
     });
 
-    _socket.onDisconnect((_) => logger.i('communication socket disconnect'));
+    _socket.onDisconnect((_) => logger.info('communication socket disconnect'));
 
-    _socket.onError((data) => logger.i(data));
+    _socket.onError((data) => logger.info(data));
   }
 
   Future<void> connect() async {
@@ -117,7 +119,7 @@ class CommunicationSocketIOService {
   }
 
   void sendMessage(String content) {
-    logger.i('sent message $content');
+    logger.info('sent message $content');
     _socket.emit(EventNames.sendMessageEvent, [
       {
         "conversationId": _conversationId,

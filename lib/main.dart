@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tctt_mobile/app.dart';
 import 'package:tctt_mobile/bloc_observer.dart';
 import 'package:tctt_mobile/core/services/firebase_service.dart';
+import 'package:tctt_mobile/core/utils/logger.dart';
 
 void main() async {
   runZonedGuarded(
@@ -25,6 +26,8 @@ void main() async {
       await FirebaseService.init();
 
       await dotenv.load(fileName: ".env");
+
+      initRootLogger();
 
       runApp(const App());
     },

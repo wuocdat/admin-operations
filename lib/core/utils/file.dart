@@ -24,7 +24,7 @@ final class FileHelper {
         if (!await dir.exists()) dir = (await getExternalStorageDirectory())!;
       }
     } catch (err) {
-      logger.i("Cannot get download folder path $err");
+      logger.info("Cannot get download folder path $err");
     }
     return "${dir?.path}$filename";
   }

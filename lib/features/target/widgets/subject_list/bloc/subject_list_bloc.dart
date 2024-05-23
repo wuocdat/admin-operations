@@ -71,7 +71,7 @@ class SubjectListBloc extends Bloc<SubjectListEvent, SubjectListState> {
               subjects: List.of(state.subjects)..addAll(subjects),
             ));
     } catch (e) {
-      logger.e(e);
+      logger.severe(e);
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }

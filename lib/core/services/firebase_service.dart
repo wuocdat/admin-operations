@@ -33,14 +33,14 @@ class FirebaseService {
       sound: true,
     );
 
-    logger.i(settings.authorizationStatus.name);
+    logger.info(settings.authorizationStatus.name);
 
     await _handleMessagesFromFCM();
   }
 
   static Future<String?> getFCMToken() async {
     final fcmToken = await FirebaseMessaging.instance.getToken();
-    logger.i('FCM Token: $fcmToken');
+    logger.info('FCM Token: $fcmToken');
 
     return fcmToken;
   }
