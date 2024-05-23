@@ -29,6 +29,7 @@ class TargetCubit extends Cubit<TargetState> {
       startDate: data.startDate,
       fbPageType: data.fbPageType,
       unsetFbType: data.fbPageType == null,
+      targetName: data.targetName,
       updateFilterCount: state.updateFilterCount + 1,
     ));
   }

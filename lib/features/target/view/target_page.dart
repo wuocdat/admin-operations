@@ -9,7 +9,6 @@ import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/features/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/features/target/widgets/subject_actions/subject_actions.dart';
 import 'package:tctt_mobile/features/target/widgets/subject_list/subject_list.dart';
-import 'package:tctt_mobile/features/target/widgets/unit_selector/unit_selector.dart';
 import 'package:tctt_mobile/features/target/widgets/wrap_options.dart';
 import 'package:tctt_mobile/shared/widgets/border_container.dart';
 import 'package:tctt_mobile/shared/widgets/has_permission.dart';
@@ -97,6 +96,7 @@ class TargetPage extends StatelessWidget {
                               context: context,
                               builder: (_) {
                                 return FilterContent(
+                                  initialTargetName: state.targetName,
                                   showTime: !isListMode,
                                   initialEndDate: state.endDate,
                                   initialStartDate: state.startDate,
@@ -153,6 +153,7 @@ class FilterContent extends StatefulWidget {
     this.initialStartDate,
     required this.showTime,
     this.selectedFbPageType,
+    required this.initialTargetName,
   });
 
   final void Function(FilterData) onApplyFilterData;
@@ -160,6 +161,7 @@ class FilterContent extends StatefulWidget {
   final DateTime? initialEndDate;
   final bool showTime;
   final FbPageType? selectedFbPageType;
+  final String initialTargetName;
 
   @override
   State<FilterContent> createState() => _FilterContentState();
@@ -169,6 +171,7 @@ class _FilterContentState extends State<FilterContent> {
   late DateTime? _pickedStartDate;
   late DateTime? _pickedEndDate;
   late FbPageType? _fbPageType;
+  late String _targetName;
 
   @override
   void initState() {
@@ -176,6 +179,7 @@ class _FilterContentState extends State<FilterContent> {
     _pickedStartDate = widget.initialStartDate;
     _pickedEndDate = widget.initialEndDate;
     _fbPageType = widget.selectedFbPageType;
+    _targetName = widget.initialTargetName;
   }
 
   void _setStartDate(DateTime date) {
@@ -196,12 +200,19 @@ class _FilterContentState extends State<FilterContent> {
     });
   }
 
+  void _setTargetName(String name) {
+    setState(() {
+      _targetName = name;
+    });
+  }
+
   void _handleApplyFilterData() {
     final data = FilterData(
       startDate:
           _pickedStartDate ?? DateTime.now().subtract(const Duration(days: 1)),
       endDate: _pickedEndDate ?? DateTime.now(),
       fbPageType: _fbPageType,
+      targetName: _targetName,
     );
     widget.onApplyFilterData(data);
   }
@@ -269,8 +280,10 @@ class _FilterContentState extends State<FilterContent> {
               FilterSection(
                 name: 'Theo tên',
                 child: BaseInput(
+                  initialValue: widget.initialTargetName,
                   hintText: 'Nhập tên đối tượng',
                   backgroundColor: Colors.grey[300],
+                  onChanged: _setTargetName,
                 ),
               ),
               FilterSection(
@@ -290,10 +303,10 @@ class _FilterContentState extends State<FilterContent> {
                 ),
               ),
             ],
-            const FilterSection(
-              name: 'Theo đơn vị quản lý',
-              child: UnitSelector(),
-            ),
+            // const FilterSection(
+            //   name: 'Theo đơn vị quản lý',
+            //   child: UnitSelector(),
+            // ),
           ],
         ));
   }

@@ -8,23 +8,33 @@ sealed class SubjectListEvent extends Equatable {
 }
 
 final class SubjectListFetched extends SubjectListEvent {
-  const SubjectListFetched({required this.typeAc, this.fbPageType});
+  const SubjectListFetched({
+    required this.typeAc,
+    this.fbPageType,
+    required this.name,
+  });
 
   final int typeAc;
   final FbPageType? fbPageType;
+  final String name;
 
   @override
-  List<Object?> get props => [typeAc, fbPageType];
+  List<Object?> get props => [typeAc, fbPageType, name];
 }
 
 final class SubjectReFetchedEvent extends SubjectListEvent {
-  const SubjectReFetchedEvent({required this.typeAc, this.fbPageType});
+  const SubjectReFetchedEvent({
+    required this.typeAc,
+    this.fbPageType,
+    required this.name,
+  });
 
   final int typeAc;
   final FbPageType? fbPageType;
+  final String name;
 
   @override
-  List<Object?> get props => [typeAc, fbPageType];
+  List<Object?> get props => [typeAc, fbPageType, name];
 }
 
 final class SubjectDeletedEvent extends SubjectListEvent {

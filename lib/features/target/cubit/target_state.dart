@@ -70,6 +70,7 @@ class TargetState extends Equatable {
     this.endDate,
     this.updateFilterCount = 0,
     this.fbPageType,
+    this.targetName = '',
   });
 
   const TargetState.subject() : this._();
@@ -86,6 +87,8 @@ class TargetState extends Equatable {
 
   final FbPageType? fbPageType;
 
+  final String targetName;
+
   final int updateFilterCount;
 
   TargetState copyWith({
@@ -96,6 +99,7 @@ class TargetState extends Equatable {
     int? updateFilterCount,
     FbPageType? fbPageType,
     bool? unsetFbType,
+    String? targetName,
   }) {
     return TargetState._(
       selectedOption: selectedOption ?? this.selectedOption,
@@ -104,6 +108,7 @@ class TargetState extends Equatable {
       endDate: endDate ?? this.endDate,
       updateFilterCount: updateFilterCount ?? this.updateFilterCount,
       fbPageType: unsetFbType == true ? null : fbPageType ?? this.fbPageType,
+      targetName: targetName ?? this.targetName,
     );
   }
 
@@ -115,5 +120,6 @@ class TargetState extends Equatable {
         endDate,
         updateFilterCount,
         fbPageType,
+        targetName,
       ];
 }

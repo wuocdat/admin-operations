@@ -28,7 +28,8 @@ class TargetApiClient {
     return result['subject'] as Map<String, dynamic>;
   }
 
-  Future<List> fetchSubjects(int typeAct, String? fbTypeId, int limit,
+  Future<List> fetchSubjects(
+      int typeAct, String name, String? fbTypeId, int limit,
       [int page = 1]) async {
     final queryParameters = {
       'typeAc': typeAct,
@@ -38,6 +39,8 @@ class TargetApiClient {
     };
 
     if (fbTypeId != null) queryParameters['type'] = fbTypeId;
+
+    if (name.isNotEmpty) queryParameters['name'] = name;
 
     final response = await _dio.get(
       TargetUrl.list,

@@ -69,11 +69,14 @@ class SubjectList extends StatelessWidget {
         .select((TargetCubit cubit) => cubit.state.selectedOption.typeAc);
     final fbType =
         context.select((TargetCubit cubit) => cubit.state.fbPageType);
+    final searchTargetName =
+        context.select((TargetCubit cubit) => cubit.state.targetName);
 
     return BlocProvider(
       create: (context) => SubjectListBloc(
           targetRepository: RepositoryProvider.of<TargetRepository>(context))
-        ..add(SubjectListFetched(typeAc: typeAc, fbPageType: fbType)),
+        ..add(SubjectListFetched(
+            typeAc: typeAc, fbPageType: fbType, name: searchTargetName)),
       child: MultiBlocListener(
         listeners: [
           BlocListener<TargetCubit, TargetState>(
@@ -83,6 +86,7 @@ class SubjectList extends StatelessWidget {
             listener: (context, state) {
               context.read<SubjectListBloc>().add(SubjectReFetchedEvent(
                   typeAc: state.selectedOption.typeAc,
+                  name: state.targetName,
                   fbPageType: state.fbPageType));
             },
           ),
@@ -106,8 +110,11 @@ class SubjectList extends StatelessWidget {
                   ),
                 );
                 Navigator.pop(context);
-                context.read<SubjectListBloc>().add(
-                    SubjectReFetchedEvent(typeAc: typeAc, fbPageType: fbType));
+                context.read<SubjectListBloc>().add(SubjectReFetchedEvent(
+                      typeAc: typeAc,
+                      fbPageType: fbType,
+                      name: searchTargetName,
+                    ));
               }
             },
           ),
@@ -127,7 +134,9 @@ class SubjectList extends StatelessWidget {
                   itemCount: state.subjects.length,
                   onRefresh: () async {
                     context.read<SubjectListBloc>().add(SubjectReFetchedEvent(
-                        typeAc: typeAc, fbPageType: fbType));
+                        name: searchTargetName,
+                        typeAc: typeAc,
+                        fbPageType: fbType));
                   },
                   itemBuilder: (index) {
                     final currentSubject = state.subjects[index];
@@ -150,8 +159,10 @@ class SubjectList extends StatelessWidget {
                     );
                   },
                   onReachedEnd: () {
-                    context.read<SubjectListBloc>().add(
-                        SubjectListFetched(typeAc: typeAc, fbPageType: fbType));
+                    context.read<SubjectListBloc>().add(SubjectListFetched(
+                        typeAc: typeAc,
+                        fbPageType: fbType,
+                        name: searchTargetName));
                   },
                 );
             }

@@ -6,12 +6,14 @@ class FilterData extends Equatable {
     required this.startDate,
     required this.endDate,
     this.fbPageType,
+    required this.targetName,
   });
 
   final DateTime startDate;
   final DateTime endDate;
   final FbPageType? fbPageType;
+  final String targetName;
 
   @override
-  List<Object?> get props => [startDate, endDate, fbPageType];
+  List<Object?> get props => [startDate, endDate, fbPageType, targetName];
 }
