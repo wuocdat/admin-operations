@@ -16,11 +16,9 @@ class TargetCubit extends Cubit<TargetState> {
   }
 
   void resetTime() {
-    emit(
-      state.copyWith(
-          startDate: DateTime.now().subtract(const Duration(days: 1)),
-          endDate: DateTime.now()),
-    );
+    emit(state.copyWith(
+        startDate: DateTime.now().subtract(const Duration(days: 1)),
+        endDate: DateTime.now()));
   }
 
   void updateFilterDataForActionView(FilterData data) {

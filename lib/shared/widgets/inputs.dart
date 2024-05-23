@@ -255,14 +255,14 @@ class BaseInput extends StatelessWidget {
     this.leading,
     this.hintText,
     this.backgroundColor,
-    this.initialValue,
+    this.controller,
   });
 
   final Widget? leading;
   final String? hintText;
   final Color? backgroundColor;
   final void Function(String)? onChanged;
-  final String? initialValue;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -271,8 +271,8 @@ class BaseInput extends StatelessWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: TextFormField(
-        initialValue: initialValue,
+      child: TextField(
+        controller: controller,
         onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hintText,

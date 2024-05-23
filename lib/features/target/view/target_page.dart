@@ -149,11 +149,11 @@ class FilterContent extends StatefulWidget {
   const FilterContent({
     super.key,
     required this.onApplyFilterData,
+    required this.showTime,
+    required this.initialTargetName,
     this.initialEndDate,
     this.initialStartDate,
-    required this.showTime,
     this.selectedFbPageType,
-    required this.initialTargetName,
   });
 
   final void Function(FilterData) onApplyFilterData;
@@ -171,7 +171,7 @@ class _FilterContentState extends State<FilterContent> {
   late DateTime? _pickedStartDate;
   late DateTime? _pickedEndDate;
   late FbPageType? _fbPageType;
-  late String _targetName;
+  final _targetNameController = TextEditingController();
 
   @override
   void initState() {
@@ -179,7 +179,7 @@ class _FilterContentState extends State<FilterContent> {
     _pickedStartDate = widget.initialStartDate;
     _pickedEndDate = widget.initialEndDate;
     _fbPageType = widget.selectedFbPageType;
-    _targetName = widget.initialTargetName;
+    _targetNameController.text = widget.initialTargetName;
   }
 
   void _setStartDate(DateTime date) {
@@ -200,21 +200,24 @@ class _FilterContentState extends State<FilterContent> {
     });
   }
 
-  void _setTargetName(String name) {
-    setState(() {
-      _targetName = name;
-    });
-  }
-
   void _handleApplyFilterData() {
     final data = FilterData(
       startDate:
           _pickedStartDate ?? DateTime.now().subtract(const Duration(days: 1)),
       endDate: _pickedEndDate ?? DateTime.now(),
       fbPageType: _fbPageType,
-      targetName: _targetName,
+      targetName: _targetNameController.text,
     );
     widget.onApplyFilterData(data);
+  }
+
+  void _handleResetFilter() {
+    setState(() {
+      _fbPageType = null;
+      _pickedStartDate = DateTime.now().subtract(const Duration(days: 1));
+      _pickedEndDate = DateTime.now();
+      _targetNameController.clear();
+    });
   }
 
   @override
@@ -232,10 +235,8 @@ class _FilterContentState extends State<FilterContent> {
                   children: [
                     const Expanded(child: Text('Bộ lọc tìm kiếm')),
                     OutlinedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Thoát'),
+                      onPressed: _handleResetFilter,
+                      child: const Text('Đặt lại'),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
@@ -280,10 +281,9 @@ class _FilterContentState extends State<FilterContent> {
               FilterSection(
                 name: 'Theo tên',
                 child: BaseInput(
-                  initialValue: widget.initialTargetName,
+                  controller: _targetNameController,
                   hintText: 'Nhập tên đối tượng',
                   backgroundColor: Colors.grey[300],
-                  onChanged: _setTargetName,
                 ),
               ),
               FilterSection(
