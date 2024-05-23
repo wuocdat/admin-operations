@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:target_repository/target_repository.dart';
 import 'package:tctt_mobile/core/utils/logger.dart';
+import 'package:tctt_mobile/features/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/shared/debounce.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 
@@ -29,7 +30,8 @@ class SubjectListBloc extends Bloc<SubjectListEvent, SubjectListState> {
     emit(const SubjectListState(status: FetchDataStatus.loading));
 
     try {
-      final subjects = await _targetRepository.fetchSubjects(event.typeAc);
+      final subjects = await _targetRepository.fetchSubjects(
+          event.typeAc, event.fbPageType?.strId);
 
       subjects.length < subjectLimit
           ? emit(state.copyWith(
@@ -56,7 +58,7 @@ class SubjectListBloc extends Bloc<SubjectListEvent, SubjectListState> {
 
     try {
       final subjects = await _targetRepository.fetchSubjects(
-          event.typeAc, state.subjects.length);
+          event.typeAc, event.fbPageType?.strId, state.subjects.length);
 
       subjects.length < subjectLimit
           ? emit(state.copyWith(

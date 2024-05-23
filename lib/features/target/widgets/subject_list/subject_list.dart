@@ -67,19 +67,23 @@ class SubjectList extends StatelessWidget {
   Widget build(BuildContext context) {
     final typeAc = context
         .select((TargetCubit cubit) => cubit.state.selectedOption.typeAc);
+    final fbType =
+        context.select((TargetCubit cubit) => cubit.state.fbPageType);
 
     return BlocProvider(
       create: (context) => SubjectListBloc(
           targetRepository: RepositoryProvider.of<TargetRepository>(context))
-        ..add(SubjectListFetched(typeAc: typeAc)),
+        ..add(SubjectListFetched(typeAc: typeAc, fbPageType: fbType)),
       child: MultiBlocListener(
         listeners: [
           BlocListener<TargetCubit, TargetState>(
             listenWhen: (previous, current) =>
-                previous.selectedOption != current.selectedOption,
+                previous.selectedOption != current.selectedOption ||
+                previous.updateFilterCount != current.updateFilterCount,
             listener: (context, state) {
-              context.read<SubjectListBloc>().add(
-                  SubjectReFetchedEvent(typeAc: state.selectedOption.typeAc));
+              context.read<SubjectListBloc>().add(SubjectReFetchedEvent(
+                  typeAc: state.selectedOption.typeAc,
+                  fbPageType: state.fbPageType));
             },
           ),
           BlocListener<SubjectListBloc, SubjectListState>(
@@ -102,9 +106,8 @@ class SubjectList extends StatelessWidget {
                   ),
                 );
                 Navigator.pop(context);
-                context
-                    .read<SubjectListBloc>()
-                    .add(SubjectReFetchedEvent(typeAc: typeAc));
+                context.read<SubjectListBloc>().add(
+                    SubjectReFetchedEvent(typeAc: typeAc, fbPageType: fbType));
               }
             },
           ),
@@ -123,9 +126,8 @@ class SubjectList extends StatelessWidget {
                   hasReachedMax: state.hasReachedMax,
                   itemCount: state.subjects.length,
                   onRefresh: () async {
-                    context
-                        .read<SubjectListBloc>()
-                        .add(SubjectReFetchedEvent(typeAc: typeAc));
+                    context.read<SubjectListBloc>().add(SubjectReFetchedEvent(
+                        typeAc: typeAc, fbPageType: fbType));
                   },
                   itemBuilder: (index) {
                     final currentSubject = state.subjects[index];
@@ -148,9 +150,8 @@ class SubjectList extends StatelessWidget {
                     );
                   },
                   onReachedEnd: () {
-                    context
-                        .read<SubjectListBloc>()
-                        .add(SubjectListFetched(typeAc: typeAc));
+                    context.read<SubjectListBloc>().add(
+                        SubjectListFetched(typeAc: typeAc, fbPageType: fbType));
                   },
                 );
             }

@@ -100,6 +100,7 @@ class TargetPage extends StatelessWidget {
                                   showTime: !isListMode,
                                   initialEndDate: state.endDate,
                                   initialStartDate: state.startDate,
+                                  selectedFbPageType: state.fbPageType,
                                   onApplyFilterData: context
                                       .read<TargetCubit>()
                                       .updateFilterDataForActionView,
@@ -151,12 +152,14 @@ class FilterContent extends StatefulWidget {
     this.initialEndDate,
     this.initialStartDate,
     required this.showTime,
+    this.selectedFbPageType,
   });
 
   final void Function(FilterData) onApplyFilterData;
   final DateTime? initialStartDate;
   final DateTime? initialEndDate;
   final bool showTime;
+  final FbPageType? selectedFbPageType;
 
   @override
   State<FilterContent> createState() => _FilterContentState();
@@ -165,12 +168,14 @@ class FilterContent extends StatefulWidget {
 class _FilterContentState extends State<FilterContent> {
   late DateTime? _pickedStartDate;
   late DateTime? _pickedEndDate;
+  late FbPageType? _fbPageType;
 
   @override
   void initState() {
     super.initState();
     _pickedStartDate = widget.initialStartDate;
     _pickedEndDate = widget.initialEndDate;
+    _fbPageType = widget.selectedFbPageType;
   }
 
   void _setStartDate(DateTime date) {
@@ -185,11 +190,18 @@ class _FilterContentState extends State<FilterContent> {
     });
   }
 
+  void _setFbPageType(FbPageType? type) {
+    setState(() {
+      _fbPageType = type;
+    });
+  }
+
   void _handleApplyFilterData() {
     final data = FilterData(
       startDate:
           _pickedStartDate ?? DateTime.now().subtract(const Duration(days: 1)),
       endDate: _pickedEndDate ?? DateTime.now(),
+      fbPageType: _fbPageType,
     );
     widget.onApplyFilterData(data);
   }
@@ -264,10 +276,16 @@ class _FilterContentState extends State<FilterContent> {
               FilterSection(
                 name: 'Theo dạng trang',
                 child: WrapOptions(
-                  builderItem: (index) => SelectableContainer(
-                    content: FbPageType.values[index].title,
-                    isSelected: true,
-                  ),
+                  builderItem: (index) {
+                    final currentFbType = FbPageType.values[index];
+                    final isSelected = _fbPageType == currentFbType;
+                    return SelectableContainer(
+                      content: currentFbType.title,
+                      isSelected: isSelected,
+                      onTap: () =>
+                          _setFbPageType(isSelected ? null : currentFbType),
+                    );
+                  },
                   length: FbPageType.values.length,
                 ),
               ),

@@ -27,6 +27,8 @@ class TargetCubit extends Cubit<TargetState> {
     emit(state.copyWith(
       endDate: data.endDate,
       startDate: data.startDate,
+      fbPageType: data.fbPageType,
+      unsetFbType: data.fbPageType == null,
       updateFilterCount: state.updateFilterCount + 1,
     ));
   }
