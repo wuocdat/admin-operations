@@ -28,6 +28,22 @@ class TargetRepository {
     return result.map((e) => Subject.fromJson(e)).toList();
   }
 
+  Future<void> downloadExcelFile(
+    int typeAc,
+    String unitId,
+    String startDate,
+    String endDate,
+    String path,
+  ) async {
+    await _targetApiClient.downloadFile(
+      typeAc,
+      unitId,
+      startDate,
+      endDate,
+      path,
+    );
+  }
+
   Future<Subject> fetchSubjectById(String subjectId) async {
     final result = await _targetApiClient.fetchSubjectById(subjectId);
 

@@ -23,4 +23,8 @@ final class TimeUtils {
 
     return DateFormat.yMd().format(date);
   }
+
+  static String getTimeStamp() {
+    return DateTime.now().microsecondsSinceEpoch.toString();
+  }
 }

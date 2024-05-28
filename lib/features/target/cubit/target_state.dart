@@ -71,6 +71,7 @@ class TargetState extends Equatable {
     this.updateFilterCount = 0,
     this.fbPageType,
     this.targetName = '',
+    this.downloadingStatus = FetchDataStatus.initial,
   });
 
   const TargetState.subject() : this._();
@@ -89,6 +90,8 @@ class TargetState extends Equatable {
 
   final String targetName;
 
+  final FetchDataStatus downloadingStatus;
+
   final int updateFilterCount;
 
   TargetState copyWith({
@@ -100,6 +103,7 @@ class TargetState extends Equatable {
     FbPageType? fbPageType,
     bool? unsetFbType,
     String? targetName,
+    FetchDataStatus? downloadingStatus,
   }) {
     return TargetState._(
       selectedOption: selectedOption ?? this.selectedOption,
@@ -109,6 +113,7 @@ class TargetState extends Equatable {
       updateFilterCount: updateFilterCount ?? this.updateFilterCount,
       fbPageType: unsetFbType == true ? null : fbPageType ?? this.fbPageType,
       targetName: targetName ?? this.targetName,
+      downloadingStatus: downloadingStatus ?? this.downloadingStatus,
     );
   }
 
@@ -121,5 +126,6 @@ class TargetState extends Equatable {
         updateFilterCount,
         fbPageType,
         targetName,
+        downloadingStatus,
       ];
 }

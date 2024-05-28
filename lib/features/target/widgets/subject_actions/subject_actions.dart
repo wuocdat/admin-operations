@@ -95,6 +95,6 @@ class SubjectActions extends StatelessWidget {
   }
 }
 
-extension on DateTime {
+extension DateTimeX on DateTime {
   String get stringFormat => DateFormat('yyyy-MM-dd').format(this);
 }

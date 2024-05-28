@@ -11,6 +11,8 @@ class NewTargetFailure implements Exception {}
 
 class DeleteTargetFailure implements Exception {}
 
+class DownloadFailure implements Exception {}
+
 class TargetApiClient {
   TargetApiClient({Dio? dio})
       : _dio = dio ?? Dio(ApiConfig.options)
@@ -70,6 +72,29 @@ class TargetApiClient {
     });
 
     if (response.statusCode != 201) throw NewTargetFailure();
+  }
+
+  Future<void> downloadFile(
+    int typeAc,
+    String unitId,
+    String startDate,
+    String endDate,
+    String path,
+  ) async {
+    final response = await _dio.download(
+      TargetUrl.excelFile,
+      path,
+      queryParameters: {
+        'typeAc': typeAc,
+        'startDate': startDate,
+        'endDate': endDate,
+        'unit': unitId,
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw DownloadFailure();
+    }
   }
 
   Future<void> deleteSubject(String subjectId) async {

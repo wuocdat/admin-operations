@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:target_repository/target_repository.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/new_subject/new_subject_page.dart';
@@ -27,8 +28,43 @@ class TargetPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => TargetCubit()..resetTime(),
-      child: BlocBuilder<TargetCubit, TargetState>(
+      create: (context) => TargetCubit(
+          targetRepository: RepositoryProvider.of<TargetRepository>(context))
+        ..resetTime(),
+      child: BlocConsumer<TargetCubit, TargetState>(
+        listenWhen: (previous, current) =>
+            previous.downloadingStatus != current.downloadingStatus,
+        listener: (context, state) {
+          switch (state.downloadingStatus) {
+            case FetchDataStatus.loading:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Đang tải xuống...'),
+                ),
+              );
+              break;
+
+            case FetchDataStatus.success:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.green,
+                  content: Text('Tải xuống thành công'),
+                ),
+              );
+              break;
+
+            case FetchDataStatus.failure:
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Tải xuống thất bại'),
+                ),
+              );
+              break;
+
+            default:
+              break;
+          }
+        },
         builder: (context, state) {
           return Column(
             children: [
@@ -83,7 +119,11 @@ class TargetPage extends StatelessWidget {
                         ],
                         if (!isListMode) ...[
                           IconButton(
-                            onPressed: () async {},
+                            onPressed: () {
+                              context
+                                  .read<TargetCubit>()
+                                  .downloadExcelFile(unitId);
+                            },
                             icon: const Icon(Icons.file_download_outlined),
                             color: Theme.of(context).primaryColor,
                           ),
