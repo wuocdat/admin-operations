@@ -72,14 +72,30 @@ class SettingPage extends StatelessWidget {
                                           )));
                             });
                       })),
-                  ContentButton(
-                      text: 'Thành viên',
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MemberManager()));
-                      }),
+                  // ContentButton(
+                  //     text: 'Thành viên',
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => const MemberManager()));
+                  //     }),
+                  BlocProvider(
+                      create: (_) => SettingBloc(),
+                      child:
+                          BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                              builder: (context, state) {
+                        return ContentButton(
+                            text: 'Thành viên',
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MemberManager(
+                                            unitId: state.user.unit.id,
+                                          )));
+                            });
+                      })),
                 ],
               ),
               const Spacer(),

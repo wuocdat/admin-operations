@@ -27,4 +27,10 @@ class UserRepository {
         .map((e) => ShortProfile.fromJson(e as Map<String, dynamic>))
         .toList();
   }
+
+  Future<List<User>> getUserbyUnitID(String unitId, int pagesize, [int currentpage = 1]) async {
+    final userdata = await _apiClient.getAllUsers(unitId, pagesize, currentpage);
+
+    return userdata.map((e) => User.fromJson(e)).toList();
+  }
 }
