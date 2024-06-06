@@ -130,6 +130,7 @@ class TargetPage extends StatelessWidget {
                           const SizedBox(width: 8),
                         ],
                         FilterButton(
+                          filtered: state.filterChanged,
                           onTap: () {
                             showModalBottomSheet<void>(
                               isScrollControlled: true,

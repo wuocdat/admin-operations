@@ -117,6 +117,20 @@ class TargetState extends Equatable {
     );
   }
 
+  bool get filterChanged {
+    final otherStartDatePicked = startDate?.stringFormat !=
+        DateTime.now().subtract(const Duration(days: 1)).stringFormat;
+    final otherEndDatePicked =
+        endDate?.stringFormat != DateTime.now().stringFormat;
+    final typePicked = fbPageType != null;
+    final nameChanged = targetName != "";
+
+    return otherEndDatePicked ||
+        otherStartDatePicked ||
+        typePicked ||
+        nameChanged;
+  }
+
   @override
   List<Object?> get props => [
         selectedOption,
