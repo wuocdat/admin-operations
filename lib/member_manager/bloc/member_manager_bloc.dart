@@ -24,16 +24,15 @@ class MemberManagerBloc extends Bloc<MemberManagerEvent, MemberManagerState> {
     Emitter<MemberManagerState> emit,
   ) async {
     if (state.hasReachedMax) return;
-    final members = await _membermanagerRepository.getUserbyUnitID(
-      event.unitId,
-      50,
-      1
+
+    final users = await _membermanagerRepository.getUserbyUnitID(
+      event.unitId
     );
 
     emit(state.copyWith(
       hasReachedMax: true,
       status: FetchDataStatus.success,
-      allusers: members,
+      users: users,
       unitId: '',
     ));
   }

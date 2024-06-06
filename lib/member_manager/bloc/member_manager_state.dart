@@ -5,29 +5,29 @@ class MemberManagerState extends Equatable {
     this.unitId,
     this.hasReachedMax = false,
     this.status = FetchDataStatus.initial,
-    this.allusers = const <User>[]
+    this.users = const <ShortProfile>[]
 });
   
   final String? unitId;
   final bool hasReachedMax;
   final FetchDataStatus status;
-  final List<User> allusers;
+  final List<ShortProfile> users;
 
   MemberManagerState copyWith({
     required String? unitId,
     required bool hasReachedMax,
     required FetchDataStatus status,
-    required List<User> allusers,
+    required List<ShortProfile> users,
   }) {
     return MemberManagerState(
       unitId: unitId,
       hasReachedMax: hasReachedMax,
       status: status,
-      allusers: allusers
+      users: users
     );
   }
 
   @override
-  List<Object?> get props => [unitId, hasReachedMax, allusers];
+  List<Object?> get props => [unitId, hasReachedMax, users];
 }
 

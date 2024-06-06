@@ -45,7 +45,7 @@ class UserApiClient {
     return result;
   }
 
-  Future<List> getAllUsers(String unit, int pageSize, 
+  Future<List> getUserbyUnitID(String unit, int pageSize, 
       [int currentPage = 1]) async {
       final response = await _dio.get(
         getalluser,

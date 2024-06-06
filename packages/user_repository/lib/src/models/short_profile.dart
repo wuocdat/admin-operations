@@ -10,6 +10,7 @@ class ShortProfile extends Equatable {
     required this.username,
     required this.phoneNumber,
     required this.name,
+    this.role,
   });
 
   static const ShortProfile empty = ShortProfile(
@@ -17,6 +18,7 @@ class ShortProfile extends Equatable {
     username: '',
     phoneNumber: '',
     name: '',
+    role: null,
   );
 
   @JsonKey(name: "_id")
@@ -24,10 +26,17 @@ class ShortProfile extends Equatable {
   final String username;
   final String phoneNumber;
   final String name;
+  @JsonKey(fromJson: _fromJson)
+  final String? role;
 
   factory ShortProfile.fromJson(Map<String, dynamic> json) =>
       _$ShortProfileFromJson(json);
 
   @override
-  List<Object> get props => [id, username, phoneNumber, name];
+  List<Object?> get props => [id, username, phoneNumber, name, role];
+
+  static String _fromJson(dynamic value) {
+    final json = value as Map<String, dynamic>;
+    return json['_id'] as String;
+  }
 }

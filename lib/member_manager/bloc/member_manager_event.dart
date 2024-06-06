@@ -8,13 +8,9 @@ sealed class MemberManagerEvent extends Equatable {
 }
 
 class MemberFetchedEvent extends MemberManagerEvent {
-  const MemberFetchedEvent(this.unitId, this.pageSize, this.currentpage);
+  const MemberFetchedEvent(this.unitId);
 
   final String unitId;
-
-  final int pageSize;
-
-  final int currentpage;
 
   @override
   List<Object> get props => [];

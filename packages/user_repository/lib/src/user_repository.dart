@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:api_client/api_client.dart';
 import 'package:user_repository/src/models/models.dart';
 
@@ -28,9 +30,11 @@ class UserRepository {
         .toList();
   }
 
-  Future<List<User>> getUserbyUnitID(String unitId, int pagesize, [int currentpage = 1]) async {
-    final userdata = await _apiClient.getAllUsers(unitId, pagesize, currentpage);
+  Future<List<ShortProfile>> getUserbyUnitID(String unitId) async {
+    final jsonUsers = await _apiClient.getUserbyUnitID(unitId, 50, 1);
 
-    return userdata.map((e) => User.fromJson(e)).toList();
+    return jsonUsers
+        .map((e) => ShortProfile.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 }

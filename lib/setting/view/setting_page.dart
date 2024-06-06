@@ -57,44 +57,36 @@ class SettingPage extends StatelessWidget {
                                 builder: (context) => const AccountSetting()));
                       }),
                   BlocProvider(
-                      create: (_) => SettingBloc(),
-                      child:
-                          BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                              builder: (context, state) {
-                        return ContentButton(
-                            text: 'Đơn vị',
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UnitManager(
-                                            parentId: state.user.unit.id,
-                                          )));
-                            });
-                      })),
-                  // ContentButton(
-                  //     text: 'Thành viên',
-                  //     onPressed: () {
-                  //       Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //               builder: (context) => const MemberManager()));
-                  //     }),
+                    create: (_) => SettingBloc(),
+                    child:
+                        BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                            builder: (context, state) {
+                      return ContentButton(
+                          text: 'Đơn vị',
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UnitManager(
+                                          parentId: state.user.unit.id,
+                                        )));
+                          });
+                    })),
                   BlocProvider(
-                      create: (_) => SettingBloc(),
-                      child:
-                          BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                              builder: (context, state) {
-                        return ContentButton(
-                            text: 'Thành viên',
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MemberManager(
-                                            unitId: state.user.unit.id,
-                                          )));
-                            });
+                    create: (_) => SettingBloc(),
+                    child:
+                        BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                            builder: (context, state) {
+                      return ContentButton(
+                          text: 'Thành viên',
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MemberManager(
+                                          unitId: state.user.unit.id
+                                        )));
+                          });
                       })),
                 ],
               ),
