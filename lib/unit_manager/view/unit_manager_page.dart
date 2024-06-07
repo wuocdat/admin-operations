@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:tctt_mobile/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/member_manager/view/member_manager_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/theme/colors.dart';
 import 'package:tctt_mobile/unit_manager/bloc/unit_manager_bloc.dart';
@@ -193,7 +194,13 @@ class UnitManager extends StatelessWidget {
                                 WhiteCustomtButton(
                                     text: 'Thành viên',
                                     icon: Icons.group,
-                                    onPressed: () {}),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                            MemberManager(unitId: state.user.unit.id)));
+                                    }),
                                 const SizedBox(width: 16),
                                 CustomButton(
                                     text: 'Thêm đơn vị',
