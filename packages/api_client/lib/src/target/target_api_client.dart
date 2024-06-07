@@ -31,9 +31,10 @@ class TargetApiClient {
   }
 
   Future<List> fetchSubjects(
-      int typeAct, String name, String? fbTypeId, int limit,
+      String unitId, int typeAct, String name, String? fbTypeId, int limit,
       [int page = 1]) async {
     final queryParameters = {
+      'unit': unitId,
       'typeAc': typeAct,
       'pageSize': limit,
       'currentPage': page,
@@ -45,7 +46,7 @@ class TargetApiClient {
     if (name.isNotEmpty) queryParameters['name'] = name;
 
     final response = await _dio.get(
-      TargetUrl.list,
+      TargetUrl.listByUnit,
       queryParameters: queryParameters,
     );
 

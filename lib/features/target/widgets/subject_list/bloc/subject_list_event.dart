@@ -12,14 +12,16 @@ final class SubjectListFetched extends SubjectListEvent {
     required this.typeAc,
     this.fbPageType,
     required this.name,
+    required this.unitId,
   });
 
   final int typeAc;
   final FbPageType? fbPageType;
   final String name;
+  final String unitId;
 
   @override
-  List<Object?> get props => [typeAc, fbPageType, name];
+  List<Object?> get props => [typeAc, fbPageType, name, unitId];
 }
 
 final class SubjectReFetchedEvent extends SubjectListEvent {
@@ -27,14 +29,16 @@ final class SubjectReFetchedEvent extends SubjectListEvent {
     required this.typeAc,
     this.fbPageType,
     required this.name,
+    required this.unitId,
   });
 
   final int typeAc;
   final FbPageType? fbPageType;
   final String name;
+  final String unitId;
 
   @override
-  List<Object?> get props => [typeAc, fbPageType, name];
+  List<Object?> get props => [typeAc, fbPageType, name, unitId];
 }
 
 final class SubjectDeletedEvent extends SubjectListEvent {

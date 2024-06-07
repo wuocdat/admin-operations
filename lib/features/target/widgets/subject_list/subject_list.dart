@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:target_repository/target_repository.dart';
+import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/core/utils/url_launcher.dart';
@@ -71,12 +72,22 @@ class SubjectList extends StatelessWidget {
         context.select((TargetCubit cubit) => cubit.state.fbPageType);
     final searchTargetName =
         context.select((TargetCubit cubit) => cubit.state.targetName);
+    final currentUnitId =
+        context.select((AuthenticationBloc bloc) => bloc.state.user.unit.id);
+    final currentPickedUnitId = context
+            .select((TargetCubit cubit) => cubit.state.currentUnit.id)
+            .noBlank ??
+        currentUnitId;
 
     return BlocProvider(
       create: (context) => SubjectListBloc(
           targetRepository: RepositoryProvider.of<TargetRepository>(context))
         ..add(SubjectListFetched(
-            typeAc: typeAc, fbPageType: fbType, name: searchTargetName)),
+          unitId: currentPickedUnitId,
+          typeAc: typeAc,
+          fbPageType: fbType,
+          name: searchTargetName,
+        )),
       child: MultiBlocListener(
         listeners: [
           BlocListener<TargetCubit, TargetState>(
@@ -85,6 +96,7 @@ class SubjectList extends StatelessWidget {
                 previous.updateFilterCount != current.updateFilterCount,
             listener: (context, state) {
               context.read<SubjectListBloc>().add(SubjectReFetchedEvent(
+                  unitId: state.currentUnit.id,
                   typeAc: state.selectedOption.typeAc,
                   name: state.targetName,
                   fbPageType: state.fbPageType));
@@ -111,6 +123,7 @@ class SubjectList extends StatelessWidget {
                 );
                 Navigator.pop(context);
                 context.read<SubjectListBloc>().add(SubjectReFetchedEvent(
+                      unitId: currentPickedUnitId,
                       typeAc: typeAc,
                       fbPageType: fbType,
                       name: searchTargetName,
@@ -134,6 +147,7 @@ class SubjectList extends StatelessWidget {
                   itemCount: state.subjects.length,
                   onRefresh: () async {
                     context.read<SubjectListBloc>().add(SubjectReFetchedEvent(
+                        unitId: currentPickedUnitId,
                         name: searchTargetName,
                         typeAc: typeAc,
                         fbPageType: fbType));
@@ -160,6 +174,7 @@ class SubjectList extends StatelessWidget {
                   },
                   onReachedEnd: () {
                     context.read<SubjectListBloc>().add(SubjectListFetched(
+                        unitId: currentPickedUnitId,
                         typeAc: typeAc,
                         fbPageType: fbType,
                         name: searchTargetName));

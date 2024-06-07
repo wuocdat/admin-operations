@@ -15,9 +15,11 @@ class TargetRepository {
     return TargetOverall.fromJson(result);
   }
 
-  Future<List<Subject>> fetchSubjects(int typeAc, String name, String? fbTypeId,
+  Future<List<Subject>> fetchSubjects(
+      String unitId, int typeAc, String name, String? fbTypeId,
       [int length = 0]) async {
     final result = await _targetApiClient.fetchSubjects(
+      unitId,
       typeAc,
       name,
       fbTypeId,

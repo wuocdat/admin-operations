@@ -31,7 +31,7 @@ class SubjectListBloc extends Bloc<SubjectListEvent, SubjectListState> {
 
     try {
       final subjects = await _targetRepository.fetchSubjects(
-          event.typeAc, event.name, event.fbPageType?.strId);
+          event.unitId, event.typeAc, event.name, event.fbPageType?.strId);
 
       subjects.length < subjectLimit
           ? emit(state.copyWith(
@@ -57,8 +57,12 @@ class SubjectListBloc extends Bloc<SubjectListEvent, SubjectListState> {
     emit(state.copyWith(status: FetchDataStatus.loading));
 
     try {
-      final subjects = await _targetRepository.fetchSubjects(event.typeAc,
-          event.name, event.fbPageType?.strId, state.subjects.length);
+      final subjects = await _targetRepository.fetchSubjects(
+          event.unitId,
+          event.typeAc,
+          event.name,
+          event.fbPageType?.strId,
+          state.subjects.length);
 
       subjects.length < subjectLimit
           ? emit(state.copyWith(
