@@ -191,7 +191,6 @@ class MemberManager extends StatelessWidget {
                       Expanded(child:
                           BlocBuilder<MemberManagerBloc, MemberManagerState>(
                         builder: (context, state) {
-                          print(state.users.toList());
                           switch (state.status) {
                             case FetchDataStatus.initial:
                               return const Loader();
@@ -209,10 +208,9 @@ class MemberManager extends StatelessWidget {
                                 hasReachedMax: state.hasReachedMax,
                                 itemCount: state.users.length,
                                 itemBuilder: (index) => CustomContainer(
-                                  name: state.users[index].name,
+                                  name: state.users[index].username,
                                   role: state.users[index].role.toString(),
                                   onPressed: () {},
-                                  // onPressed: () async {}
                                 ),
                                 onReachedEnd: () {
                                   // context.read<UnitManagerBloc>().add(const UnitFetchedEvent(state.units.id));;);
