@@ -27,11 +27,13 @@ class FilterContentState extends Equatable {
     List<Unit>? stepUnitsList,
     List<Unit>? subUnitsList,
     FetchDataStatus? status,
+    bool? unsetFbPageType,
   }) {
     return FilterContentState(
       pickedStartDate: pickedStartDate ?? this.pickedStartDate,
       pickedEndDate: pickedEndDate ?? this.pickedEndDate,
-      fbPageType: fbPageType ?? this.fbPageType,
+      fbPageType:
+          unsetFbPageType == true ? null : fbPageType ?? this.fbPageType,
       currentUnit: currentUnit ?? this.currentUnit,
       stepUnitsList: stepUnitsList ?? this.stepUnitsList,
       subUnitsList: subUnitsList ?? this.subUnitsList,

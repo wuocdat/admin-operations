@@ -58,12 +58,13 @@ class FilterContentCubit extends Cubit<FilterContentState> {
   }
 
   void updateFbPageType(FbPageType? type) {
-    emit(state.copyWith(fbPageType: type));
+    emit(state.copyWith(fbPageType: type, unsetFbPageType: type == null));
   }
 
   Future<void> resetStateFilter(Unit rootUnit) async {
     emit(state.copyWith(
       fbPageType: null,
+      unsetFbPageType: true,
       pickedStartDate: DateTime.now().subtract(const Duration(days: 1)),
       pickedEndDate: DateTime.now(),
       stepUnitsList: [],
