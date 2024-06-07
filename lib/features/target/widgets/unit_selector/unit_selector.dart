@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
+import 'package:units_repository/units_repository.dart';
 
 class UnitSelector extends StatelessWidget {
-  const UnitSelector({super.key});
+  const UnitSelector({
+    super.key,
+    required this.currentUnit,
+    required this.stepUnitsList,
+    required this.subUnitsList,
+    required this.onSelectUnit,
+  });
+
+  final Unit currentUnit;
+  final List<Unit> stepUnitsList;
+  final List<Unit> subUnitsList;
+  final void Function(Unit) onSelectUnit;
 
   @override
   Widget build(BuildContext context) {
     final themeColor = Theme.of(context).colorScheme.primary;
+
+    final rootUnit =
+        context.select((AuthenticationBloc bloc) => bloc.state.user.unit);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -17,26 +32,19 @@ class UnitSelector extends StatelessWidget {
           text: TextSpan(
             text: 'Đang chọn: ',
             style: DefaultTextStyle.of(context).style,
-            children: const <TextSpan>[
+            children: <TextSpan>[
               TextSpan(
-                text: 'BCD 35',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                text: currentUnit.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
           ),
         ),
         const SizedBox(height: 8),
-        BlocSelector<AuthenticationBloc, AuthenticationState, User>(
-          selector: (state) {
-            return state.user;
-          },
-          builder: (context, user) {
-            return StepItem(
-              isFirstItem: true,
-              child: Text(user.unit.name),
-            );
-          },
-        ),
+        ...stepUnitsList.map((unit) => StepItem(
+              isFirstItem: unit.id == rootUnit.id,
+              child: Text(unit.name),
+            )),
         StepItem(
           child: MenuAnchor(
             builder: (context, controller, child) => InkWell(
@@ -64,7 +72,16 @@ class UnitSelector extends StatelessWidget {
                 ],
               ),
             ),
-            menuChildren: const [],
+            menuChildren: subUnitsList
+                .map((unit) => InkWell(
+                      onTap: () => onSelectUnit(unit),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        child: Text(unit.name),
+                      ),
+                    ))
+                .toList(),
           ),
         ),
       ],

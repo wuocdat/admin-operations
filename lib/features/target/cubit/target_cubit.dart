@@ -7,6 +7,7 @@ import 'package:tctt_mobile/core/utils/time.dart';
 import 'package:tctt_mobile/features/target/models/filter_data.dart';
 import 'package:tctt_mobile/features/target/widgets/subject_actions/subject_actions.dart';
 import 'package:tctt_mobile/shared/enums.dart';
+import 'package:units_repository/units_repository.dart';
 
 part 'target_state.dart';
 
@@ -38,6 +39,9 @@ class TargetCubit extends Cubit<TargetState> {
       fbPageType: data.fbPageType,
       unsetFbType: data.fbPageType == null,
       targetName: data.targetName,
+      currentUnit: data.currentUnit,
+      stepUnitsList: data.stepUnitsList,
+      subUnitsList: data.subUnitsList,
       updateFilterCount: state.updateFilterCount + 1,
     ));
   }

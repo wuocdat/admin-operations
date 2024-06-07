@@ -72,6 +72,9 @@ class TargetState extends Equatable {
     this.fbPageType,
     this.targetName = '',
     this.downloadingStatus = FetchDataStatus.initial,
+    this.currentUnit = Unit.empty,
+    this.stepUnitsList = const [],
+    this.subUnitsList = const [],
   });
 
   const TargetState.subject() : this._();
@@ -94,6 +97,12 @@ class TargetState extends Equatable {
 
   final int updateFilterCount;
 
+  final Unit currentUnit;
+
+  final List<Unit> stepUnitsList;
+
+  final List<Unit> subUnitsList;
+
   TargetState copyWith({
     TargetOptions? selectedOption,
     int? viewIndex,
@@ -104,6 +113,9 @@ class TargetState extends Equatable {
     bool? unsetFbType,
     String? targetName,
     FetchDataStatus? downloadingStatus,
+    Unit? currentUnit,
+    List<Unit>? stepUnitsList,
+    List<Unit>? subUnitsList,
   }) {
     return TargetState._(
       selectedOption: selectedOption ?? this.selectedOption,
@@ -114,6 +126,9 @@ class TargetState extends Equatable {
       fbPageType: unsetFbType == true ? null : fbPageType ?? this.fbPageType,
       targetName: targetName ?? this.targetName,
       downloadingStatus: downloadingStatus ?? this.downloadingStatus,
+      currentUnit: currentUnit ?? this.currentUnit,
+      stepUnitsList: stepUnitsList ?? this.stepUnitsList,
+      subUnitsList: subUnitsList ?? this.subUnitsList,
     );
   }
 
@@ -141,5 +156,8 @@ class TargetState extends Equatable {
         fbPageType,
         targetName,
         downloadingStatus,
+        currentUnit,
+        subUnitsList,
+        stepUnitsList,
       ];
 }
