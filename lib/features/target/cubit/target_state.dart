@@ -143,7 +143,8 @@ class TargetState extends Equatable {
     return otherEndDatePicked ||
         otherStartDatePicked ||
         typePicked ||
-        nameChanged;
+        nameChanged ||
+        stepUnitsList.length > 1;
   }
 
   @override

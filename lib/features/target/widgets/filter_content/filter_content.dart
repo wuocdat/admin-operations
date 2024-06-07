@@ -67,6 +67,7 @@ class _FilterContentState extends State<FilterContent> {
   Widget build(BuildContext context) {
     final currentUnit =
         context.select((AuthenticationBloc bloc) => bloc.state.user.unit);
+
     return BlocProvider(
       create: (context) => FilterContentCubit(
         unitRepository: RepositoryProvider.of<UnitsRepository>(context),
@@ -95,7 +96,7 @@ class _FilterContentState extends State<FilterContent> {
                           onPressed: () {
                             context
                                 .read<FilterContentCubit>()
-                                .resetStateFilter();
+                                .resetStateFilter(currentUnit);
                             _targetNameController.clear();
                           },
                           child: const Text('Đặt lại'),
