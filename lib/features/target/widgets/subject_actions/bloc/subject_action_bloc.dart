@@ -11,7 +11,6 @@ class SubjectActionBloc extends Bloc<SubjectActionEvent, SubjectActionState> {
   SubjectActionBloc(
       {required TargetRepository targetRepository, required String unitId})
       : _targetRepository = targetRepository,
-        _unitId = unitId,
         super(const SubjectActionState()) {
     on<PostsFetchedEvent>(
       _onPostsFetched,
@@ -21,7 +20,6 @@ class SubjectActionBloc extends Bloc<SubjectActionEvent, SubjectActionState> {
   }
 
   final TargetRepository _targetRepository;
-  final String _unitId;
 
   Future<void> _onPostsRefetched(
     PostsReFetchedEvent event,
@@ -31,7 +29,7 @@ class SubjectActionBloc extends Bloc<SubjectActionEvent, SubjectActionState> {
 
     try {
       final posts = await _targetRepository.fetchPostsByUnit(
-          event.typeAc, _unitId, event.startDate, event.endDate);
+          event.typeAc, event.unitId, event.startDate, event.endDate);
 
       posts.length < subjectLimit
           ? emit(state.copyWith(
@@ -59,7 +57,7 @@ class SubjectActionBloc extends Bloc<SubjectActionEvent, SubjectActionState> {
 
     try {
       final posts = await _targetRepository.fetchPostsByUnit(event.typeAc,
-          _unitId, event.startDate, event.endDate, state.posts.length);
+          event.unitId, event.startDate, event.endDate, state.posts.length);
 
       posts.length < subjectLimit
           ? emit(state.copyWith(

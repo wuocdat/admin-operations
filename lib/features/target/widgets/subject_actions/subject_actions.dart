@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:target_repository/target_repository.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/features/target/widgets/subject_actions/bloc/subject_action_bloc.dart';
@@ -22,6 +23,10 @@ class SubjectActions extends StatelessWidget {
     final startDate =
         context.select((TargetCubit cubit) => cubit.state.startDate);
     final endDate = context.select((TargetCubit cubit) => cubit.state.endDate);
+    final currentPickedUnitId = context
+            .select((TargetCubit cubit) => cubit.state.currentUnit.id)
+            .noBlank ??
+        unitId;
 
     return BlocProvider(
       create: (context) => SubjectActionBloc(
@@ -31,6 +36,7 @@ class SubjectActions extends StatelessWidget {
           typeAc: typeAc,
           startDate: (startDate ?? DateTime.now()).stringFormat,
           endDate: (endDate ?? DateTime.now()).stringFormat,
+          unitId: currentPickedUnitId,
         )),
       child: BlocListener<TargetCubit, TargetState>(
         listenWhen: (previous, current) =>
@@ -41,6 +47,7 @@ class SubjectActions extends StatelessWidget {
                 typeAc: state.selectedOption.typeAc,
                 startDate: (state.startDate ?? DateTime.now()).stringFormat,
                 endDate: (state.endDate ?? DateTime.now()).stringFormat,
+                unitId: state.currentUnit.id,
               ));
         },
         child: BlocBuilder<SubjectActionBloc, SubjectActionState>(
@@ -63,6 +70,7 @@ class SubjectActions extends StatelessWidget {
                           typeAc: typeAc,
                           startDate: (startDate ?? DateTime.now()).stringFormat,
                           endDate: (endDate ?? DateTime.now()).stringFormat,
+                          unitId: currentPickedUnitId,
                         ));
                   },
                   itemBuilder: (index) {
@@ -84,6 +92,7 @@ class SubjectActions extends StatelessWidget {
                           typeAc: typeAc,
                           startDate: (startDate ?? DateTime.now()).stringFormat,
                           endDate: (endDate ?? DateTime.now()).stringFormat,
+                          unitId: currentPickedUnitId,
                         ));
                   },
                 );

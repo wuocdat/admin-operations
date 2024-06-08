@@ -121,7 +121,7 @@ class TargetApiClient {
   Future<List> fetchPostsByType(
       int typeAc, String unitId, String startDate, String endDate, int limit,
       [int page = 1]) async {
-    final response = await _dio.get(TargetUrl.posts, queryParameters: {
+    final response = await _dio.get(TargetUrl.postsByType, queryParameters: {
       'typeAc': typeAc,
       'pageSize': limit,
       'currentPage': page,
