@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/conversation/view/conversation_page.dart';
 import 'package:tctt_mobile/features/search_user/bloc/search_user_bloc.dart';
 import 'package:tctt_mobile/shared/enums.dart';
@@ -26,6 +27,9 @@ class SearchUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId =
+        context.select((AuthenticationBloc bloc) => bloc.state.user.id);
+
     return Scaffold(
       appBar: AppBar(
         leading: BlocBuilder<SearchUserBloc, SearchUserState>(
@@ -161,11 +165,14 @@ class SearchUser extends StatelessWidget {
                         itemCount: state.users.length,
                         itemBuilder: (index) {
                           final currentUser = state.users[index];
-                          return UserItem(
-                            currentUser: currentUser,
-                            showCheckBox: state.groupMode,
-                            isPicked: state.pickedUsers.contains(currentUser),
-                          );
+                          return (currentUserId == currentUser.id)
+                              ? Container()
+                              : UserItem(
+                                  currentUser: currentUser,
+                                  showCheckBox: state.groupMode,
+                                  isPicked:
+                                      state.pickedUsers.contains(currentUser),
+                                );
                         },
                         onReachedEnd: () => context
                             .read<SearchUserBloc>()
