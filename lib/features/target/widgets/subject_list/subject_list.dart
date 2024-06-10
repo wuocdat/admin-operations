@@ -96,7 +96,7 @@ class SubjectList extends StatelessWidget {
                 previous.updateFilterCount != current.updateFilterCount,
             listener: (context, state) {
               context.read<SubjectListBloc>().add(SubjectReFetchedEvent(
-                  unitId: state.currentUnit.id,
+                  unitId: state.currentUnit.id.noBlank ?? currentUnitId,
                   typeAc: state.selectedOption.typeAc,
                   name: state.targetName,
                   fbPageType: state.fbPageType));

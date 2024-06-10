@@ -47,7 +47,7 @@ class SubjectActions extends StatelessWidget {
                 typeAc: state.selectedOption.typeAc,
                 startDate: (state.startDate ?? DateTime.now()).stringFormat,
                 endDate: (state.endDate ?? DateTime.now()).stringFormat,
-                unitId: state.currentUnit.id,
+                unitId: state.currentUnit.id.noBlank ?? unitId,
               ));
         },
         child: BlocBuilder<SubjectActionBloc, SubjectActionState>(
