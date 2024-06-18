@@ -1,11 +1,14 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:conversation_repository/conversation_repository.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mail_repository/mail_repository.dart';
 import 'package:target_repository/target_repository.dart';
 import 'package:task_repository/task_repository.dart';
+import 'package:tctt_mobile/core/services/firebase_service.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/features/global/bloc/global_bloc.dart';
 import 'package:tctt_mobile/features/home/home.dart';
 import 'package:tctt_mobile/features/login/login.dart';
 import 'package:tctt_mobile/features/splash/splash.dart';
@@ -51,11 +54,18 @@ class _AppState extends State<App> {
         RepositoryProvider(create: (context) => TargetRepository()),
         RepositoryProvider(create: (context) => ConversationRepository()),
       ],
-      child: BlocProvider(
-        create: (_) => AuthenticationBloc(
-          authenticationRepository: _authenticationRepository,
-          userRepository: _userRepository,
-        ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => AuthenticationBloc(
+              authenticationRepository: _authenticationRepository,
+              userRepository: _userRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => GlobalBloc(),
+          ),
+        ],
         child: const AppView(),
       ),
     );
@@ -73,6 +83,13 @@ class _AppViewState extends State<AppView> {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   NavigatorState get _navigator => _navigatorKey.currentState!;
+
+  @override
+  void initState() {
+    super.initState();
+
+    FirebaseMessaging.onMessage.listen(showFlutterNotification);
+  }
 
   @override
   Widget build(BuildContext context) {

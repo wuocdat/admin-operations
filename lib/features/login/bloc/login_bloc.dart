@@ -48,7 +48,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state.isValid) {
       emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
       try {
-        final fcmToken = await FirebaseService.getFCMToken();
+        final fcmToken = await getFCMToken();
 
         await _authenticationRepository.login(
             username: state.username.value,

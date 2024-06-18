@@ -23,7 +23,9 @@ void main() async {
             : await getTemporaryDirectory(),
       );
 
-      await FirebaseService.init();
+      await initializeFirebaseService();
+
+      await initializeNotifications();
 
       await dotenv.load(fileName: ".env");
 

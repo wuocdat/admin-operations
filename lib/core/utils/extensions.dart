@@ -17,6 +17,17 @@ extension StringExtension on String {
     }
     return this;
   }
+
+  ENotificationType get toENotificationType {
+    switch (this) {
+      case '1':
+        return ENotificationType.mission;
+      case '2':
+        return ENotificationType.mail;
+      default:
+        return ENotificationType.chat;
+    }
+  }
 }
 
 extension TaskTypeExtension on TaskType {

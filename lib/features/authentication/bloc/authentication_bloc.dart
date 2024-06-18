@@ -58,7 +58,7 @@ class AuthenticationBloc
     Emitter<AuthenticationState> emit,
   ) async {
     try {
-      final fcmToken = await FirebaseService.getFCMToken();
+      final fcmToken = await getFCMToken();
       await _authenticationRepository.logout(fcmToken ?? "");
     } catch (_) {
       emit(const AuthenticationState.unauthenticated());

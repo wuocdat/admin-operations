@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mail_repository/mail_repository.dart';
 import 'package:task_repository/task_repository.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/features/conversation/view/conversation_page.dart';
 import 'package:tctt_mobile/features/conversation_center/view/conversation_center_page.dart';
 import 'package:tctt_mobile/features/dashboard/view/dashboard_page.dart';
+import 'package:tctt_mobile/features/global/bloc/global_bloc.dart';
 import 'package:tctt_mobile/features/home/cubit/home_cubit.dart';
 import 'package:tctt_mobile/features/home/widgets/notifications_bell.dart';
 import 'package:tctt_mobile/features/mail/view/mail_page.dart';
+import 'package:tctt_mobile/features/received_task_detail/view/received_task_detail_page.dart';
 import 'package:tctt_mobile/features/target/view/target_page.dart';
 import 'package:tctt_mobile/features/task/view/task_page.dart';
 import 'package:tctt_mobile/features/setting/view/setting_page.dart';
 import 'package:tctt_mobile/features/account_setting/view/account_setting_page.dart';
+import 'package:tctt_mobile/shared/enums.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -32,6 +37,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasNavigatedOnLaunch =
+        context.select((GlobalBloc bloc) => bloc.state.hasNavigatedOnLaunchApp);
     final List<Map<String, dynamic>> menuItems = [
       {
         'icon': Icons.account_box_outlined,
@@ -58,12 +65,35 @@ class HomePage extends StatelessWidget {
       },
     ];
     final theme = Theme.of(context);
+
     return BlocProvider(
       create: (context) => HomeCubit(
         taskRepository: RepositoryProvider.of<TaskRepository>(context),
         mailRepository: RepositoryProvider.of<MailRepository>(context),
-      ),
-      child: BlocBuilder<HomeCubit, HomeState>(
+      )..checkIfAppLaunchedByNotification(),
+      child: BlocConsumer<HomeCubit, HomeState>(
+        listenWhen: (previous, current) =>
+            current.notificationData != null &&
+            previous.notificationData != current.notificationData &&
+            !hasNavigatedOnLaunch,
+        listener: (context, state) {
+          final notificationType =
+              state.notificationData!.type.toENotificationType;
+
+          final data = state.notificationData!.data;
+          context.read<GlobalBloc>().add(const AppNavigatedOnLaunchEvent());
+
+          switch (notificationType) {
+            case ENotificationType.chat:
+              Navigator.of(context).push(ConversationPage.route(data));
+              break;
+            case ENotificationType.mission:
+              Navigator.of(context).push(ReceivedTaskDetailPage.route(data));
+              break;
+            default:
+              break;
+          }
+        },
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
