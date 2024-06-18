@@ -11,6 +11,8 @@ class NewTargetFailure implements Exception {}
 
 class DeleteTargetFailure implements Exception {}
 
+class DownloadFailure implements Exception {}
+
 class TargetApiClient {
   TargetApiClient({Dio? dio})
       : _dio = dio ?? Dio(ApiConfig.options)
@@ -28,13 +30,25 @@ class TargetApiClient {
     return result['subject'] as Map<String, dynamic>;
   }
 
-  Future<List> fetchSubjects(int typeAct, int limit, [int page = 1]) async {
-    final response = await _dio.get(TargetUrl.list, queryParameters: {
+  Future<List> fetchSubjects(
+      String unitId, int typeAct, String name, String? fbTypeId, int limit,
+      [int page = 1]) async {
+    final queryParameters = {
+      'unit': unitId,
       'typeAc': typeAct,
       'pageSize': limit,
       'currentPage': page,
       'sortBy': jsonEncode({'name': 1})
-    });
+    };
+
+    if (fbTypeId != null) queryParameters['type'] = fbTypeId;
+
+    if (name.isNotEmpty) queryParameters['name'] = name;
+
+    final response = await _dio.get(
+      TargetUrl.listByUnit,
+      queryParameters: queryParameters,
+    );
 
     final result = Handler.parseResponse(response) as List;
 
@@ -61,6 +75,29 @@ class TargetApiClient {
     if (response.statusCode != 201) throw NewTargetFailure();
   }
 
+  Future<void> downloadFile(
+    int typeAc,
+    String unitId,
+    String startDate,
+    String endDate,
+    String path,
+  ) async {
+    final response = await _dio.download(
+      TargetUrl.excelFile,
+      path,
+      queryParameters: {
+        'typeAc': typeAc,
+        'startDate': startDate,
+        'endDate': endDate,
+        'unit': unitId,
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw DownloadFailure();
+    }
+  }
+
   Future<void> deleteSubject(String subjectId) async {
     final response = await _dio.delete('${TargetUrl.list}/$subjectId');
 
@@ -84,7 +121,7 @@ class TargetApiClient {
   Future<List> fetchPostsByType(
       int typeAc, String unitId, String startDate, String endDate, int limit,
       [int page = 1]) async {
-    final response = await _dio.get(TargetUrl.posts, queryParameters: {
+    final response = await _dio.get(TargetUrl.postsByType, queryParameters: {
       'typeAc': typeAc,
       'pageSize': limit,
       'currentPage': page,

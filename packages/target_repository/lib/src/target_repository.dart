@@ -15,14 +15,35 @@ class TargetRepository {
     return TargetOverall.fromJson(result);
   }
 
-  Future<List<Subject>> fetchSubjects(int typeAc, [int length = 0]) async {
+  Future<List<Subject>> fetchSubjects(
+      String unitId, int typeAc, String name, String? fbTypeId,
+      [int length = 0]) async {
     final result = await _targetApiClient.fetchSubjects(
+      unitId,
       typeAc,
+      name,
+      fbTypeId,
       subjectLimit,
       (length / subjectLimit).ceil() + 1,
     );
 
     return result.map((e) => Subject.fromJson(e)).toList();
+  }
+
+  Future<void> downloadExcelFile(
+    int typeAc,
+    String unitId,
+    String startDate,
+    String endDate,
+    String path,
+  ) async {
+    await _targetApiClient.downloadFile(
+      typeAc,
+      unitId,
+      startDate,
+      endDate,
+      path,
+    );
   }
 
   Future<Subject> fetchSubjectById(String subjectId) async {
