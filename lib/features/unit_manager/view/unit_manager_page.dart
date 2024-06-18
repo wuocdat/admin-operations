@@ -83,10 +83,12 @@ class WhiteCustomtButton extends StatelessWidget {
     required IconData icon,
     required VoidCallback? onPressed,
   })  : _text = text,
-        _icon = icon;
+        _icon = icon,
+        _onPressed = onPressed;
 
   final String _text;
   final IconData _icon;
+  final VoidCallback? _onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +97,7 @@ class WhiteCustomtButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: _onPressed,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             elevation: 6,

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/features/account_setting/bloc/bloc/account_setting_bloc.dart';
+import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
 import 'package:tctt_mobile/shared/widgets/border_container.dart';
 import 'package:tctt_mobile/shared/widgets/contained_button.dart';
@@ -78,113 +82,132 @@ class AccountSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        leading: BackButton(
-          color: Colors.black,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text(
-          'Quản lí tài khoản',
-          style: TextStyle(
-            fontFamily: 'Urbanest',
-            letterSpacing: 0,
-          ),
-        ),
-      ),
-      body: Container(
-        color: Colors.white,
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  BorderContainer(
-                    child: Align(
-                      alignment: const AlignmentDirectional(0, 0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            BigPadding(text: 'Thông tin cá nhân'),
-                            SmallPadding(text: 'Tài khoản: Nguyễn Văn A'),
-                            SmallPadding(text: 'Năm sinh: 2000'),
-                            SmallPadding(text: 'SDT:'),
-                            SmallPadding(text: 'Đơn vị: Ban chỉ đạo 35'),
-                            Devider(),
-                            CustomButton(
-                                text: 'Cập nhật ',
-                                icon: Icons.edit_square,
-                                onPressed: () {}),
-                          ],
-                        ),
-                      ),
-                    ),
+    return BlocProvider(
+        create: (_) => AccountSettingBloc(),
+        child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+          builder: (context, state) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                automaticallyImplyLeading: false,
+                leading: BackButton(
+                  color: Colors.black,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                title: const Text(
+                  'Quản lí tài khoản',
+                  style: TextStyle(
+                    fontFamily: 'Urbanest',
+                    letterSpacing: 0,
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                    child: BorderContainer(
-                      child: Align(
-                        alignment: AlignmentDirectional(0, 0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              BigPadding(text: 'Bảo mật'),
-                              SmallPadding(text: 'Quyền: Quản lý'),
-                              Devider(),
-                              CustomButton(
-                                  text: 'Thay đổi mật khẩu',
-                                  icon: Icons.password_rounded,
-                                  onPressed: () {}),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                    child: BorderContainer(
-                      child: Align(
-                        alignment: AlignmentDirectional(0, 0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              BigPadding(text: 'Xác thực 2 lớp'),
-                              SmallPadding(text: 'Trạng thái: Đã kích hoạt'),
-                              Devider(),
-                              CustomButton(
-                                  text: 'Ngừng kích hoạt',
-                                  icon: Icons.privacy_tip_outlined,
-                                  onPressed: () {}),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
-      ),
-    );
+              body: Container(
+                color: Colors.white,
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          BorderContainer(
+                            child: Align(
+                              alignment: const AlignmentDirectional(0, 0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const BigPadding(text: 'Thông tin cá nhân'),
+                                    SmallPadding(
+                                        text: 'Tài khoản: ${state.user.name}'),
+                                    SmallPadding(
+                                        text:
+                                            'Ngày tạo: ${state.user.createdAt}'),
+                                    const SmallPadding(text: 'SĐT:'),
+                                    SmallPadding(
+                                        text:
+                                            'Đơn vị: ${state.user.unit.name}'),
+                                    const Devider(),
+                                    CustomButton(
+                                        text: 'Cập nhật ',
+                                        icon: Icons.edit_square,
+                                        onPressed: () {}),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 16, 0, 0),
+                            child: BorderContainer(
+                              child: Align(
+                                alignment: const AlignmentDirectional(0, 0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const BigPadding(text: 'Bảo mật'),
+                                      SmallPadding(
+                                          text:
+                                              'Quyền: ${state.user.roleE.name}'),
+                                      const Devider(),
+                                      CustomButton(
+                                          text: 'Thay đổi mật khẩu',
+                                          icon: Icons.password_rounded,
+                                          onPressed: () {}),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 16, 0, 0),
+                            child: BorderContainer(
+                              child: Align(
+                                alignment: const AlignmentDirectional(0, 0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const BigPadding(text: 'Xác thực 2 lớp'),
+                                      SmallPadding(
+                                          text:
+                                              'Trạng thái: ${state.user.is2FAEnabled ? 'Đã kích hoạt' : 'Chưa kích hoạt'}'),
+                                      const Devider(),
+                                      CustomButton(
+                                          text: 'Ngừng kích hoạt',
+                                          icon: Icons.privacy_tip_outlined,
+                                          onPressed: () {}),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ));
   }
 }
