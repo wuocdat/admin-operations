@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/features/member_manager/view/member_manager_page.dart';
+import 'package:tctt_mobile/features/new_unit/new_unit_page.dart';
+import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
+import 'package:tctt_mobile/features/unit_manager/bloc/unit_manager_bloc.dart';
 import 'package:tctt_mobile/shared/widgets/contained_button.dart';
+import 'package:tctt_mobile/shared/widgets/empty_list_message.dart';
+import 'package:tctt_mobile/shared/widgets/loader.dart';
+import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
+import 'package:units_repository/units_repository.dart';
 
 class CustomPadding extends StatelessWidget {
   const CustomPadding({
@@ -74,10 +84,12 @@ class WhiteCustomtButton extends StatelessWidget {
     required IconData icon,
     required VoidCallback? onPressed,
   })  : _text = text,
-        _icon = icon;
+        _icon = icon,
+        _onPressed = onPressed;
 
   final String _text;
   final IconData _icon;
+  final VoidCallback? _onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +98,7 @@ class WhiteCustomtButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: _onPressed,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             elevation: 6,
@@ -119,7 +131,9 @@ class WhiteCustomtButton extends StatelessWidget {
 }
 
 class UnitManager extends StatelessWidget {
-  const UnitManager({super.key});
+  const UnitManager({super.key, required this.parentId});
+
+  final String parentId;
 
   @override
   Widget build(BuildContext context) {
@@ -144,53 +158,99 @@ class UnitManager extends StatelessWidget {
       body: Container(
         color: Colors.white,
         child: SafeArea(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-              child: ListView(
-                padding: EdgeInsets.zero,
-                scrollDirection: Axis.vertical,
-                children: [
-                  const Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
-                    child: Text(
-                      'Thành phố Đà Nẵng',
-                      style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 16,
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 12),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        WhiteCustomtButton(
-                            text: 'Thành viên',
-                            icon: Icons.group,
-                            onPressed: () {}),
-                        const SizedBox(width: 16),
-                        CustomButton(
-                            text: 'Thêm đơn vị',
-                            icon: Icons.add,
-                            onPressed: () {}),
-                      ],
-                    ),
-                  ),
-                  CustomPadding(text: 'Quận Hải  Châu', onPressed: () {}),
-                  CustomPadding(text: 'Quận Ngũ Hành Sơn', onPressed: () {}),
-                  CustomPadding(text: 'Quận Cẩm Lệ', onPressed: () {}),
-                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {}),
-                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {}),
-                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {}),
-                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {})
-                ],
-              ),
+          child: BlocProvider(
+            create: (context) => UnitManagerBloc(
+                repository: RepositoryProvider.of<UnitsRepository>(context))
+              ..add(UnitFetchedEvent(parentId)),
+            child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, state) {
+                return Container(
+                  color: Colors.white,
+                  child: Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 12, 0, 12),
+                            child: Text(
+                              state.user.unit.name,
+                              style: const TextStyle(
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontSize: 16,
+                                letterSpacing: 0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 0, 12, 12),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                WhiteCustomtButton(
+                                    text: 'Thành viên',
+                                    icon: Icons.group,
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                            MemberManager(unitId: state.user.unit.id)));
+                                    }),
+                                const SizedBox(width: 16),
+                                CustomButton(
+                                    text: 'Thêm đơn vị',
+                                    icon: Icons.add,
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                            NewUnit(typeunitId: state.user.unit.id)));
+                                    }),
+                              ],
+                            ),
+                          ),
+                          Expanded(child:
+                              BlocBuilder<UnitManagerBloc, UnitManagerState>(
+                                  builder: (context, state) {
+                            switch (state.status) {
+                              case FetchDataStatus.initial:
+                                return const Loader();
+                              default:
+                                if (state.status.isLoading &&
+                                    state.units.isEmpty) {
+                                  return const Loader();
+                                }
+                                if (state.units.isEmpty) {
+                                  return const EmptyListMessage(
+                                    message: "co du lieu",
+                                  );
+                                }
+                                return RichListView(
+                                  hasReachedMax: state.hasReachedMax,
+                                  itemCount: state.units.length,
+                                  itemBuilder: (index) => CustomPadding(
+                                    text: state.units[index].name,
+                                    onPressed: () {},
+                                    // onPressed: () async {}
+                                  ),
+                                  onReachedEnd: () {
+                                    // context.read<UnitManagerBloc>().add(const UnitFetchedEvent(state.units.id));;);
+                                  },
+                                );
+                            }
+                          }))
+                        ],
+                      )),
+                );
+              },
             ),
           ),
         ),

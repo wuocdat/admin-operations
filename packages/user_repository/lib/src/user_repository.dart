@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:api_client/api_client.dart';
 import 'package:user_repository/src/models/models.dart';
 
@@ -22,6 +24,14 @@ class UserRepository {
       userLimit,
       (length / userLimit).ceil() + 1,
     );
+
+    return jsonUsers
+        .map((e) => ShortProfile.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<List<ShortProfile>> getUserbyUnitID(String unitId) async {
+    final jsonUsers = await _apiClient.getUserbyUnitID(unitId, 50, 1);
 
     return jsonUsers
         .map((e) => ShortProfile.fromJson(e as Map<String, dynamic>))

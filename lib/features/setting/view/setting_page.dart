@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/features/setting/bloc/setting_bloc.dart';
 import 'package:tctt_mobile/features/unit_manager/view/unit_manager_page.dart';
 import 'package:tctt_mobile/features/member_manager/view/member_manager_page.dart';
 import 'package:tctt_mobile/features/account_setting/view/account_setting_page.dart';
 import 'package:tctt_mobile/shared/widgets/contained_button.dart';
 import 'package:tctt_mobile/shared/widgets/label_text.dart';
-
 import '../../authentication/bloc/authentication_bloc.dart';
 
 class SettingPage extends StatelessWidget {
@@ -55,22 +55,37 @@ class SettingPage extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => const AccountSetting()));
                       }),
-                  ContentButton(
-                      text: 'Đơn vị',
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const UnitManager()));
-                      }),
-                  ContentButton(
-                      text: 'Thành viên',
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MemberManager()));
-                      }),
+                  BlocProvider(
+                      create: (_) => SettingBloc(),
+                      child:
+                          BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                              builder: (context, state) {
+                        return ContentButton(
+                            text: 'Đơn vị',
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UnitManager(
+                                            parentId: state.user.unit.id,
+                                          )));
+                            });
+                      })),
+                  BlocProvider(
+                      create: (_) => SettingBloc(),
+                      child:
+                          BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                              builder: (context, state) {
+                        return ContentButton(
+                            text: 'Thành viên',
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MemberManager(
+                                          unitId: state.user.unit.id)));
+                            });
+                      })),
                 ],
               ),
               const Spacer(),

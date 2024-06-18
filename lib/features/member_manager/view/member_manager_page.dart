@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/features/member_manager/bloc/member_manager_bloc.dart';
+import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
+import 'package:tctt_mobile/shared/widgets/empty_list_message.dart';
+import 'package:tctt_mobile/shared/widgets/loader.dart';
+import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
+import 'package:user_repository/user_repository.dart';
 
 class CustomContainer extends StatelessWidget {
   const CustomContainer({
@@ -87,7 +95,9 @@ class CustomContainer extends StatelessWidget {
 }
 
 class MemberManager extends StatelessWidget {
-  const MemberManager({super.key});
+  const MemberManager({super.key, required this.unitId});
+
+  final String unitId;
 
   @override
   Widget build(BuildContext context) {
@@ -112,76 +122,107 @@ class MemberManager extends StatelessWidget {
       body: Container(
         color: Colors.white,
         child: SafeArea(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-              child: ListView(
-                padding: EdgeInsets.zero,
-                scrollDirection: Axis.vertical,
-                children: [
-                  const Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 4),
-                    child: Text(
-                      'Thành phố Đà Nẵng',
-                      style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 16,
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                          child: Icon(
-                            Icons.person_add_rounded,
-                            color: Color(0xFF14181B),
-                            size: 20,
+          child: BlocProvider(
+            create: (context) => MemberManagerBloc(
+                repository: RepositoryProvider.of<UserRepository>(context))
+              ..add(MemberFetchedEvent(unitId)),
+            child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                builder: (context, state) {
+              return Container(
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 4),
+                        child: Text(
+                          state.user.unit.name,
+                          style: const TextStyle(
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontSize: 16,
+                            letterSpacing: 0,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-                            child: Text(
-                              'Thêm thành viên',
-                              style: TextStyle(
-                                fontFamily: 'Plus Jakarta Sans',
+                      ),
+                      const Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                              child: Icon(
+                                Icons.person_add_rounded,
                                 color: Color(0xFF14181B),
-                                fontSize: 14,
-                                letterSpacing: 0,
-                                fontWeight: FontWeight.w500,
+                                size: 20,
                               ),
                             ),
-                          ),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    12, 0, 12, 0),
+                                child: Text(
+                                  'Thêm thành viên',
+                                  style: TextStyle(
+                                    fontFamily: 'Plus Jakarta Sans',
+                                    color: Color(0xFF14181B),
+                                    fontSize: 14,
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      const Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: Colors.grey,
+                      ),
+                      Expanded(child:
+                          BlocBuilder<MemberManagerBloc, MemberManagerState>(
+                        builder: (context, state) {
+                          switch (state.status) {
+                            case FetchDataStatus.initial:
+                              return const Loader();
+                            default:
+                              if (state.status.isLoading &&
+                                  state.users.isEmpty) {
+                                return const Loader();
+                              }
+                              if (state.users.isEmpty) {
+                                return const EmptyListMessage(
+                                  message: "co du lieu",
+                                );
+                              }
+                              return RichListView(
+                                hasReachedMax: state.hasReachedMax,
+                                itemCount: state.users.length,
+                                itemBuilder: (index) => CustomContainer(
+                                  name: state.users[index].username,
+                                  role: state.users[index].role.toString(),
+                                  onPressed: () {},
+                                ),
+                                onReachedEnd: () {
+                                  // context.read<UnitManagerBloc>().add(const UnitFetchedEvent(state.units.id));;);
+                                },
+                              );
+                          }
+                        },
+                      ))
+                    ],
                   ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Colors.grey,
-                  ),
-                  CustomContainer(
-                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
-                  CustomContainer(
-                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
-                  CustomContainer(
-                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
-                  CustomContainer(
-                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
-                  CustomContainer(
-                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
-                ],
-              ),
-            ),
+                ),
+              );
+            }),
           ),
         ),
       ),
