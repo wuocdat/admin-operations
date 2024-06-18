@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tctt_mobile/features/unit_manager/view/unit_manager_page.dart';
 import 'package:tctt_mobile/features/member_manager/view/member_manager_page.dart';
 import 'package:tctt_mobile/features/account_setting/view/account_setting_page.dart';
@@ -19,6 +20,8 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appVersion = dotenv.env['APP_VERSION'];
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -78,9 +81,9 @@ class SettingPage extends StatelessWidget {
                 padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
                 child: MediumLabelText("© 2024 c3c6"),
               ),
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16, 4, 0, 0),
-                child: MediumLabelText("v1.0.0"),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 0, 0),
+                child: MediumLabelText("v$appVersion"),
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(14, 0, 0, 8),
