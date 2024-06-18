@@ -58,6 +58,9 @@ class AuthenticationBloc
     Emitter<AuthenticationState> emit,
   ) async {
     try {
+      //cancelling all notifications
+      await flutterLocalNotificationsPlugin.cancelAll();
+
       final fcmToken = await getFCMToken();
       await _authenticationRepository.logout(fcmToken ?? "");
     } catch (_) {
