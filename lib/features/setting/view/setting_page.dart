@@ -58,14 +58,19 @@ class SettingPage extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => const AccountSetting()));
                       }),
-                  ContentButton(
-                      text: 'Đơn vị',
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const UnitManager()));
-                      }),
+                  BlocSelector<AuthenticationBloc, AuthenticationState, String>(
+                    selector: (state) {
+                      return state.user.unit.id;
+                    },
+                    builder: (context, unitId) {
+                      return ContentButton(
+                          text: 'Đơn vị',
+                          onPressed: () {
+                            Navigator.push(
+                                context, UnitManagerPage.route(unitId));
+                          });
+                    },
+                  ),
                   ContentButton(
                       text: 'Thành viên',
                       onPressed: () {

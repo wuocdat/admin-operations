@@ -10,6 +10,14 @@ class UnitsApiClient {
 
   final Dio _dio;
 
+  Future<Map<String, dynamic>> getUnitDetailById(String unitId) async {
+    final response = await _dio.get("${UnitsUrl.getUnits}/$unitId");
+
+    final result = Handler.parseResponse(response) as Map<String, dynamic>;
+
+    return result;
+  }
+
   Future<List<Map<String, dynamic>>> getUnitsByParentId(String parentId) async {
     final response = await _dio.get(UnitsUrl.getUnits, queryParameters: {
       'parentUnit': parentId,

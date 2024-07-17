@@ -7,6 +7,12 @@ class UnitsRepository {
 
   final UnitsApiClient _unitsApiClient;
 
+  Future<Unit> getUnitById(String unitId) async {
+    final unitJson = await _unitsApiClient.getUnitDetailById(unitId);
+
+    return Unit.fromJson(unitJson);
+  }
+
   Future<List<Unit>> getUnitsByParentId(String parentId) async {
     final units = await _unitsApiClient.getUnitsByParentId(parentId);
 

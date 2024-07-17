@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
+import 'package:tctt_mobile/features/unit_manager/bloc/unit_manager_bloc.dart';
 import 'package:tctt_mobile/shared/widgets/contained_button.dart';
+import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
+import 'package:units_repository/units_repository.dart';
 
 class CustomPadding extends StatelessWidget {
   const CustomPadding({
@@ -118,8 +122,19 @@ class WhiteCustomtButton extends StatelessWidget {
   }
 }
 
-class UnitManager extends StatelessWidget {
-  const UnitManager({super.key});
+class UnitManagerPage extends StatelessWidget {
+  const UnitManagerPage({super.key});
+
+  static Route<void> route(String unitId) {
+    return MaterialPageRoute<void>(
+      builder: (_) => BlocProvider(
+        create: (context) => UnitManagerBloc(
+            unitsRepository: RepositoryProvider.of<UnitsRepository>(context))
+          ..add(ChildUnitsFetchedEvent(parentUnitId: unitId)),
+        child: const UnitManagerPage(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,21 +163,29 @@ class UnitManager extends StatelessWidget {
             color: Colors.white,
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-              child: ListView(
-                padding: EdgeInsets.zero,
-                scrollDirection: Axis.vertical,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
-                    child: Text(
-                      'Thành phố Đà Nẵng',
-                      style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 16,
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  BlocSelector<UnitManagerBloc, UnitManagerState, String>(
+                    selector: (state) {
+                      return state.currentUnit.name;
+                    },
+                    builder: (context, unitName) {
+                      return Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
+                        child: Text(
+                          unitName,
+                          style: const TextStyle(
+                            fontFamily: 'Plus Jakarta Sans',
+                            fontSize: 16,
+                            letterSpacing: 0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 12),
@@ -182,13 +205,22 @@ class UnitManager extends StatelessWidget {
                       ],
                     ),
                   ),
-                  CustomPadding(text: 'Quận Hải  Châu', onPressed: () {}),
-                  CustomPadding(text: 'Quận Ngũ Hành Sơn', onPressed: () {}),
-                  CustomPadding(text: 'Quận Cẩm Lệ', onPressed: () {}),
-                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {}),
-                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {}),
-                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {}),
-                  CustomPadding(text: 'Quận Liên Chiểu', onPressed: () {})
+                  Expanded(
+                    child: BlocBuilder<UnitManagerBloc, UnitManagerState>(
+                      builder: (context, state) {
+                        return RichListView(
+                          hasReachedMax: true,
+                          itemCount: state.childUnits.length,
+                          onReachedEnd: () {},
+                          itemBuilder: (index) {
+                            final currentUnit = state.childUnits[index];
+                            return CustomPadding(
+                                text: currentUnit.name, onPressed: () {});
+                          },
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
