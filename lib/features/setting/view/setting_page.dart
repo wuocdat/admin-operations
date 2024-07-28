@@ -6,6 +6,7 @@ import 'package:tctt_mobile/features/member_manager/view/member_manager_page.dar
 import 'package:tctt_mobile/features/account_setting/view/account_setting_page.dart';
 import 'package:tctt_mobile/shared/widgets/contained_button.dart';
 import 'package:tctt_mobile/shared/widgets/label_text.dart';
+import 'package:units_repository/units_repository.dart';
 
 import '../../authentication/bloc/authentication_bloc.dart';
 
@@ -58,16 +59,18 @@ class SettingPage extends StatelessWidget {
                             MaterialPageRoute(
                                 builder: (context) => const AccountSetting()));
                       }),
-                  BlocSelector<AuthenticationBloc, AuthenticationState, String>(
+                  BlocSelector<AuthenticationBloc, AuthenticationState, Unit>(
                     selector: (state) {
-                      return state.user.unit.id;
+                      return state.user.unit;
                     },
-                    builder: (context, unitId) {
+                    builder: (context, unit) {
                       return ContentButton(
                           text: 'Đơn vị',
                           onPressed: () {
                             Navigator.push(
-                                context, UnitManagerPage.route(unitId));
+                              context,
+                              UnitManagerPage.route(unit.id, unit.type["_id"]),
+                            );
                           });
                     },
                   ),

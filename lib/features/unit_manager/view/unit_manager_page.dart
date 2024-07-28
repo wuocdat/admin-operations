@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:formz/formz.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/features/unit_manager/bloc/unit_manager_bloc.dart';
-import 'package:tctt_mobile/shared/widgets/contained_button.dart';
+import 'package:tctt_mobile/features/unit_manager/widgets/create_unit_container.dart';
+import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
 import 'package:units_repository/units_repository.dart';
 
-class CustomPadding extends StatelessWidget {
-  const CustomPadding({
+class UnitItem extends StatelessWidget {
+  const UnitItem({
     super.key,
     required String text,
     required VoidCallback? onPressed,
-  }) : _text = text;
+  })  : _text = text,
+        _onPressed = onPressed;
 
   final String _text;
+  final VoidCallback? _onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -33,37 +39,35 @@ class CustomPadding extends StatelessWidget {
           borderRadius: BorderRadius.circular(0),
           shape: BoxShape.rectangle,
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                width: 4,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(2),
+        child: InkWell(
+          onTap: _onPressed,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  width: 4,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                  child: Text(
-                    _text,
-                    style: const TextStyle(
-                      fontFamily: 'Plus Jakarta Sans',
-                      letterSpacing: 0,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                    child: Text(
+                      _text,
+                      style: const TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        letterSpacing: 0,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const Icon(
-                Icons.more_vert,
-                color: Colors.black,
-                size: 24,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -71,8 +75,8 @@ class CustomPadding extends StatelessWidget {
   }
 }
 
-class WhiteCustomtButton extends StatelessWidget {
-  const WhiteCustomtButton({
+class WhiteButton extends StatelessWidget {
+  const WhiteButton({
     super.key,
     required String text,
     required IconData icon,
@@ -93,7 +97,7 @@ class WhiteCustomtButton extends StatelessWidget {
           onPressed: () {},
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            elevation: 6,
+            elevation: 1,
             textStyle: const TextStyle(
                 fontSize: 13,
                 fontFamily: 'Plus Jakarta Sans',
@@ -125,13 +129,71 @@ class WhiteCustomtButton extends StatelessWidget {
 class UnitManagerPage extends StatelessWidget {
   const UnitManagerPage({super.key});
 
-  static Route<void> route(String unitId) {
+  static Route<void> route(String unitId, String unitTypeId) {
     return MaterialPageRoute<void>(
       builder: (_) => BlocProvider(
         create: (context) => UnitManagerBloc(
-            unitsRepository: RepositoryProvider.of<UnitsRepository>(context))
-          ..add(ChildUnitsFetchedEvent(parentUnitId: unitId)),
-        child: const UnitManagerPage(),
+          unitsRepository: RepositoryProvider.of<UnitsRepository>(context),
+        )..add(ChildUnitsFetchedEvent(
+            parentUnitId: unitId, parentUnitTypeId: unitTypeId)),
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<UnitManagerBloc, UnitManagerState>(
+              listenWhen: (previous, current) =>
+                  previous.formStatus != current.formStatus,
+              listener: (context, state) {
+                switch (state.formStatus) {
+                  case FormzSubmissionStatus.success:
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Tạo mới thành công'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    break;
+                  case FormzSubmissionStatus.failure:
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Tạo mới thất bại'),
+                      ),
+                    );
+                    break;
+                  default:
+                    break;
+                }
+              },
+            ),
+            BlocListener<UnitManagerBloc, UnitManagerState>(
+              listenWhen: (previous, current) =>
+                  previous.status != current.status,
+              listener: (context, state) {
+                switch (state.status) {
+                  // case FetchDataStatus.success:
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     const SnackBar(
+                  //       content: Text('Đã xóa'),
+                  //       backgroundColor: Colors.green,
+                  //     ),
+                  //   );
+                  //   context.read<UnitManagerBloc>().add(ChildUnitsFetchedEvent(
+                  //       parentUnitId: state.currentUnit.id,
+                  //       parentUnitTypeId: state.currentUnit.type["_id"]));
+                  //   break;
+                  case FetchDataStatus.failure:
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Thất bại'),
+                      ),
+                    );
+                    break;
+                  default:
+                    break;
+                }
+              },
+            ),
+          ],
+          child: const UnitManagerPage(),
+        ),
       ),
     );
   }
@@ -155,6 +217,40 @@ class UnitManagerPage extends StatelessWidget {
             letterSpacing: 0,
           ),
         ),
+      ),
+      floatingActionButton: BlocBuilder<UnitManagerBloc, UnitManagerState>(
+        builder: (context, state) {
+          return FloatingActionButton.small(
+            onPressed: () async {
+              final reload = await showModalBottomSheet<bool>(
+                context: context,
+                isScrollControlled: true,
+                builder: (_) {
+                  return BlocProvider.value(
+                    value: BlocProvider.of<UnitManagerBloc>(context),
+                    child: BlocBuilder<UnitManagerBloc, UnitManagerState>(
+                      builder: (context, state) {
+                        return CreateUnitContainer(
+                          initialUnitName: state.unitName.value,
+                          initialUnitTypeId: state.unitTypeId,
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+
+              if (!context.mounted) return;
+
+              if (reload ?? false) {
+                context.read<UnitManagerBloc>().add(ChildUnitsFetchedEvent(
+                    parentUnitId: state.currentUnit.id,
+                    parentUnitTypeId: state.currentUnit.type["_id"]));
+              }
+            },
+            child: const Icon(Icons.add),
+          );
+        },
       ),
       body: Container(
         color: Colors.white,
@@ -187,23 +283,16 @@ class UnitManagerPage extends StatelessWidget {
                       );
                     },
                   ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 12),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        WhiteCustomtButton(
-                            text: 'Thành viên',
-                            icon: Icons.group,
-                            onPressed: () {}),
-                        const SizedBox(width: 16),
-                        CustomButton(
-                            text: 'Thêm đơn vị',
-                            icon: Icons.add,
-                            onPressed: () {}),
-                      ],
-                    ),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      WhiteButton(
+                        text: 'Thành viên',
+                        icon: Icons.group,
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
                   Expanded(
                     child: BlocBuilder<UnitManagerBloc, UnitManagerState>(
@@ -214,8 +303,65 @@ class UnitManagerPage extends StatelessWidget {
                           onReachedEnd: () {},
                           itemBuilder: (index) {
                             final currentUnit = state.childUnits[index];
-                            return CustomPadding(
-                                text: currentUnit.name, onPressed: () {});
+                            return Slidable(
+                              key: ValueKey(index),
+                              startActionPane: const ActionPane(
+                                motion: ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: null,
+                                    backgroundColor: Color(0xFF2ecc71),
+                                    foregroundColor: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(4),
+                                      bottomLeft: Radius.circular(4),
+                                    ),
+                                    icon: Icons.manage_accounts,
+                                    label: 'Thành viên',
+                                  ),
+                                ],
+                              ),
+                              endActionPane: ActionPane(
+                                motion: const ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (_) {
+                                      context.read<UnitManagerBloc>().add(
+                                          UnitDeletedEvent(currentUnit.id));
+                                    },
+                                    backgroundColor: const Color(0xFFe74c3c),
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.delete,
+                                    label: 'Xoá',
+                                  ),
+                                  const SlidableAction(
+                                    onPressed: null,
+                                    backgroundColor: Color(0xFF3498db),
+                                    foregroundColor: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(4),
+                                      bottomRight: Radius.circular(4),
+                                    ),
+                                    icon: Icons.edit,
+                                    label: 'Sửa',
+                                  ),
+                                ],
+                              ),
+                              child: UnitItem(
+                                text:
+                                    "${currentUnit.type["name"]} ${currentUnit.name}"
+                                        .capitalize(),
+                                onPressed: () {
+                                  context
+                                      .read<UnitManagerBloc>()
+                                      .add(ChildUnitsFetchedEvent(
+                                        parentUnitId: currentUnit.id,
+                                        parentUnitTypeId:
+                                            currentUnit.type["_id"],
+                                      ));
+                                },
+                              ),
+                            );
                           },
                         );
                       },

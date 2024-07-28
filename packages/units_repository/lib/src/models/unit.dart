@@ -8,6 +8,7 @@ class Unit extends Equatable {
   const Unit({
     required this.id,
     required this.name,
+    required this.type,
     required this.createdBy,
     required this.createdAt,
     required this.isActive,
@@ -16,6 +17,7 @@ class Unit extends Equatable {
   @JsonKey(name: "_id")
   final String id;
   final String name;
+  final Map<String, dynamic> type;
   final String createdBy;
   final String createdAt;
   final bool isActive;
@@ -27,11 +29,12 @@ class Unit extends Equatable {
   static const Unit empty = Unit(
     id: '',
     name: '',
+    type: {},
     createdBy: '',
     createdAt: '',
     isActive: false,
   );
 
   @override
-  List<Object> get props => [id, name, createdAt, createdBy, isActive];
+  List<Object> get props => [id, name, type, createdAt, createdBy, isActive];
 }

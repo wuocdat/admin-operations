@@ -15,6 +15,7 @@ Unit _$UnitFromJson(Map<String, dynamic> json) => $checkedCreate(
         final val = Unit(
           id: $checkedConvert('_id', (v) => v as String),
           name: $checkedConvert('name', (v) => v as String),
+          type: $checkedConvert('type', (v) => v as Map<String, dynamic>),
           createdBy: $checkedConvert('createdBy', (v) => v as String),
           createdAt: $checkedConvert('createdAt', (v) => v as String),
           isActive: $checkedConvert('isActive', (v) => v as bool),
@@ -27,6 +28,7 @@ Unit _$UnitFromJson(Map<String, dynamic> json) => $checkedCreate(
 Map<String, dynamic> _$UnitToJson(Unit instance) => <String, dynamic>{
       '_id': instance.id,
       'name': instance.name,
+      'type': instance.type,
       'createdBy': instance.createdBy,
       'createdAt': instance.createdAt,
       'isActive': instance.isActive,

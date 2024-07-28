@@ -18,4 +18,18 @@ class UnitsRepository {
 
     return units.map((e) => Unit.fromJson(e)).toList();
   }
+
+  Future<List<UnitType>> getChildrenUnitTypes(String parentUnitTypeId) async {
+    final types = await _unitsApiClient.getChildrenUnitTypes(parentUnitTypeId);
+
+    return types.map((e) => UnitType.fromJson(e)).toList();
+  }
+
+  Future<void> createUnit(String name, String parentUnit, String type) async {
+    await _unitsApiClient.createUnit(name, parentUnit, type);
+  }
+
+  Future<void> deleteUnitById(String id) async {
+    await _unitsApiClient.deleteUnitById(id);
+  }
 }
