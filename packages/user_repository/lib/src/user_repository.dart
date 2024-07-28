@@ -27,4 +27,17 @@ class UserRepository {
         .map((e) => ShortProfile.fromJson(e as Map<String, dynamic>))
         .toList();
   }
+
+  Future<List<ShortProfile>> fetchUsersByUnitId(String unitId,
+      [int length = 0]) async {
+    final jsonUsers = await _apiClient.fetchUnitUsers(
+      unitId,
+      userLimit,
+      (length / userLimit).ceil() + 1,
+    );
+
+    return jsonUsers
+        .map((e) => ShortProfile.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
 }

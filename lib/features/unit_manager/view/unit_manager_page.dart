@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:formz/formz.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
 import 'package:tctt_mobile/core/utils/extensions.dart';
+import 'package:tctt_mobile/features/member_manager/view/member_manager_page.dart';
 import 'package:tctt_mobile/features/unit_manager/bloc/unit_manager_bloc.dart';
 import 'package:tctt_mobile/features/unit_manager/widgets/create_unit_container.dart';
 import 'package:tctt_mobile/shared/enums.dart';
@@ -82,10 +83,12 @@ class WhiteButton extends StatelessWidget {
     required IconData icon,
     required VoidCallback? onPressed,
   })  : _text = text,
-        _icon = icon;
+        _icon = icon,
+        _onPressed = onPressed;
 
   final String _text;
   final IconData _icon;
+  final VoidCallback? _onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +97,7 @@ class WhiteButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: _onPressed,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             elevation: 1,
@@ -287,10 +290,22 @@ class UnitManagerPage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      WhiteButton(
-                        text: 'Thành viên',
-                        icon: Icons.group,
-                        onPressed: () {},
+                      BlocSelector<UnitManagerBloc, UnitManagerState, Unit>(
+                        selector: (state) {
+                          return state.currentUnit;
+                        },
+                        builder: (context, unit) {
+                          return WhiteButton(
+                            text: 'Thành viên',
+                            icon: Icons.group,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MemberManager.route(unit.id,
+                                      "${unit.type["name"]} ${unit.name}"));
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -305,14 +320,21 @@ class UnitManagerPage extends StatelessWidget {
                             final currentUnit = state.childUnits[index];
                             return Slidable(
                               key: ValueKey(index),
-                              startActionPane: const ActionPane(
-                                motion: ScrollMotion(),
+                              startActionPane: ActionPane(
+                                motion: const ScrollMotion(),
                                 children: [
                                   SlidableAction(
-                                    onPressed: null,
-                                    backgroundColor: Color(0xFF2ecc71),
+                                    onPressed: (_) {
+                                      Navigator.push(
+                                          context,
+                                          MemberManager.route(
+                                            state.currentUnit.id,
+                                            "${currentUnit.type["name"]} ${currentUnit.name}",
+                                          ));
+                                    },
+                                    backgroundColor: const Color(0xFF2ecc71),
                                     foregroundColor: Colors.white,
-                                    borderRadius: BorderRadius.only(
+                                    borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(4),
                                       bottomLeft: Radius.circular(4),
                                     ),
@@ -334,17 +356,17 @@ class UnitManagerPage extends StatelessWidget {
                                     icon: Icons.delete,
                                     label: 'Xoá',
                                   ),
-                                  const SlidableAction(
-                                    onPressed: null,
-                                    backgroundColor: Color(0xFF3498db),
-                                    foregroundColor: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(4),
-                                      bottomRight: Radius.circular(4),
-                                    ),
-                                    icon: Icons.edit,
-                                    label: 'Sửa',
-                                  ),
+                                  // const SlidableAction(
+                                  //   onPressed: null,
+                                  //   backgroundColor: Color(0xFF3498db),
+                                  //   foregroundColor: Colors.white,
+                                  //   borderRadius: BorderRadius.only(
+                                  //     topRight: Radius.circular(4),
+                                  //     bottomRight: Radius.circular(4),
+                                  //   ),
+                                  //   icon: Icons.edit,
+                                  //   label: 'Sửa',
+                                  // ),
                                 ],
                               ),
                               child: UnitItem(

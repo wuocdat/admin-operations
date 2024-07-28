@@ -13,6 +13,7 @@ class UserApiClient {
 
   static const userUrl = "/auth/current";
   static const searchUser = "/users/all";
+  static const userList = "/users";
 
   final Dio _dio;
 
@@ -38,6 +39,18 @@ class UserApiClient {
         'page': currentPage,
       },
     );
+
+    final result = Handler.parseResponse(response) as List;
+
+    return result;
+  }
+
+  Future<List> fetchUnitUsers(String unitId, int limit, [int page = 1]) async {
+    final response = await _dio.get(userList, queryParameters: {
+      "unit": unitId,
+      "pageSize": limit,
+      "currentPage": page,
+    });
 
     final result = Handler.parseResponse(response) as List;
 

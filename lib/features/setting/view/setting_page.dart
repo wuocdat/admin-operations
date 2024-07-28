@@ -74,14 +74,21 @@ class SettingPage extends StatelessWidget {
                           });
                     },
                   ),
-                  ContentButton(
-                      text: 'Thành viên',
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const MemberManager()));
-                      }),
+                  BlocSelector<AuthenticationBloc, AuthenticationState, Unit>(
+                    selector: (state) {
+                      return state.user.unit;
+                    },
+                    builder: (context, unit) {
+                      return ContentButton(
+                          text: 'Thành viên',
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MemberManager.route(unit.id,
+                                    "${unit.type["name"]} ${unit.name}"));
+                          });
+                    },
+                  ),
                 ],
               ),
               const Spacer(),

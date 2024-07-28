@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
+import 'package:tctt_mobile/features/member_manager/bloc/member_manager_bloc.dart';
+import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
+import 'package:user_repository/user_repository.dart';
 
-class CustomContainer extends StatelessWidget {
-  const CustomContainer({
+class MemberItem extends StatelessWidget {
+  const MemberItem({
     super.key,
     required String name,
     required String role,
@@ -23,7 +28,7 @@ class CustomContainer extends StatelessWidget {
         color: Colors.white,
       ),
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(12, 8, 12, 8),
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -87,7 +92,21 @@ class CustomContainer extends StatelessWidget {
 }
 
 class MemberManager extends StatelessWidget {
-  const MemberManager({super.key});
+  const MemberManager({super.key, required this.currentUnitName});
+
+  static Route<void> route(String unitId, String currentUnitName) {
+    return MaterialPageRoute<void>(
+      builder: (_) => BlocProvider(
+        create: (context) => MemberManagerBloc(
+          userRepository: RepositoryProvider.of<UserRepository>(context),
+          unitId: unitId,
+        )..add(const UserFetchedEvent()),
+        child: MemberManager(currentUnitName: currentUnitName),
+      ),
+    );
+  }
+
+  final String currentUnitName;
 
   @override
   Widget build(BuildContext context) {
@@ -116,15 +135,15 @@ class MemberManager extends StatelessWidget {
             color: Colors.white,
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-              child: ListView(
-                padding: EdgeInsets.zero,
-                scrollDirection: Axis.vertical,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.max,
                 children: [
-                  const Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 4),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 4),
                     child: Text(
-                      'Thành phố Đà Nẵng',
-                      style: TextStyle(
+                      currentUnitName.capitalize(),
+                      style: const TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
                         fontSize: 16,
                         letterSpacing: 0,
@@ -169,16 +188,33 @@ class MemberManager extends StatelessWidget {
                     thickness: 1,
                     color: Colors.grey,
                   ),
-                  CustomContainer(
-                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
-                  CustomContainer(
-                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
-                  CustomContainer(
-                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
-                  CustomContainer(
-                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
-                  CustomContainer(
-                      name: 'Nguyen Van A', role: 'admin', onPressed: () {}),
+                  Expanded(
+                      child: BlocBuilder<MemberManagerBloc, MemberManagerState>(
+                    builder: (context, state) {
+                      return RichListView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        hasReachedMax: state.hasReachedMax,
+                        itemCount: state.users.length,
+                        onRefresh: () async {
+                          context
+                              .read<MemberManagerBloc>()
+                              .add(const UserReFetchedEvent());
+                        },
+                        itemBuilder: (index) {
+                          final currentUser = state.users[index];
+                          return MemberItem(
+                              name: currentUser.name,
+                              role: currentUser.username,
+                              onPressed: () {});
+                        },
+                        onReachedEnd: () {
+                          context
+                              .read<MemberManagerBloc>()
+                              .add(const UserFetchedEvent());
+                        },
+                      );
+                    },
+                  ))
                 ],
               ),
             ),
