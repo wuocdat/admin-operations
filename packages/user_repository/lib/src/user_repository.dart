@@ -15,6 +15,11 @@ class UserRepository {
     return User.fromJson(userData);
   }
 
+  Future<void> createUser(String name, String username, String unitId,
+      String password, String role) async {
+    await _apiClient.createNewUser(name, username, password, unitId, role);
+  }
+
   Future<List<ShortProfile>> searchUsers(String username,
       [int length = 0]) async {
     final jsonUsers = await _apiClient.searchUsers(

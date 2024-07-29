@@ -6,6 +6,8 @@ class UserRequestFailure implements Exception {}
 
 class UserNotFoundFailure implements Exception {}
 
+class CreateNewUserFailure implements Exception {}
+
 class UserApiClient {
   UserApiClient({Dio? dio})
       : _dio = dio ?? Dio(ApiConfig.options)
@@ -55,5 +57,18 @@ class UserApiClient {
     final result = Handler.parseResponse(response) as List;
 
     return result;
+  }
+
+  Future<void> createNewUser(String name, String username, String password,
+      String unitId, String role) async {
+    final response = await _dio.post(userList, data: {
+      "name": name,
+      "username": username,
+      "password": password,
+      "role": role,
+      "unit": unitId,
+    });
+
+    if (response.statusCode != 201) throw CreateNewUserFailure();
   }
 }

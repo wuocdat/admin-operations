@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
 import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/features/member_manager/bloc/member_manager_bloc.dart';
+import 'package:tctt_mobile/features/new_member/view/new_member_page.dart';
 import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -92,7 +93,8 @@ class MemberItem extends StatelessWidget {
 }
 
 class MemberManager extends StatelessWidget {
-  const MemberManager({super.key, required this.currentUnitName});
+  const MemberManager(
+      {super.key, required this.unitId, required this.currentUnitName});
 
   static Route<void> route(String unitId, String currentUnitName) {
     return MaterialPageRoute<void>(
@@ -101,12 +103,13 @@ class MemberManager extends StatelessWidget {
           userRepository: RepositoryProvider.of<UserRepository>(context),
           unitId: unitId,
         )..add(const UserFetchedEvent()),
-        child: MemberManager(currentUnitName: currentUnitName),
+        child: MemberManager(currentUnitName: currentUnitName, unitId: unitId),
       ),
     );
   }
 
   final String currentUnitName;
+  final String unitId;
 
   @override
   Widget build(BuildContext context) {
@@ -151,12 +154,12 @@ class MemberManager extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Padding(
+                        const Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                           child: Icon(
                             Icons.person_add_rounded,
@@ -165,20 +168,34 @@ class MemberManager extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          child: Padding(
-                            padding:
-                                EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-                            child: Text(
-                              'Thêm thành viên',
-                              style: TextStyle(
-                                fontFamily: 'Plus Jakarta Sans',
-                                color: Color(0xFF14181B),
-                                fontSize: 14,
-                                letterSpacing: 0,
-                                fontWeight: FontWeight.w500,
+                          child: Builder(builder: (context) {
+                            return InkWell(
+                              onTap: () async {
+                                await Navigator.push(
+                                    context,
+                                    NewMemberPage.route(
+                                        unitId, currentUnitName));
+                                if (!context.mounted) return;
+                                context
+                                    .read<MemberManagerBloc>()
+                                    .add(const UserReFetchedEvent());
+                              },
+                              child: const Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    12, 0, 12, 0),
+                                child: Text(
+                                  'Thêm thành viên',
+                                  style: TextStyle(
+                                    fontFamily: 'Plus Jakarta Sans',
+                                    color: Color(0xFF14181B),
+                                    fontSize: 14,
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          }),
                         ),
                       ],
                     ),

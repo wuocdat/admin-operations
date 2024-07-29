@@ -284,3 +284,73 @@ class BaseInput extends StatelessWidget {
     );
   }
 }
+
+class PasswordInput extends StatelessWidget {
+  const PasswordInput({
+    super.key,
+    String? labelText,
+    String? hintText,
+    String? errorText,
+    ValueChanged<String>? onChanged,
+  })  : _labelText = labelText,
+        _hintText = hintText,
+        _errorText = errorText,
+        _onChanged = onChanged;
+
+  final String? _labelText;
+  final String? _hintText;
+  final String? _errorText;
+  final ValueChanged<String>? _onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextField(
+      obscureText: true,
+      onChanged: _onChanged,
+      decoration: InputDecoration(
+        hintText: _hintText,
+        labelText: _labelText,
+        errorText: _errorText,
+        alignLabelWithHint: true,
+        hintStyle: theme.textTheme.labelLarge?.copyWith(
+          color: Colors.grey[400],
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(
+            color: AppColors.secondaryBackground,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: theme.primaryColor,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: theme.colorScheme.error,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: theme.colorScheme.error,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        contentPadding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 12),
+      ),
+      style: theme.textTheme.bodyMedium?.copyWith(
+        fontFamily: 'Plus Jakarta Sans',
+        letterSpacing: 0,
+      ),
+      cursorColor: theme.primaryColor,
+    );
+  }
+}
