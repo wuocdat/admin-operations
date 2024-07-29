@@ -15,6 +15,7 @@ class MemberManagerBloc extends Bloc<MemberManagerEvent, MemberManagerState> {
         super(const MemberManagerState()) {
     on<UserFetchedEvent>(_onUserFetched);
     on<UserReFetchedEvent>(_onUserRefetched);
+    on<UserDeletedEvent>(_onUserDeleted);
   }
 
   final UserRepository _userRepository;
@@ -70,6 +71,22 @@ class MemberManagerBloc extends Bloc<MemberManagerEvent, MemberManagerState> {
     } catch (e) {
       logger.severe(e);
       emit(state.copyWith(status: FetchDataStatus.failure));
+    }
+  }
+
+  Future<void> _onUserDeleted(
+      UserDeletedEvent event, Emitter<MemberManagerState> emit) async {
+    emit(state.copyWith(
+      users: List.of(state.users)
+        ..removeWhere((user) => user.id == event.userId),
+      deleteStatus: FetchDataStatus.loading,
+    ));
+    try {
+      await _userRepository.deleteUser(event.userId);
+      emit(state.copyWith(deleteStatus: FetchDataStatus.success));
+    } catch (e) {
+      logger.severe(e);
+      emit(state.copyWith(deleteStatus: FetchDataStatus.failure));
     }
   }
 }

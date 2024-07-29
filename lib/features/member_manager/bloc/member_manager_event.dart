@@ -20,3 +20,12 @@ final class UserReFetchedEvent extends MemberManagerEvent {
   @override
   List<Object> get props => [];
 }
+
+final class UserDeletedEvent extends MemberManagerEvent {
+  const UserDeletedEvent(this.userId);
+
+  final String userId;
+
+  @override
+  List<Object> get props => [userId];
+}

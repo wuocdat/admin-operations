@@ -4,6 +4,8 @@ import 'package:tctt_mobile/core/theme/colors.dart';
 import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/features/member_manager/bloc/member_manager_bloc.dart';
 import 'package:tctt_mobile/features/new_member/view/new_member_page.dart';
+import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/widgets/loader.dart';
 import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -80,11 +82,11 @@ class MemberItem extends StatelessWidget {
                 ),
               ),
             ),
-            const Icon(
-              Icons.more_vert,
-              color: AppColors.primary,
-              size: 24,
-            ),
+            // const Icon(
+            //   Icons.more_vert,
+            //   color: AppColors.primary,
+            //   size: 24,
+            // ),
           ],
         ),
       ),
@@ -208,28 +210,49 @@ class MemberManager extends StatelessWidget {
                   Expanded(
                       child: BlocBuilder<MemberManagerBloc, MemberManagerState>(
                     builder: (context, state) {
-                      return RichListView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        hasReachedMax: state.hasReachedMax,
-                        itemCount: state.users.length,
-                        onRefresh: () async {
-                          context
-                              .read<MemberManagerBloc>()
-                              .add(const UserReFetchedEvent());
-                        },
-                        itemBuilder: (index) {
-                          final currentUser = state.users[index];
-                          return MemberItem(
-                              name: currentUser.name,
-                              role: currentUser.username,
-                              onPressed: () {});
-                        },
-                        onReachedEnd: () {
-                          context
-                              .read<MemberManagerBloc>()
-                              .add(const UserFetchedEvent());
-                        },
-                      );
+                      switch (state.status) {
+                        case FetchDataStatus.initial:
+                          return const Loader();
+                        default:
+                          if (state.status.isLoading && state.users.isEmpty) {
+                            return const Loader();
+                          }
+                          return RichListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            hasReachedMax: state.hasReachedMax,
+                            itemCount: state.users.length,
+                            onRefresh: () async {
+                              context
+                                  .read<MemberManagerBloc>()
+                                  .add(const UserReFetchedEvent());
+                            },
+                            itemBuilder: (index) {
+                              final currentUser = state.users[index];
+                              return Dismissible(
+                                key: Key(currentUser.id),
+                                onDismissed: (direction) {
+                                  context
+                                      .read<MemberManagerBloc>()
+                                      .add(UserDeletedEvent(currentUser.id));
+                                },
+                                background: Container(
+                                  color: Colors.red,
+                                  child: const Icon(Icons.delete,
+                                      color: Colors.white),
+                                ),
+                                child: MemberItem(
+                                    name: currentUser.name,
+                                    role: currentUser.username,
+                                    onPressed: () {}),
+                              );
+                            },
+                            onReachedEnd: () {
+                              context
+                                  .read<MemberManagerBloc>()
+                                  .add(const UserFetchedEvent());
+                            },
+                          );
+                      }
                     },
                   ))
                 ],

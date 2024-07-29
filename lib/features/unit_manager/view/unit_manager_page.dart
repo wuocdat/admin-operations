@@ -8,6 +8,7 @@ import 'package:tctt_mobile/features/member_manager/view/member_manager_page.dar
 import 'package:tctt_mobile/features/unit_manager/bloc/unit_manager_bloc.dart';
 import 'package:tctt_mobile/features/unit_manager/widgets/create_unit_container.dart';
 import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/widgets/loader.dart';
 import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
 import 'package:units_repository/units_repository.dart';
 
@@ -312,80 +313,91 @@ class UnitManagerPage extends StatelessWidget {
                   Expanded(
                     child: BlocBuilder<UnitManagerBloc, UnitManagerState>(
                       builder: (context, state) {
-                        return RichListView(
-                          hasReachedMax: true,
-                          itemCount: state.childUnits.length,
-                          onReachedEnd: () {},
-                          itemBuilder: (index) {
-                            final currentUnit = state.childUnits[index];
-                            return Slidable(
-                              key: ValueKey(index),
-                              startActionPane: ActionPane(
-                                motion: const ScrollMotion(),
-                                children: [
-                                  SlidableAction(
-                                    onPressed: (_) {
-                                      Navigator.push(
-                                          context,
-                                          MemberManager.route(
-                                            state.currentUnit.id,
-                                            "${currentUnit.type["name"]} ${currentUnit.name}",
+                        switch (state.status) {
+                          case FetchDataStatus.initial:
+                            return const Loader();
+                          default:
+                            if (state.status.isLoading &&
+                                state.childUnits.isEmpty) {
+                              return const Loader();
+                            }
+                            return RichListView(
+                              hasReachedMax: true,
+                              itemCount: state.childUnits.length,
+                              onReachedEnd: () {},
+                              itemBuilder: (index) {
+                                final currentUnit = state.childUnits[index];
+                                return Slidable(
+                                  key: ValueKey(index),
+                                  startActionPane: ActionPane(
+                                    motion: const ScrollMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        onPressed: (_) {
+                                          Navigator.push(
+                                              context,
+                                              MemberManager.route(
+                                                state.currentUnit.id,
+                                                "${currentUnit.type["name"]} ${currentUnit.name}",
+                                              ));
+                                        },
+                                        backgroundColor:
+                                            const Color(0xFF2ecc71),
+                                        foregroundColor: Colors.white,
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(4),
+                                          bottomLeft: Radius.circular(4),
+                                        ),
+                                        icon: Icons.manage_accounts,
+                                        label: 'Thành viên',
+                                      ),
+                                    ],
+                                  ),
+                                  endActionPane: ActionPane(
+                                    motion: const ScrollMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        onPressed: (_) {
+                                          context.read<UnitManagerBloc>().add(
+                                              UnitDeletedEvent(currentUnit.id));
+                                        },
+                                        backgroundColor:
+                                            const Color(0xFFe74c3c),
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.delete,
+                                        label: 'Xoá',
+                                      ),
+                                      // const SlidableAction(
+                                      //   onPressed: null,
+                                      //   backgroundColor: Color(0xFF3498db),
+                                      //   foregroundColor: Colors.white,
+                                      //   borderRadius: BorderRadius.only(
+                                      //     topRight: Radius.circular(4),
+                                      //     bottomRight: Radius.circular(4),
+                                      //   ),
+                                      //   icon: Icons.edit,
+                                      //   label: 'Sửa',
+                                      // ),
+                                    ],
+                                  ),
+                                  child: UnitItem(
+                                    text:
+                                        "${currentUnit.type["name"]} ${currentUnit.name}"
+                                            .capitalize(),
+                                    onPressed: () {
+                                      context
+                                          .read<UnitManagerBloc>()
+                                          .add(ChildUnitsFetchedEvent(
+                                            parentUnitId: currentUnit.id,
+                                            parentUnitTypeId:
+                                                currentUnit.type["_id"],
                                           ));
                                     },
-                                    backgroundColor: const Color(0xFF2ecc71),
-                                    foregroundColor: Colors.white,
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(4),
-                                      bottomLeft: Radius.circular(4),
-                                    ),
-                                    icon: Icons.manage_accounts,
-                                    label: 'Thành viên',
                                   ),
-                                ],
-                              ),
-                              endActionPane: ActionPane(
-                                motion: const ScrollMotion(),
-                                children: [
-                                  SlidableAction(
-                                    onPressed: (_) {
-                                      context.read<UnitManagerBloc>().add(
-                                          UnitDeletedEvent(currentUnit.id));
-                                    },
-                                    backgroundColor: const Color(0xFFe74c3c),
-                                    foregroundColor: Colors.white,
-                                    icon: Icons.delete,
-                                    label: 'Xoá',
-                                  ),
-                                  // const SlidableAction(
-                                  //   onPressed: null,
-                                  //   backgroundColor: Color(0xFF3498db),
-                                  //   foregroundColor: Colors.white,
-                                  //   borderRadius: BorderRadius.only(
-                                  //     topRight: Radius.circular(4),
-                                  //     bottomRight: Radius.circular(4),
-                                  //   ),
-                                  //   icon: Icons.edit,
-                                  //   label: 'Sửa',
-                                  // ),
-                                ],
-                              ),
-                              child: UnitItem(
-                                text:
-                                    "${currentUnit.type["name"]} ${currentUnit.name}"
-                                        .capitalize(),
-                                onPressed: () {
-                                  context
-                                      .read<UnitManagerBloc>()
-                                      .add(ChildUnitsFetchedEvent(
-                                        parentUnitId: currentUnit.id,
-                                        parentUnitTypeId:
-                                            currentUnit.type["_id"],
-                                      ));
-                                },
-                              ),
+                                );
+                              },
                             );
-                          },
-                        );
+                        }
                       },
                     ),
                   ),

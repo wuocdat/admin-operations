@@ -8,6 +8,8 @@ class UserNotFoundFailure implements Exception {}
 
 class CreateNewUserFailure implements Exception {}
 
+class DeleteUserFailure implements Exception {}
+
 class UserApiClient {
   UserApiClient({Dio? dio})
       : _dio = dio ?? Dio(ApiConfig.options)
@@ -70,5 +72,13 @@ class UserApiClient {
     });
 
     if (response.statusCode != 201) throw CreateNewUserFailure();
+  }
+
+  Future<void> deleteUser(String userId) async {
+    final response = await _dio.patch("$userList/$userId", data: {
+      "isActive": false,
+    });
+
+    if (response.statusCode != 200) throw DeleteUserFailure();
   }
 }
