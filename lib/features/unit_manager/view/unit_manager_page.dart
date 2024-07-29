@@ -337,7 +337,7 @@ class UnitManagerPage extends StatelessWidget {
                                           Navigator.push(
                                               context,
                                               MemberManager.route(
-                                                state.currentUnit.id,
+                                                currentUnit.id,
                                                 "${currentUnit.type["name"]} ${currentUnit.name}",
                                               ));
                                         },

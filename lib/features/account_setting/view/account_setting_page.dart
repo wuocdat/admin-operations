@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tctt_mobile/core/theme/colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
+import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/shared/widgets/border_container.dart';
-import 'package:tctt_mobile/shared/widgets/contained_button.dart';
 
 class BigPadding extends StatelessWidget {
   const BigPadding({
@@ -55,17 +56,17 @@ class SmallPadding extends StatelessWidget {
   }
 }
 
-class Devider extends StatelessWidget {
-  const Devider({super.key});
+// class Devider extends StatelessWidget {
+//   const Devider({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const Divider(
-      thickness: 1,
-      color: AppColors.secondaryBackground,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Divider(
+//       thickness: 1,
+//       color: AppColors.secondaryBackground,
+//     );
+//   }
+// }
 
 class AccountSetting extends StatelessWidget {
   const AccountSetting({super.key});
@@ -112,73 +113,96 @@ class AccountSetting extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            BigPadding(text: 'Thông tin cá nhân'),
-                            SmallPadding(text: 'Tài khoản: Nguyễn Văn A'),
-                            SmallPadding(text: 'Năm sinh: 2000'),
-                            SmallPadding(text: 'SDT:'),
-                            SmallPadding(text: 'Đơn vị: Ban chỉ đạo 35'),
-                            Devider(),
-                            CustomButton(
-                                text: 'Cập nhật ',
-                                icon: Icons.edit_square,
-                                onPressed: () {}),
+                            const BigPadding(text: 'Thông tin cá nhân'),
+                            BlocSelector<AuthenticationBloc,
+                                AuthenticationState, String>(
+                              selector: (state) {
+                                return state.user.name;
+                              },
+                              builder: (context, state) {
+                                return SmallPadding(text: 'Tài khoản: $state');
+                              },
+                            ),
+                            BlocSelector<AuthenticationBloc,
+                                AuthenticationState, String>(
+                              selector: (state) {
+                                return state.user.phoneNumber;
+                              },
+                              builder: (context, phoneNumber) {
+                                return SmallPadding(text: 'SĐT: $phoneNumber');
+                              },
+                            ),
+                            BlocSelector<AuthenticationBloc,
+                                AuthenticationState, String>(
+                              selector: (state) {
+                                return state.user.unit.name.capitalize();
+                              },
+                              builder: (context, state) {
+                                return SmallPadding(text: 'Đơn vị: $state');
+                              },
+                            ),
+                            // const Devider(),
+                            // CustomButton(
+                            //     text: 'Cập nhật ',
+                            //     icon: Icons.edit_square,
+                            //     onPressed: () {}),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                    child: BorderContainer(
-                      child: Align(
-                        alignment: AlignmentDirectional(0, 0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              BigPadding(text: 'Bảo mật'),
-                              SmallPadding(text: 'Quyền: Quản lý'),
-                              Devider(),
-                              CustomButton(
-                                  text: 'Thay đổi mật khẩu',
-                                  icon: Icons.password_rounded,
-                                  onPressed: () {}),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
-                    child: BorderContainer(
-                      child: Align(
-                        alignment: AlignmentDirectional(0, 0),
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              BigPadding(text: 'Xác thực 2 lớp'),
-                              SmallPadding(text: 'Trạng thái: Đã kích hoạt'),
-                              Devider(),
-                              CustomButton(
-                                  text: 'Ngừng kích hoạt',
-                                  icon: Icons.privacy_tip_outlined,
-                                  onPressed: () {}),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                  //   child: BorderContainer(
+                  //     child: Align(
+                  //       alignment: AlignmentDirectional(0, 0),
+                  //       child: Padding(
+                  //         padding: EdgeInsets.all(8),
+                  //         child: Column(
+                  //           mainAxisSize: MainAxisSize.max,
+                  //           mainAxisAlignment: MainAxisAlignment.center,
+                  //           crossAxisAlignment: CrossAxisAlignment.start,
+                  //           children: [
+                  //             BigPadding(text: 'Bảo mật'),
+                  //             SmallPadding(text: 'Quyền: Quản lý'),
+                  //             Devider(),
+                  //             CustomButton(
+                  //                 text: 'Thay đổi mật khẩu',
+                  //                 icon: Icons.password_rounded,
+                  //                 onPressed: () {}),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: EdgeInsetsDirectional.fromSTEB(0, 16, 0, 0),
+                  //   child: BorderContainer(
+                  //     child: Align(
+                  //       alignment: AlignmentDirectional(0, 0),
+                  //       child: Padding(
+                  //         padding: EdgeInsets.all(8),
+                  //         child: Column(
+                  //           mainAxisSize: MainAxisSize.max,
+                  //           mainAxisAlignment: MainAxisAlignment.center,
+                  //           crossAxisAlignment: CrossAxisAlignment.start,
+                  //           children: [
+                  //             BigPadding(text: 'Xác thực 2 lớp'),
+                  //             SmallPadding(text: 'Trạng thái: Đã kích hoạt'),
+                  //             Devider(),
+                  //             CustomButton(
+                  //                 text: 'Ngừng kích hoạt',
+                  //                 icon: Icons.privacy_tip_outlined,
+                  //                 onPressed: () {}),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
