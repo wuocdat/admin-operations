@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:api_client/api_client.dart';
 import 'package:mail_repository/src/models/models.dart';
 
+const mailLimit = 20;
+
 class MailRepository {
   MailRepository({MailApiClient? mailApiClient})
       : _mailApiClient = mailApiClient ?? MailApiClient();
@@ -33,5 +35,12 @@ class MailRepository {
       updatedAt: 'updatedAt',
       updatedBy: 'updatedBy',
     );
+  }
+
+  Future<List<Mail>> fetchReceivedMails([int mailLength = 0]) async {
+    final mailsJson = await _mailApiClient.getReceivedMails(
+        mailLimit, (mailLength / mailLimit).ceil() + 1);
+
+    return mailsJson.map((e) => Mail.fromJson(e)).toList();
   }
 }
