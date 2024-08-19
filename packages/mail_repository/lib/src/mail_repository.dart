@@ -50,4 +50,16 @@ class MailRepository {
 
     return mailsJson.map((e) => SentMailType.fromJson(e)).toList();
   }
+
+  Future<Mail> getReceivedMailDetail(String mailId) async {
+    final mailJson = await _mailApiClient.getReceivedMailDetail(mailId);
+
+    return Mail.fromJson(mailJson);
+  }
+
+  Future<SentMailType> getSentMailDetail(String mailId) async {
+    final mailJson = await _mailApiClient.getSentMailDetail(mailId);
+
+    return SentMailType.fromJson(mailJson);
+  }
 }

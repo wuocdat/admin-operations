@@ -33,7 +33,9 @@ final class Mail extends Equatable {
   static const empty = Mail(
     content: '',
     createdAt: '',
-    createdBy: {},
+    createdBy: {
+      "unit": {"name": ""}
+    },
     files: [],
     important: false,
     id: '',

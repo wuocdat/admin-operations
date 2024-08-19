@@ -51,4 +51,20 @@ class MailApiClient {
 
     return result;
   }
+
+  Future<Map<String, dynamic>> getReceivedMailDetail(String maiId) async {
+    final response = await _dio.get("${MailUrl.receivedMail}/$maiId");
+
+    final result = Handler.parseResponse(response) as Map<String, dynamic>;
+
+    return result;
+  }
+
+  Future<Map<String, dynamic>> getSentMailDetail(String maiId) async {
+    final response = await _dio.get("${MailUrl.sentMail}/$maiId");
+
+    final result = Handler.parseResponse(response) as Map<String, dynamic>;
+
+    return result;
+  }
 }

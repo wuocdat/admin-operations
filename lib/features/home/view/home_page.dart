@@ -9,7 +9,6 @@ import 'package:tctt_mobile/features/conversation_center/view/conversation_cente
 import 'package:tctt_mobile/features/dashboard/view/dashboard_page.dart';
 import 'package:tctt_mobile/features/global/bloc/global_bloc.dart';
 import 'package:tctt_mobile/features/home/cubit/home_cubit.dart';
-import 'package:tctt_mobile/features/home/widgets/notifications_bell.dart';
 import 'package:tctt_mobile/features/mail/view/mail_page.dart';
 import 'package:tctt_mobile/features/received_task_detail/view/received_task_detail_page.dart';
 import 'package:tctt_mobile/features/target/view/target_page.dart';

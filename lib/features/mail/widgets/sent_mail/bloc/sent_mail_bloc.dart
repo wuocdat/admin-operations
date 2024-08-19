@@ -37,8 +37,7 @@ class SentMailBloc extends Bloc<SentMailEvent, SentMailState> {
               status: FetchDataStatus.success,
               mails: List.of(state.mails)..addAll(mails),
             ));
-    } catch (e) {
-      print(e);
+    } catch (_) {
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }

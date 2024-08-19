@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mail_repository/mail_repository.dart';
 import 'package:tctt_mobile/features/mail/widgets/received_mail/bloc/received_mail_bloc.dart';
+import 'package:tctt_mobile/features/received_mail_detail.dart/view/received_mail_detail_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/widgets/loader.dart';
 import 'package:tctt_mobile/shared/widgets/msg_item.dart';
@@ -60,10 +61,13 @@ class ReceivedMail extends StatelessWidget {
                           itemBuilder: (index) {
                             final currentMail = state.mails[index];
                             return MessageItem(
-                                name: currentMail.createdBy['name'],
-                                title: currentMail.createdBy['unit']?["name"],
-                                content: currentMail.content,
-                                time: currentMail.createdAt);
+                              name: currentMail.createdBy['name'],
+                              title: currentMail.createdBy['unit']?["name"],
+                              content: currentMail.content,
+                              time: currentMail.createdAt,
+                              onTap: () => Navigator.push(context,
+                                  ReceivedMailDetailPage.route(currentMail.id)),
+                            );
                           },
                           onReachedEnd: () {
                             context
