@@ -37,4 +37,18 @@ class MailApiClient {
 
     return result;
   }
+
+  Future<List> getSentMails(int limit, [int currentPage = 1]) async {
+    final response = await _dio.get(MailUrl.sentMail, queryParameters: {
+      "pageSize": limit,
+      "currentPage": currentPage,
+      "shortBy": jsonEncode({
+        "createdAt": -1,
+      })
+    });
+
+    final result = Handler.parseResponse(response) as List;
+
+    return result;
+  }
 }

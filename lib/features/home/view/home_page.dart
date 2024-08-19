@@ -103,10 +103,10 @@ class HomePage extends StatelessWidget {
                 style: theme.textTheme.headlineMedium,
               ),
               actions: [
-                const Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-                  child: NotificationBell(count: 2),
-                ),
+                // const Padding(
+                //   padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+                //   child: NotificationBell(count: 2),
+                // ),
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
                   child: state.index.isHome
@@ -192,10 +192,12 @@ class HomePage extends StatelessWidget {
                 ),
                 const NavigationDestination(
                   selectedIcon: Badge(
+                    isLabelVisible: false,
                     label: Text('5'),
                     child: Icon(Icons.messenger),
                   ),
                   icon: Badge(
+                    isLabelVisible: false,
                     label: Text('5'),
                     child: Icon(Icons.messenger_outline),
                   ),

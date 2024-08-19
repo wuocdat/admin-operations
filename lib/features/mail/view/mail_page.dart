@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/mail/bloc/mail_container_bloc.dart';
 import 'package:tctt_mobile/features/mail/widgets/received_mail/received_mail.dart';
-import 'package:tctt_mobile/features/mail/widgets/sent_mail.dart';
+import 'package:tctt_mobile/features/mail/widgets/sent_mail/sent_mail.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/widgets/has_permission.dart';
 import 'package:tctt_mobile/shared/widgets/head_bar.dart';

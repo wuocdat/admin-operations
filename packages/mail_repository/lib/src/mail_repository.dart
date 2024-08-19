@@ -43,4 +43,11 @@ class MailRepository {
 
     return mailsJson.map((e) => Mail.fromJson(e)).toList();
   }
+
+  Future<List<SentMailType>> fetchSentMails([int mailLength = 0]) async {
+    final mailsJson = await _mailApiClient.getSentMails(
+        mailLimit, (mailLength / mailLimit).ceil() + 1);
+
+    return mailsJson.map((e) => SentMailType.fromJson(e)).toList();
+  }
 }
