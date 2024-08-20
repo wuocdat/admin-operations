@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mail_repository/mail_repository.dart';
 import 'package:tctt_mobile/features/mail/widgets/sent_mail/bloc/sent_mail_bloc.dart';
+import 'package:tctt_mobile/features/sent_mail_detail/view/sent_mail_detail_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/widgets/loader.dart';
 import 'package:tctt_mobile/shared/widgets/msg_item.dart';
@@ -60,12 +61,15 @@ class SentMail extends StatelessWidget {
                           itemBuilder: (index) {
                             final currentMail = state.mails[index];
                             return MessageItem(
-                                name: currentMail.receivers
-                                    .map((item) => item['name'])
-                                    .join(', '),
-                                title: currentMail.name,
-                                content: currentMail.content,
-                                time: currentMail.createdAt);
+                              name: currentMail.receivers
+                                  .map((item) => item['name'])
+                                  .join(', '),
+                              title: currentMail.name,
+                              content: currentMail.content,
+                              time: currentMail.createdAt,
+                              onTap: () => Navigator.push(context,
+                                  SentMailDetailPage.route(currentMail.id)),
+                            );
                           },
                           onReachedEnd: () {
                             context

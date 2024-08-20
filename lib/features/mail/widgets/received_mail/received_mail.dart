@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mail_repository/mail_repository.dart';
 import 'package:tctt_mobile/features/mail/widgets/received_mail/bloc/received_mail_bloc.dart';
-import 'package:tctt_mobile/features/received_mail_detail.dart/view/received_mail_detail_page.dart';
+import 'package:tctt_mobile/features/received_mail_detail/view/received_mail_detail_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/widgets/loader.dart';
 import 'package:tctt_mobile/shared/widgets/msg_item.dart';

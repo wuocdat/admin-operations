@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mail_repository/mail_repository.dart';
-import 'package:tctt_mobile/features/received_mail_detail.dart/cubit/received_mail_detail_cubit.dart';
+import 'package:tctt_mobile/features/received_mail_detail/cubit/received_mail_detail_cubit.dart';
 import 'package:tctt_mobile/shared/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/shared/widgets/content_container.dart';
 
