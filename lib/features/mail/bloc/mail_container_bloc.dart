@@ -7,12 +7,18 @@ part 'mail_container_state.dart';
 class MailContainerBloc extends Bloc<MailContainerEvent, MailContainerState> {
   MailContainerBloc() : super(const MailContainerState.receiver()) {
     on<ChangeModeEvent>(_onChangeMode);
+    on<ReloadIncreasedEvent>(_onReloadingCountIncreased);
   }
 
   void _onChangeMode(ChangeModeEvent event, Emitter<MailContainerState> emit) {
     emit(event.mode.isReceiverMode
         ? const MailContainerState.receiver()
         : const MailContainerState.sender());
+  }
+
+  void _onReloadingCountIncreased(
+      ReloadIncreasedEvent event, Emitter<MailContainerState> emit) {
+    emit(state.copyWith(reloadCount: state.reloadCount + 1));
   }
 }
 

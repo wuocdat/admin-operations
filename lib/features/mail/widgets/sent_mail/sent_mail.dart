@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mail_repository/mail_repository.dart';
+import 'package:tctt_mobile/features/mail/bloc/mail_container_bloc.dart';
 import 'package:tctt_mobile/features/mail/widgets/sent_mail/bloc/sent_mail_bloc.dart';
 import 'package:tctt_mobile/features/sent_mail_detail/view/sent_mail_detail_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
@@ -30,6 +31,13 @@ class SentMail extends StatelessWidget {
                     const SnackBar(content: Text("Đã xảy ra lỗi")),
                   );
               }
+            },
+          ),
+          BlocListener<MailContainerBloc, MailContainerState>(
+            listenWhen: (previous, current) =>
+                previous.reloadCount != current.reloadCount,
+            listener: (context, state) {
+              context.read<SentMailBloc>().add(const SentMailsFetchedEvent());
             },
           ),
         ],

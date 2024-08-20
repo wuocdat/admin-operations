@@ -15,3 +15,10 @@ final class ChangeModeEvent extends MailContainerEvent {
   @override
   List<Object> get props => [mode];
 }
+
+final class ReloadIncreasedEvent extends MailContainerEvent {
+  const ReloadIncreasedEvent();
+
+  @override
+  List<Object> get props => [];
+}

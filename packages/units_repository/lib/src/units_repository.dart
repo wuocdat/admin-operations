@@ -32,4 +32,13 @@ class UnitsRepository {
   Future<void> deleteUnitById(String id) async {
     await _unitsApiClient.deleteUnitById(id);
   }
+
+  Future<List<UnitNode>> getFullUnitTree() async {
+    final jsonList = await _unitsApiClient.getFullTree();
+
+    return jsonList.map((json) {
+      final unitNode = UnitNode.fromJson(json);
+      return unitNode;
+    }).toList();
+  }
 }

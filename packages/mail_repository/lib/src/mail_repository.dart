@@ -62,4 +62,14 @@ class MailRepository {
 
     return SentMailType.fromJson(mailJson);
   }
+
+  Future<void> sentMail(
+    String name,
+    String content,
+    List<String> units,
+    bool important,
+    List<String> filePaths,
+  ) async {
+    await _mailApiClient.createMail(name, content, important, units, filePaths);
+  }
 }

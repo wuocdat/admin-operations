@@ -59,4 +59,15 @@ class UnitsApiClient {
       return map;
     }).toList();
   }
+
+  Future<List<Map<String, dynamic>>> getFullTree() async {
+    final response = await _dio.get(UnitsUrl.unitTree);
+
+    final result = Handler.parseResponse(response) as List;
+
+    return result.map((dynamic json) {
+      final map = json as Map<String, dynamic>;
+      return map;
+    }).toList();
+  }
 }

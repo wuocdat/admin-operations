@@ -4,6 +4,7 @@ import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dar
 import 'package:tctt_mobile/features/mail/bloc/mail_container_bloc.dart';
 import 'package:tctt_mobile/features/mail/widgets/received_mail/received_mail.dart';
 import 'package:tctt_mobile/features/mail/widgets/sent_mail/sent_mail.dart';
+import 'package:tctt_mobile/features/new_mail/view/new_mail_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/widgets/has_permission.dart';
 import 'package:tctt_mobile/shared/widgets/head_bar.dart';
@@ -48,17 +49,14 @@ class MailPage extends StatelessWidget {
                           },
                           builder: (context, unitId) {
                             return IconButton(
-                              // onPressed: () async {
-                              //   await Navigator.push(
-                              //     context,
-                              //     NewTaskPage.route(unitId),
-                              //   );
-                              //   if (!context.mounted) return;
-                              //   context
-                              //       .read<TaskBloc>()
-                              //       .add(const ReloadIncreasedEvent());
-                              // },
-                              onPressed: () {},
+                              onPressed: () async {
+                                await Navigator.push(
+                                    context, NewMailPage.route(unitId));
+                                if (!context.mounted) return;
+                                context
+                                    .read<MailContainerBloc>()
+                                    .add(const ReloadIncreasedEvent());
+                              },
                               icon: const Icon(Icons.add),
                               color: Theme.of(context).primaryColor,
                             );

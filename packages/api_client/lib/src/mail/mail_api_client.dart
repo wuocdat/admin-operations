@@ -7,6 +7,8 @@ import 'package:dio/dio.dart';
 
 class MailNotFoundFailure implements Exception {}
 
+class MailRequestFailure implements Exception {}
+
 class MailApiClient {
   MailApiClient({Dio? dio})
       : _dio = dio ?? Dio(ApiConfig.options)
@@ -66,5 +68,33 @@ class MailApiClient {
     final result = Handler.parseResponse(response) as Map<String, dynamic>;
 
     return result;
+  }
+
+  Future<void> createMail(String name, String content, bool important,
+      List<String> units, List<String> filePaths) async {
+    final formData = FormData.fromMap({
+      'name': name,
+      'content': content,
+      'important': important,
+    });
+
+    formData.fields.addAll(units.map((unit) {
+      return MapEntry('receivers[]', unit);
+    }));
+
+    if (filePaths.isNotEmpty) {
+      formData.files.addAll(await Future.wait(filePaths.map((path) async {
+        return MapEntry('files', await MultipartFile.fromFile(path));
+      })));
+    }
+
+    final response = await _dio.post(
+      MailUrl.original,
+      data: formData,
+    );
+
+    if (response.statusCode != 201) {
+      throw MailRequestFailure();
+    }
   }
 }
