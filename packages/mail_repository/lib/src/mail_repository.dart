@@ -53,6 +53,8 @@ class MailRepository {
 
   Future<Mail> getReceivedMailDetail(String mailId) async {
     final mailJson = await _mailApiClient.getReceivedMailDetail(mailId);
+    final overall = await _mailApiClient.getOverall();
+    _controller.add(MailOverall.fromJson(overall));
 
     return Mail.fromJson(mailJson);
   }

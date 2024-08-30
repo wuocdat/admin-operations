@@ -30,7 +30,7 @@ class MailApiClient {
     final response = await _dio.get(MailUrl.receivedMail, queryParameters: {
       "pageSize": limit,
       "currentPage": currentPage,
-      "shortBy": jsonEncode({
+      "sortBy": jsonEncode({
         "createdAt": -1,
       })
     });
@@ -44,7 +44,7 @@ class MailApiClient {
     final response = await _dio.get(MailUrl.sentMail, queryParameters: {
       "pageSize": limit,
       "currentPage": currentPage,
-      "shortBy": jsonEncode({
+      "sortBy": jsonEncode({
         "createdAt": -1,
       })
     });

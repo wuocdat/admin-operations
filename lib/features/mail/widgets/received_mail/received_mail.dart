@@ -65,8 +65,17 @@ class ReceivedMail extends StatelessWidget {
                               title: currentMail.createdBy['unit']?["name"],
                               content: currentMail.content,
                               time: currentMail.createdAt,
-                              onTap: () => Navigator.push(context,
-                                  ReceivedMailDetailPage.route(currentMail.id)),
+                              highlighted: !currentMail.read,
+                              onTap: () async {
+                                await Navigator.push(
+                                    context,
+                                    ReceivedMailDetailPage.route(
+                                        currentMail.id));
+                                if (!context.mounted) return;
+                                context
+                                    .read<ReceivedMailBloc>()
+                                    .add(const ReceiverResetEvent());
+                              },
                             );
                           },
                           onReachedEnd: () {
