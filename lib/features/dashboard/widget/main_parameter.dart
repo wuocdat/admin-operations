@@ -30,13 +30,14 @@ class MainParameter extends StatelessWidget {
             themeColor: Colors.amber[700],
           ),
           ParameterItem(
-            parameterValue:
-                context.select((DashboardBloc bloc) => bloc.state.target.all),
+            parameterValue: context
+                .select((DashboardBloc bloc) => bloc.state.target.reactionary),
             title: "Đối tượng",
             themeColor: Colors.redAccent,
           ),
-          const ParameterItem(
-            parameterValue: 16,
+          ParameterItem(
+            parameterValue: context
+                .select((DashboardBloc bloc) => bloc.state.target.subject_35),
             title: "Trang truyền thông",
             themeColor: Colors.blueAccent,
           ),
