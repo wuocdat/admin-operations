@@ -7,12 +7,14 @@ import 'package:mail_repository/mail_repository.dart';
 import 'package:target_repository/target_repository.dart';
 import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/core/services/firebase_service.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/global/bloc/global_bloc.dart';
 import 'package:tctt_mobile/features/home/home.dart';
 import 'package:tctt_mobile/features/login/login.dart';
 import 'package:tctt_mobile/features/splash/splash.dart';
 import 'package:tctt_mobile/core/theme/theme.dart';
+import 'package:tctt_mobile/shared/enums.dart';
 import 'package:units_repository/units_repository.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -27,12 +29,14 @@ class _AppState extends State<App> {
   late final AuthenticationRepository _authenticationRepository;
   late final UserRepository _userRepository;
   late final UnitsRepository _unitsRepository;
+  late final ConversationRepository _conversationRepository;
 
   @override
   void initState() {
     _authenticationRepository = AuthenticationRepository();
     _userRepository = UserRepository();
     _unitsRepository = UnitsRepository();
+    _conversationRepository = ConversationRepository();
     super.initState();
   }
 
@@ -49,10 +53,10 @@ class _AppState extends State<App> {
         RepositoryProvider.value(value: _authenticationRepository),
         RepositoryProvider.value(value: _userRepository),
         RepositoryProvider.value(value: _unitsRepository),
+        RepositoryProvider.value(value: _conversationRepository),
         RepositoryProvider(create: (context) => TaskRepository()),
         RepositoryProvider(create: (context) => MailRepository()),
         RepositoryProvider(create: (context) => TargetRepository()),
-        RepositoryProvider(create: (context) => ConversationRepository()),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -63,7 +67,8 @@ class _AppState extends State<App> {
             ),
           ),
           BlocProvider(
-            create: (context) => GlobalBloc(),
+            create: (context) =>
+                GlobalBloc(conversationRepository: _conversationRepository),
           ),
         ],
         child: const AppView(),
@@ -84,11 +89,36 @@ class _AppViewState extends State<AppView> {
 
   NavigatorState get _navigator => _navigatorKey.currentState!;
 
+  void _pushNotificationToStream(RemoteMessage message) {
+    final messType = message.data['type'];
+    if (messType == null) return;
+    final typeValue = messType as String;
+    switch (typeValue.toENotificationType) {
+      case ENotificationType.mission:
+        // Handle task
+        break;
+
+      case ENotificationType.mail:
+        // Handle mail
+        break;
+
+      case ENotificationType.chat:
+        final conversationId = message.data['conversationId'];
+        context
+            .read<GlobalBloc>()
+            .add(ConversationDataPushedEvent(conversationId));
+        break;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
-    FirebaseMessaging.onMessage.listen(showFlutterNotification);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _pushNotificationToStream(message);
+      showFlutterNotification(message);
+    });
   }
 
   @override

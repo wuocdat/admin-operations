@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:conversation_repository/conversation_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -9,13 +11,17 @@ class ConversationCenterCubit extends Cubit<ConversationCenterState> {
   ConversationCenterCubit({
     required ConversationRepository conversationRepository,
   })  : _conversationRepository = conversationRepository,
-        super(const ConversationCenterState());
+        super(const ConversationCenterState()) {
+    _conversationSubscription = _conversationRepository.notification
+        .listen((_) => fetchConversations(true));
+  }
 
   final ConversationRepository _conversationRepository;
+  late StreamSubscription<String> _conversationSubscription;
 
-  Future<void> fetchConversations() async {
+  Future<void> fetchConversations([bool withoutLoading = false]) async {
     try {
-      emit(state.copyWith(status: FetchDataStatus.loading));
+      if (!withoutLoading) emit(state.copyWith(status: FetchDataStatus.loading));
 
       final conversations = await _conversationRepository.getConversations();
 
@@ -24,5 +30,11 @@ class ConversationCenterCubit extends Cubit<ConversationCenterState> {
     } catch (_) {
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _conversationSubscription.cancel();
+    return super.close();
   }
 }

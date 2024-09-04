@@ -10,6 +10,15 @@ class ConversationRepository {
       : _apiClient = conversationApiClient ?? ConversationApiClient();
 
   final ConversationApiClient _apiClient;
+  final _controller = StreamController<String>();
+
+  Stream<String> get notification async* {
+    yield* _controller.stream.asBroadcastStream();
+  }
+
+  void pushConversationDataToStream(String conversationId) {
+    _controller.add(conversationId);
+  }
 
   Future<List<Conversation>> getConversations() async {
     final jsonList = await _apiClient.getConversations();

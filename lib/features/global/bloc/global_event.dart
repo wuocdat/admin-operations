@@ -13,3 +13,12 @@ final class AppNavigatedOnLaunchEvent extends GlobalEvent {
   @override
   List<Object> get props => [];
 }
+
+final class ConversationDataPushedEvent extends GlobalEvent {
+  const ConversationDataPushedEvent(this.conversationId);
+
+  final String conversationId;
+
+  @override
+  List<Object> get props => [];
+}
