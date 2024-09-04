@@ -37,7 +37,7 @@ class SentMail extends StatelessWidget {
             listenWhen: (previous, current) =>
                 previous.reloadCount != current.reloadCount,
             listener: (context, state) {
-              context.read<SentMailBloc>().add(const SentMailsFetchedEvent());
+              context.read<SentMailBloc>().add(const SentMailsResetEvent());
             },
           ),
         ],
