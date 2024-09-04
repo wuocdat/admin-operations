@@ -134,7 +134,9 @@ class TargetState extends Equatable {
 
   bool get filterChanged {
     final otherStartDatePicked = startDate?.stringFormat !=
-        DateTime.now().subtract(const Duration(days: 1)).stringFormat;
+        DateTime.now()
+            .subtract(const Duration(days: defaultDayDuration))
+            .stringFormat;
     final otherEndDatePicked =
         endDate?.stringFormat != DateTime.now().stringFormat;
     final typePicked = fbPageType != null;

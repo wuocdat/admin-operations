@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
+import 'package:tctt_mobile/core/utils/constants.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/features/target/models/filter_data.dart';
@@ -52,7 +53,7 @@ class _FilterContentState extends State<FilterContent> {
   void _handleApplyFilterData(FilterContentState state) {
     final data = FilterData(
       startDate: state.pickedStartDate ??
-          DateTime.now().subtract(const Duration(days: 1)),
+          DateTime.now().subtract(const Duration(days: defaultDayDuration)),
       endDate: state.pickedEndDate ?? DateTime.now(),
       fbPageType: state.fbPageType,
       targetName: _targetNameController.text,

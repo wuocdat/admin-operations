@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tctt_mobile/core/utils/constants.dart';
 import 'package:tctt_mobile/core/utils/logger.dart';
 import 'package:tctt_mobile/features/target/cubit/target_cubit.dart';
 import 'package:tctt_mobile/shared/enums.dart';
@@ -65,7 +66,8 @@ class FilterContentCubit extends Cubit<FilterContentState> {
     emit(state.copyWith(
       fbPageType: null,
       unsetFbPageType: true,
-      pickedStartDate: DateTime.now().subtract(const Duration(days: 1)),
+      pickedStartDate:
+          DateTime.now().subtract(const Duration(days: defaultDayDuration)),
       pickedEndDate: DateTime.now(),
       stepUnitsList: [],
       subUnitsList: [],

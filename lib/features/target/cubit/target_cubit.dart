@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:target_repository/target_repository.dart';
+import 'package:tctt_mobile/core/utils/constants.dart';
 import 'package:tctt_mobile/core/utils/file.dart';
 import 'package:tctt_mobile/core/utils/logger.dart';
 import 'package:tctt_mobile/core/utils/time.dart';
@@ -28,7 +29,8 @@ class TargetCubit extends Cubit<TargetState> {
 
   void resetTime() {
     emit(state.copyWith(
-        startDate: DateTime.now().subtract(const Duration(days: 1)),
+        startDate:
+            DateTime.now().subtract(const Duration(days: defaultDayDuration)),
         endDate: DateTime.now()));
   }
 
