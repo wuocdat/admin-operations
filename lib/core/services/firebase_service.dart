@@ -149,7 +149,29 @@ void showFlutterNotification(RemoteMessage message,
       break;
 
     case ENotificationType.mail:
-      // Handle mail notification
+      final mailId = message.data['mailId'] as String;
+      final notificationId = int.tryParse(mailId) ?? 0;
+      final body = message.data['body'] as String;
+      const title = "Thư mới";
+
+      flutterLocalNotificationsPlugin.show(
+        notificationId,
+        title,
+        body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            icon: 'app_icon',
+            // other properties...
+          ),
+        ),
+        payload: jsonEncode({
+          "type": typeValue,
+          "data": mailId,
+        }),
+      );
       break;
 
     case ENotificationType.chat:
