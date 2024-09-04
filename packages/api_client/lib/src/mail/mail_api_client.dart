@@ -70,6 +70,14 @@ class MailApiClient {
     return result;
   }
 
+  Future<Map<String, dynamic>?> getNewestMail() async {
+    final response = await _dio.get("${MailUrl.receivedMail}/latest-unreads");
+
+    final result = Handler.parseResponse(response) as Map<String, dynamic>?;
+
+    return result;
+  }
+
   Future<void> createMail(String name, String content, bool important,
       List<String> units, List<String> filePaths) async {
     final formData = FormData.fromMap({

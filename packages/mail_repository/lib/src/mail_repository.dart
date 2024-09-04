@@ -21,20 +21,9 @@ class MailRepository {
   }
 
   Future<Mail?> getNewestMail() async {
-    //mocked data
-    return const Mail(
-      content:
-          'Kình gửi XXX, thông tin liên quan đến đối tượng Nguyễn Lân Thắng. Hồ sơ đối tượng trong file đính kèm....',
-      createdAt: 'Hôm nay, 6:20pm',
-      createdBy: {},
-      files: [],
-      important: false,
-      id: 'id',
-      name: 'Report mục tiêu',
-      read: false,
-      updatedAt: 'updatedAt',
-      updatedBy: 'updatedBy',
-    );
+    final mailJson = await _mailApiClient.getNewestMail();
+
+    return mailJson != null ? Mail.fromJson(mailJson) : null;
   }
 
   Future<List<Mail>> fetchReceivedMails([int mailLength = 0]) async {

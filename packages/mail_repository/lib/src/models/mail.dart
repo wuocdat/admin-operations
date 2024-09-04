@@ -26,6 +26,7 @@ final class Mail extends Equatable {
   @JsonKey(name: '_id')
   final String id;
   final String name;
+  @JsonKey(fromJson: _fromJson)
   final bool read;
   final String updatedAt;
   final String updatedBy;
@@ -60,4 +61,12 @@ final class Mail extends Equatable {
         updatedAt,
         updatedBy,
       ];
+
+  static bool _fromJson(dynamic value) {
+    if (value is bool) {
+      return value;
+    } else {
+      return false;
+    }
+  }
 }

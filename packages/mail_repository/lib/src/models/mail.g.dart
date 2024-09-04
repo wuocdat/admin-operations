@@ -14,7 +14,7 @@ Mail _$MailFromJson(Map<String, dynamic> json) => Mail(
       important: json['important'] as bool,
       id: json['_id'] as String,
       name: json['name'] as String,
-      read: json['read'] as bool,
+      read: Mail._fromJson(json['read']),
       updatedAt: json['updatedAt'] as String,
       updatedBy: json['updatedBy'] as String,
     );
