@@ -20,6 +20,11 @@ class MailRepository {
     yield* _controller.stream.asBroadcastStream();
   }
 
+  Future<void> updateOverall() async {
+    final overall = await _mailApiClient.getOverall();
+    _controller.add(MailOverall.fromJson(overall));
+  }
+
   Future<Mail?> getNewestMail() async {
     final mailJson = await _mailApiClient.getNewestMail();
 

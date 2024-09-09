@@ -21,6 +21,11 @@ class TaskRepository {
     yield* _controller.stream.asBroadcastStream();
   }
 
+  Future<void> updateOverall() async {
+    final overall = await _taskApiClient.getOverall();
+    _controller.add(Overall.fromJson(overall));
+  }
+
   Future<List<Task>> fetchReceivedTasks(
       String progressStatus, String? searchValue,
       [int taskLength = 0]) async {

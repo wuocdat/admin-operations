@@ -30,6 +30,8 @@ class _AppState extends State<App> {
   late final UserRepository _userRepository;
   late final UnitsRepository _unitsRepository;
   late final ConversationRepository _conversationRepository;
+  late final TaskRepository _taskRepository;
+  late final MailRepository _mailRepository;
 
   @override
   void initState() {
@@ -37,6 +39,8 @@ class _AppState extends State<App> {
     _userRepository = UserRepository();
     _unitsRepository = UnitsRepository();
     _conversationRepository = ConversationRepository();
+    _taskRepository = TaskRepository();
+    _mailRepository = MailRepository();
     super.initState();
   }
 
@@ -54,8 +58,8 @@ class _AppState extends State<App> {
         RepositoryProvider.value(value: _userRepository),
         RepositoryProvider.value(value: _unitsRepository),
         RepositoryProvider.value(value: _conversationRepository),
-        RepositoryProvider(create: (context) => TaskRepository()),
-        RepositoryProvider(create: (context) => MailRepository()),
+        RepositoryProvider.value(value: _taskRepository),
+        RepositoryProvider.value(value: _mailRepository),
         RepositoryProvider(create: (context) => TargetRepository()),
       ],
       child: MultiBlocProvider(
@@ -67,8 +71,11 @@ class _AppState extends State<App> {
             ),
           ),
           BlocProvider(
-            create: (context) =>
-                GlobalBloc(conversationRepository: _conversationRepository),
+            create: (context) => GlobalBloc(
+              conversationRepository: _conversationRepository,
+              taskRepository: _taskRepository,
+              mailRepository: _mailRepository,
+            ),
           ),
         ],
         child: const AppView(),
@@ -95,11 +102,11 @@ class _AppViewState extends State<AppView> {
     final typeValue = messType as String;
     switch (typeValue.toENotificationType) {
       case ENotificationType.mission:
-        // Handle task
+        context.read<GlobalBloc>().add(const TaskOverallUpdatedEvent());
         break;
 
       case ENotificationType.mail:
-        // Handle mail
+        context.read<GlobalBloc>().add(const MailOverallUpdatedEvent());
         break;
 
       case ENotificationType.chat:
