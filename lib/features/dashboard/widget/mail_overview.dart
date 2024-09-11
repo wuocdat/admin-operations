@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/core/utils/time.dart';
 import 'package:tctt_mobile/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:tctt_mobile/features/dashboard/widget/info_item.dart';
 import 'package:tctt_mobile/features/dashboard/widget/overview.dart';
@@ -41,7 +42,8 @@ class MailOverview extends StatelessWidget {
           return MessageItem(
             name: 'Tin nhắn mới',
             title: state.newestMail!.name,
-            time: state.newestMail!.createdAt,
+            time: TimeUtils.convertTimeToReadableFormat(
+                state.newestMail!.createdAt),
             content: state.newestMail!.content,
           );
         },

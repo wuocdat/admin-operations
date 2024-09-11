@@ -82,18 +82,18 @@ class ConversationPage extends StatelessWidget {
           //   ),
           // ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
-            child: IconButton(
-              onPressed: () => ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(const SnackBar(
-                    content: Text('Tính năng đang được phát triển'))),
-              icon: const Icon(Icons.more_horiz),
-              iconSize: 30,
-            ),
-          ),
+        actions: const [
+          // Padding(
+          //   padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+          //   child: IconButton(
+          //     onPressed: () => ScaffoldMessenger.of(context)
+          //       ..hideCurrentSnackBar()
+          //       ..showSnackBar(const SnackBar(
+          //           content: Text('Tính năng đang được phát triển'))),
+          //     icon: const Icon(Icons.more_horiz),
+          //     iconSize: 30,
+          //   ),
+          // ),
         ],
       ),
       body: SafeArea(
@@ -142,13 +142,13 @@ class BottomActionContainer extends StatelessWidget {
         builder: (context, state) {
           return Row(
             children: [
-              IconButton(
-                onPressed: () => ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(const SnackBar(
-                      content: Text('Tính năng đang được phát triển'))),
-                icon: const Icon(Icons.attach_file),
-              ),
+              // IconButton(
+              //   onPressed: () => ScaffoldMessenger.of(context)
+              //     ..hideCurrentSnackBar()
+              //     ..showSnackBar(const SnackBar(
+              //         content: Text('Tính năng đang được phát triển'))),
+              //   icon: const Icon(Icons.attach_file),
+              // ),
               const SizedBox(width: 8),
               Expanded(
                 child: BorderInput(
