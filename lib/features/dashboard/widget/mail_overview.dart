@@ -4,6 +4,7 @@ import 'package:tctt_mobile/core/utils/time.dart';
 import 'package:tctt_mobile/features/dashboard/bloc/dashboard_bloc.dart';
 import 'package:tctt_mobile/features/dashboard/widget/info_item.dart';
 import 'package:tctt_mobile/features/dashboard/widget/overview.dart';
+import 'package:tctt_mobile/features/received_mail_detail/view/received_mail_detail_page.dart';
 import 'package:tctt_mobile/shared/widgets/msg_item.dart';
 
 class MailOverview extends StatelessWidget {
@@ -45,6 +46,13 @@ class MailOverview extends StatelessWidget {
             time: TimeUtils.convertTimeToReadableFormat(
                 state.newestMail!.createdAt),
             content: state.newestMail!.content,
+            highlighted: true,
+            onTap: () async {
+              await Navigator.push(
+                  context, ReceivedMailDetailPage.route(state.newestMail!.id));
+              if (!context.mounted) return;
+              context.read<DashboardBloc>().add(const OverallsReloaded());
+            },
           );
         },
       ),
