@@ -18,6 +18,7 @@ class UserApiClient {
   static const userUrl = "/auth/current";
   static const searchUser = "/users/all";
   static const userList = "/users";
+  static const userInUnit = "/users/list-users-in-unit/";
 
   final Dio _dio;
 
@@ -80,5 +81,13 @@ class UserApiClient {
     });
 
     if (response.statusCode != 200) throw DeleteUserFailure();
+  }
+
+  Future<List> getUsersByUnitId(String id) async {
+    final response = await _dio.get("$userInUnit$id");
+
+    final result = Handler.parseResponse(response) as List;
+
+    return result;
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/conversation/view/conversation_page.dart';
 import 'package:tctt_mobile/features/search_user/bloc/search_user_bloc.dart';
+import 'package:tctt_mobile/features/search_user_by_unit/view/search_user_by_unit_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:tctt_mobile/shared/widgets/border_container.dart';
 import 'package:tctt_mobile/shared/widgets/chips.dart';
@@ -67,37 +68,33 @@ class SearchUser extends StatelessWidget {
                   );
           },
         ),
-        actions: [
-          BlocBuilder<SearchUserBloc, SearchUserState>(
-            buildWhen: (previous, current) =>
-                previous.groupMode != current.groupMode,
-            builder: (context, state) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: state.groupMode
-                    ? TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Tạo',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      )
-                    : TextButton(
-                        // onPressed: !state.creatingStatus.isLoading
-                        //     ? () => context
-                        //         .read<SearchUserBloc>()
-                        //         .add(const ModeChangedEvent())
-                        //     : null,
-                        onPressed: () => ScaffoldMessenger.of(context)
-                          ..hideCurrentSnackBar()
-                          ..showSnackBar(const SnackBar(
-                              content: Text('Tính năng đang được phát triển'))),
-                        child: const Text('Tạo nhóm'),
-                      ),
-              );
-            },
-          ),
-        ],
+        // actions: [
+        //   BlocBuilder<SearchUserBloc, SearchUserState>(
+        //     buildWhen: (previous, current) =>
+        //         previous.groupMode != current.groupMode,
+        //     builder: (context, state) {
+        //       return Padding(
+        //         padding: const EdgeInsets.only(right: 8.0),
+        //         child: state.groupMode
+        //             ? TextButton(
+        //                 onPressed: () {},
+        //                 child: const Text(
+        //                   'Tạo',
+        //                   style: TextStyle(fontWeight: FontWeight.bold),
+        //                 ),
+        //               )
+        //             : TextButton(
+        //                 onPressed: !state.creatingStatus.isLoading
+        //                     ? () => context
+        //                         .read<SearchUserBloc>()
+        //                         .add(const ModeChangedEvent())
+        //                     : null,
+        //                 child: const Text('Tạo nhóm'),
+        //               ),
+        //       );
+        //     },
+        //   ),
+        // ],
       ),
       body: SafeArea(
         child: BlocConsumer<SearchUserBloc, SearchUserState>(
@@ -154,6 +151,20 @@ class SearchUser extends StatelessWidget {
                       ),
                     )
                   ],
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context, SearchUserByUnitPage.route());
+                            },
+                            child: const Text("Theo đơn vị")),
+                      ],
+                    ),
+                  ),
                   Expanded(
                     child: LoadingOverlay(
                       opacity: 0.1,

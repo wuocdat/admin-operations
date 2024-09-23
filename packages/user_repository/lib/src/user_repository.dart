@@ -49,4 +49,12 @@ class UserRepository {
         .map((e) => ShortProfile.fromJson(e as Map<String, dynamic>))
         .toList();
   }
+
+  Future<List<ShortProfile>> getChatUsersByUnitId(String unitId) async {
+    final jsonUsers = await _apiClient.getUsersByUnitId(unitId);
+
+    return jsonUsers
+        .map((e) => ShortProfile.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
 }
