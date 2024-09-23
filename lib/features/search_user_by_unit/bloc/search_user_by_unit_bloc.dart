@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tctt_mobile/core/services/socket_service.dart';
 import 'package:tctt_mobile/core/utils/logger.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 import 'package:units_repository/units_repository.dart';
@@ -16,13 +19,30 @@ class SearchUserByUnitBloc
       required UnitsRepository unitsRepository})
       : _userRepository = userRepository,
         _unitsRepository = unitsRepository,
+        _socketIOService = CreatingConversationSocketIOService(),
         super(const SearchUserByUnitState()) {
     on<RootUserFetchedEvent>(_onRootUserFetched);
     on<UnitSelectedEvent>(_onUnitSelected);
+    on<OneByOneConversationCreatedEvent>(_onOneByOneConversationCreated);
+    on<_ConversationIdReceivedEvent>(_onConversationIdReceived);
+
+    _socketIOService.connect();
+
+    _conversationIdSubscription = _socketIOService.getResponse
+        .listen((id) => add(_ConversationIdReceivedEvent(id)));
   }
 
   final UserRepository _userRepository;
   final UnitsRepository _unitsRepository;
+  final CreatingConversationSocketIOService _socketIOService;
+  late StreamSubscription<String> _conversationIdSubscription;
+
+  @override
+  Future<void> close() {
+    _conversationIdSubscription.cancel();
+    _socketIOService.dispose();
+    return super.close();
+  }
 
   Future<void> _onRootUserFetched(
       RootUserFetchedEvent event, Emitter<SearchUserByUnitState> emit) async {
@@ -60,5 +80,24 @@ class SearchUserByUnitBloc
       logger.severe(e);
       emit(state.copyWith(status: FetchDataStatus.failure, users: const []));
     }
+  }
+
+  void _onOneByOneConversationCreated(
+      OneByOneConversationCreatedEvent event,
+      Emitter<SearchUserByUnitState> emit,
+      ) {
+    emit(state.copyWith(creatingStatus: FetchDataStatus.loading));
+
+    _socketIOService.sendOneByOneConversationRequest(event.otherUserId);
+  }
+
+  void _onConversationIdReceived(
+      _ConversationIdReceivedEvent event,
+      Emitter<SearchUserByUnitState> emit,
+      ) {
+    emit(state.copyWith(
+      creatingStatus: FetchDataStatus.success,
+      conversationId: event.conversationId,
+    ));
   }
 }

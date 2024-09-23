@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
+import 'package:tctt_mobile/features/conversation/view/conversation_page.dart';
 import 'package:tctt_mobile/features/search_user_by_unit/bloc/search_user_by_unit_bloc.dart';
 import 'package:tctt_mobile/features/search_user_by_unit/widgets/unit_selector.dart';
 import 'package:tctt_mobile/shared/enums.dart';
@@ -55,7 +56,14 @@ class SearchUserByUnitPage extends StatelessWidget {
         child: Container(
           color: Colors.white,
           padding: const EdgeInsets.all(16.0),
-          child: BlocBuilder<SearchUserByUnitBloc, SearchUserByUnitState>(
+          child: BlocConsumer<SearchUserByUnitBloc, SearchUserByUnitState>(
+            listener: (context, state) {
+              if (state.creatingStatus.isSuccess &&
+                  state.conversationId != null) {
+                Navigator.pushReplacement(
+                    context, ConversationPage.route(state.conversationId!));
+              }
+            },
             builder: (context, state) {
               return (state.isInitialLoading)
                   ? const Loader()
@@ -115,7 +123,11 @@ class UserItem extends StatelessWidget {
         contentPadding: const EdgeInsets.only(left: 0, right: 0),
         title: Text(currentUser.username),
         subtitle: Text(currentUser.name),
-        onTap: () {},
+        onTap: () {
+          context.read<SearchUserByUnitBloc>().add(
+                OneByOneConversationCreatedEvent(currentUser.id),
+              );
+        },
       ),
     );
   }

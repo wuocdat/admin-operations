@@ -28,3 +28,21 @@ final class UnitSelectedEvent extends SearchUserByUnitEvent {
   @override
   List<Object> get props => [selectedUnit];
 }
+
+class OneByOneConversationCreatedEvent extends SearchUserByUnitEvent {
+  const OneByOneConversationCreatedEvent(this.otherUserId);
+
+  final String otherUserId;
+
+  @override
+  List<Object> get props => [otherUserId];
+}
+
+class _ConversationIdReceivedEvent extends SearchUserByUnitEvent {
+  const _ConversationIdReceivedEvent(this.conversationId);
+
+  final String conversationId;
+
+  @override
+  List<Object> get props => [conversationId];
+}
