@@ -44,9 +44,9 @@ extension FbPageTypeX on FbPageType {
 extension TargetOptionsX on TargetOptions {
   String get title {
     if (this == TargetOptions.subject) {
-      return "Đối tượng";
+      return "Đối tượng giám sát";
     } else {
-      return "Kênh ta";
+      return "Kênh truyền thông";
     }
   }
 

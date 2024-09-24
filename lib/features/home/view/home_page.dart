@@ -174,7 +174,7 @@ class HomePage extends StatelessWidget {
                 const NavigationDestination(
                   selectedIcon: Icon(Icons.supervised_user_circle),
                   icon: Icon(Icons.supervised_user_circle_outlined),
-                  label: 'Đối tượng',
+                  label: 'Giám sát',
                 ),
                 NavigationDestination(
                   selectedIcon: Badge(
@@ -222,7 +222,7 @@ extension on int {
       case 1:
         return "Nhiệm vụ";
       case 2:
-        return "Đối tượng";
+        return "Giám sát";
       case 3:
         return "Hòm thư";
     }

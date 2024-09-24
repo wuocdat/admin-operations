@@ -64,7 +64,7 @@ class TargetPage extends StatelessWidget {
           return Column(
             children: [
               HeadBar<TargetOptions>(
-                label: "Đối tượng và Kênh ta",
+                label: "Đối tượng giám sát và Kênh truyền thông",
                 hideSearchBar: true,
                 selectedOption: state.selectedOption,
                 options: TargetOptions.values
