@@ -58,6 +58,14 @@ class CreatingConversationSocketIOService {
       {"userId": otherUserId}
     ]);
   }
+
+  void sendGroupConversationRequest(
+      List<String> otherUserIds, String? groupName) {
+    logger.info('sent group conversation request');
+    _socket.emit(EventNames.joinEvent, [
+      {"userId": otherUserIds}
+    ]);
+  }
 }
 
 class CommunicationSocketIOService {

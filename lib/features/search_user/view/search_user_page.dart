@@ -68,33 +68,42 @@ class SearchUser extends StatelessWidget {
                   );
           },
         ),
-        // actions: [
-        //   BlocBuilder<SearchUserBloc, SearchUserState>(
-        //     buildWhen: (previous, current) =>
-        //         previous.groupMode != current.groupMode,
-        //     builder: (context, state) {
-        //       return Padding(
-        //         padding: const EdgeInsets.only(right: 8.0),
-        //         child: state.groupMode
-        //             ? TextButton(
-        //                 onPressed: () {},
-        //                 child: const Text(
-        //                   'Tạo',
-        //                   style: TextStyle(fontWeight: FontWeight.bold),
-        //                 ),
-        //               )
-        //             : TextButton(
-        //                 onPressed: !state.creatingStatus.isLoading
-        //                     ? () => context
-        //                         .read<SearchUserBloc>()
-        //                         .add(const ModeChangedEvent())
-        //                     : null,
-        //                 child: const Text('Tạo nhóm'),
-        //               ),
-        //       );
-        //     },
-        //   ),
-        // ],
+        actions: [
+          BlocBuilder<SearchUserBloc, SearchUserState>(
+            buildWhen: (previous, current) =>
+                previous.groupMode != current.groupMode ||
+                previous.isValid != current.isValid,
+            builder: (context, state) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: state.groupMode
+                    ? TextButton(
+                        onPressed: state.isValid &&
+                                !state.creatingStatus.isLoading &&
+                                !state.status.isLoading
+                            ? () {
+                                context
+                                    .read<SearchUserBloc>()
+                                    .add(const GroupConversationCreatedEvent());
+                              }
+                            : null,
+                        child: const Text(
+                          'Tạo',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    : TextButton(
+                        onPressed: !state.creatingStatus.isLoading
+                            ? () => context
+                                .read<SearchUserBloc>()
+                                .add(const ModeChangedEvent())
+                            : null,
+                        child: const Text('Tạo nhóm'),
+                      ),
+              );
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: BlocConsumer<SearchUserBloc, SearchUserState>(
@@ -106,71 +115,77 @@ class SearchUser extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            return Container(
-              color: Colors.white,
-              child: Column(
-                children: [
-                  if (state.groupMode) ...[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: BaseInput(
-                        hintText: "Đặt tên nhóm",
-                        onChanged: (text) {},
+            return LoadingOverlay(
+              opacity: 0.1,
+              overlayColor: Colors.grey,
+              isLoading:
+                  state.status.isLoading || state.creatingStatus.isLoading,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    if (state.groupMode) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: BaseInput(
+                          hintText: "Đặt tên nhóm",
+                          onChanged: (text) {
+                            context
+                                .read<SearchUserBloc>()
+                                .add(GroupNameChanged(text));
+                          },
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: BaseInput(
-                        leading: const Icon(Icons.search),
-                        backgroundColor: Colors.grey[100],
-                        hintText: "Tìm tên hoặc số điện thoại",
-                        onChanged: (text) => context
-                            .read<SearchUserBloc>()
-                            .add(SearchInputChangeEvent(text)),
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: BaseInput(
+                          leading: const Icon(Icons.search),
+                          backgroundColor: Colors.grey[100],
+                          hintText: "Tìm tên hoặc số điện thoại",
+                          onChanged: (text) => context
+                              .read<SearchUserBloc>()
+                              .add(SearchInputChangeEvent(text)),
+                        ),
                       ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      child: Wrap(
-                        spacing: 12,
-                        runSpacing: 8,
-                        children: <Widget>[
-                          ...state.pickedUsers.map(
-                            (e) => CloseChip(
-                              text: e.username,
-                              onClose: () => context
-                                  .read<SearchUserBloc>()
-                                  .add(CheckBoxStatusChangeEvent(false, e)),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        child: Wrap(
+                          spacing: 12,
+                          runSpacing: 8,
+                          children: <Widget>[
+                            ...state.pickedUsers.map(
+                              (e) => CloseChip(
+                                text: e.username,
+                                onClose: () => context
+                                    .read<SearchUserBloc>()
+                                    .add(CheckBoxStatusChangeEvent(false, e)),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      )
+                    ],
+                    if (!state.groupMode) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                      context, SearchUserByUnitPage.route());
+                                },
+                                child: const Text("Theo đơn vị")),
+                          ],
+                        ),
                       ),
-                    )
-                  ],
-                  Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                  context, SearchUserByUnitPage.route());
-                            },
-                            child: const Text("Theo đơn vị")),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: LoadingOverlay(
-                      opacity: 0.1,
-                      overlayColor: Colors.grey,
-                      isLoading: state.status.isLoading ||
-                          state.creatingStatus.isLoading,
+                    ],
+                    Expanded(
                       child: RichListView(
                         hasReachedMax: state.hasReachedMax,
                         itemCount: state.users.length,
@@ -190,8 +205,8 @@ class SearchUser extends StatelessWidget {
                             .add(const UserFetchedEvent()),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },

@@ -3,11 +3,14 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tctt_mobile/core/services/socket_service.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/shared/debounce.dart';
 import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/models/content.dart';
 import 'package:user_repository/user_repository.dart';
 
 part 'search_user_event.dart';
+
 part 'search_user_state.dart';
 
 class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
@@ -22,11 +25,13 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
     on<ModeChangedEvent>(_onModeToggled);
     on<CheckBoxStatusChangeEvent>(_onCheckboxStatusChanged);
     on<OneByOneConversationCreatedEvent>(_onOneByOneConversationCreated);
+    on<GroupConversationCreatedEvent>(_onGroupConversationCreated);
     on<_ConversationIdReceivedEvent>(_onConversationIdReceived);
     on<UserFetchedEvent>(
       _onUserFetched,
       transformer: throttleDroppable(throttleDuration),
     );
+    on<GroupNameChanged>(_onGroupNameChanged);
 
     _socketIOService.connect();
 
@@ -114,11 +119,15 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
 
     if (event.checked) {
       emit(state.copyWith(
-          pickedUsers: List.of(state.pickedUsers)..add(event.user)));
+        pickedUsers: List.of(state.pickedUsers)..add(event.user),
+        isValid: state.pickedUsers.isNotEmpty,
+      ));
     } else {
       emit(
         state.copyWith(
-            pickedUsers: List.of(state.pickedUsers)..remove(event.user)),
+          pickedUsers: List.of(state.pickedUsers)..remove(event.user),
+          isValid: state.pickedUsers.length >= 3,
+        ),
       );
     }
   }
@@ -132,6 +141,19 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
     _socketIOService.sendOneByOneConversationRequest(event.otherUserId);
   }
 
+  void _onGroupConversationCreated(
+    GroupConversationCreatedEvent event,
+    Emitter<SearchUserState> emit,
+  ) {
+    if (!state.groupMode || !state.isValid) return;
+
+    emit(state.copyWith(creatingStatus: CreateConversationStatus.loading));
+
+    _socketIOService.sendGroupConversationRequest(
+        state.pickedUsers.map((user) => user.id).toList(),
+        state.groupName.value.noBlank);
+  }
+
   void _onConversationIdReceived(
     _ConversationIdReceivedEvent event,
     Emitter<SearchUserState> emit,
@@ -139,6 +161,14 @@ class SearchUserBloc extends Bloc<SearchUserEvent, SearchUserState> {
     emit(state.copyWith(
       creatingStatus: CreateConversationStatus.success,
       conversationId: event.conversationId,
+    ));
+  }
+
+  void _onGroupNameChanged(
+      GroupNameChanged event, Emitter<SearchUserState> emit) {
+    final groupName = Content.dirty(event.groupName);
+    emit(state.copyWith(
+      groupName: groupName,
     ));
   }
 }

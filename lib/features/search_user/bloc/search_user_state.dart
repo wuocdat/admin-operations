@@ -18,6 +18,8 @@ class SearchUserState extends Equatable {
     this.conversationId,
     this.hasReachedMax = true,
     this.searchValue = "",
+    this.isValid = false,
+    this.groupName = const Content.pure(),
   });
 
   final List<ShortProfile> users;
@@ -28,6 +30,8 @@ class SearchUserState extends Equatable {
   final String? conversationId;
   final bool hasReachedMax;
   final String searchValue;
+  final bool isValid;
+  final Content groupName;
 
   SearchUserState copyWith({
     List<ShortProfile>? users,
@@ -38,6 +42,8 @@ class SearchUserState extends Equatable {
     String? conversationId,
     bool? hasReachedMax,
     String? searchValue,
+    bool? isValid,
+    Content? groupName,
   }) {
     return SearchUserState(
       users: users ?? this.users,
@@ -48,6 +54,8 @@ class SearchUserState extends Equatable {
       conversationId: conversationId ?? this.conversationId,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       searchValue: searchValue ?? this.searchValue,
+      isValid: isValid ?? this.isValid,
+      groupName: groupName ?? this.groupName,
     );
   }
 
@@ -61,5 +69,7 @@ class SearchUserState extends Equatable {
         conversationId,
         hasReachedMax,
         searchValue,
+        isValid,
+        groupName,
       ];
 }

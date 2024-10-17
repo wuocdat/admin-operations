@@ -42,6 +42,13 @@ class OneByOneConversationCreatedEvent extends SearchUserEvent {
   List<Object> get props => [otherUserId];
 }
 
+class GroupConversationCreatedEvent extends SearchUserEvent {
+  const GroupConversationCreatedEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
 class _ConversationIdReceivedEvent extends SearchUserEvent {
   const _ConversationIdReceivedEvent(this.conversationId);
 
@@ -56,4 +63,13 @@ final class UserFetchedEvent extends SearchUserEvent {
 
   @override
   List<Object> get props => [];
+}
+
+final class GroupNameChanged extends SearchUserEvent {
+  const GroupNameChanged(this.groupName);
+
+  final String groupName;
+
+  @override
+  List<Object> get props => [groupName];
 }
