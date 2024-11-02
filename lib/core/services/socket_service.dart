@@ -63,7 +63,7 @@ class CreatingConversationSocketIOService {
       List<String> otherUserIds, String? groupName) {
     logger.info('sent group conversation request');
     _socket.emit(EventNames.joinEvent, [
-      {"userId": otherUserIds}
+      {"userId": otherUserIds, "name": groupName}
     ]);
   }
 }

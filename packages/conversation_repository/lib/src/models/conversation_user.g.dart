@@ -13,7 +13,7 @@ ConversationUser _$ConversationUserFromJson(Map<String, dynamic> json) =>
       userId: json['userId'] as String,
       conversationId: json['conversationId'] as String,
       adderId: json['adderId'] as String,
-      userDetail: Map<String, String>.from(json['userDetail'] as Map),
+      userDetail: ConversationUser._fromJson(json['userDetail']),
     );
 
 Map<String, dynamic> _$ConversationUserToJson(ConversationUser instance) =>
