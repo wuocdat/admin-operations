@@ -7,6 +7,8 @@ class ConversationNotFoundFailure implements Exception {}
 
 class MessagesNotFoundFailure implements Exception {}
 
+class MessageFilesUploadingFailure implements Exception {}
+
 class ConversationApiClient {
   ConversationApiClient({Dio? dio})
       : _dio = dio ?? Dio(ApiConfig.options)
@@ -49,5 +51,28 @@ class ConversationApiClient {
     final messages = jsonResult['messages'] as List;
 
     return messages;
+  }
+
+  Future<List> uploadMessageFile(List<String> filePaths, String type) async {
+    final formData = FormData.fromMap({
+      "type": type,
+    });
+
+    if (filePaths.isNotEmpty) {
+      formData.files.addAll(await Future.wait(filePaths.map((path) async {
+        return MapEntry('files', await MultipartFile.fromFile(path));
+      })));
+    }
+
+    final response = await _dio.post(
+      ConversationUrl.uploadFile,
+      data: formData,
+    );
+
+    if (response.statusCode != 201 || response.data['data'] == null) {
+      throw MessageFilesUploadingFailure();
+    }
+
+    return response.data['data'] as List;
   }
 }

@@ -126,12 +126,14 @@ class CommunicationSocketIOService {
     ]);
   }
 
-  void sendMessage(String content) {
+  void sendMessage({String? content, List<String>? images, String? video}) {
     logger.info('sent message $content');
     _socket.emit(EventNames.sendMessageEvent, [
       {
         "conversationId": _conversationId,
         "content": content,
+        'images': images,
+        'video': video,
       }
     ]);
   }

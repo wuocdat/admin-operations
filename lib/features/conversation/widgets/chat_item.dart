@@ -14,6 +14,7 @@ extension MessageOriginX on MessageSide {
 
 class ChatItem extends StatelessWidget {
   const ChatItem(this.message, {super.key});
+
   final Message message;
 
   @override
@@ -76,7 +77,7 @@ class ChatItem extends StatelessWidget {
               screenSize: screenSize,
               origin: otherSide ? MessageSide.otherSide : MessageSide.mySide,
               text: message.content,
-              attachmentUrl: null),
+              attachmentUrl: message.type.isMediaType ? "true" : null),
         ],
       ),
     );

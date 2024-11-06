@@ -50,4 +50,11 @@ class ConversationRepository {
         .map((e) => Message.fromJson(e))
         .toList();
   }
+
+  Future<List<String>> uploadMessageFiles(
+      List<String> filePaths, String type) async {
+    final jsonList = await _apiClient.uploadMessageFile(filePaths, type);
+
+    return jsonList.map((e) => e as String).toList();
+  }
 }

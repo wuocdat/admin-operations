@@ -1,6 +1,7 @@
 import 'package:conversation_repository/conversation_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tctt_mobile/core/utils/constants.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/conversation/bloc/conversation_bloc.dart';
 import 'package:tctt_mobile/features/conversation/widgets/chat_item.dart';
@@ -9,6 +10,7 @@ import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/shared/widgets/inputs.dart';
 import 'package:tctt_mobile/shared/widgets/loader.dart';
 import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
+import 'package:file_picker/file_picker.dart' as picker;
 
 class ConversationPage extends StatelessWidget {
   const ConversationPage(this.conversationId, {super.key});
@@ -118,6 +120,17 @@ class ConversationPage extends StatelessWidget {
                 ),
               ),
             ),
+            BlocBuilder<ConversationBloc, ConversationState>(
+              builder: (context, state) {
+                return state.files.isNotEmpty
+                    ? AttachNoticeContainer(
+                        onTap: () => context
+                            .read<ConversationBloc>()
+                            .add(FilesCleared()),
+                      )
+                    : Container();
+              },
+            ),
             BottomActionContainer()
           ],
         ),
@@ -126,12 +139,61 @@ class ConversationPage extends StatelessWidget {
   }
 }
 
+class AttachNoticeContainer extends StatelessWidget {
+  const AttachNoticeContainer({super.key, this.onTap});
+
+  final Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: [
+          const Icon(Icons.image),
+          const SizedBox(width: 16),
+          Expanded(child: const Text('Đang đính kèm 1 file')),
+          IconButton(onPressed: onTap, icon: const Icon(Icons.close))
+        ],
+      ),
+    );
+  }
+}
+
+const int _maxFileSizeInMb = 20 * 1024 * 1024;
+
 class BottomActionContainer extends StatelessWidget {
   BottomActionContainer({
     super.key,
   });
 
   final controller = TextEditingController();
+
+  Future<List<picker.PlatformFile>?> _onTap() async {
+    try {
+      picker.FilePickerResult? result =
+          await picker.FilePicker.platform.pickFiles(
+        type: picker.FileType.custom,
+        allowedExtensions: List.from(allowedImageExtensions)
+          ..addAll(allowedVideoExtensions),
+      );
+
+      if (result != null) {
+        final files = result.files.nonNulls
+            .where((element) => element.size <= _maxFileSizeInMb)
+            .toList();
+        if (files.length > 5) {
+          files.removeRange(5, files.length);
+        }
+        return files;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,13 +204,24 @@ class BottomActionContainer extends StatelessWidget {
         builder: (context, state) {
           return Row(
             children: [
-              // IconButton(
-              //   onPressed: () => ScaffoldMessenger.of(context)
-              //     ..hideCurrentSnackBar()
-              //     ..showSnackBar(const SnackBar(
-              //         content: Text('Tính năng đang được phát triển'))),
-              //   icon: const Icon(Icons.attach_file),
-              // ),
+              IconButton(
+                onPressed: () async {
+                  final resultFiles = await _onTap();
+
+                  if (resultFiles == null || !context.mounted) return;
+
+                  if (resultFiles.isEmpty) {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(const SnackBar(
+                          content: Text('Kích thước file phải nhỏ hơn 20MB')));
+                    return;
+                  }
+
+                  context.read<ConversationBloc>().add(FilePicked(resultFiles));
+                },
+                icon: const Icon(Icons.attach_file),
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: BorderInput(
@@ -161,17 +234,18 @@ class BottomActionContainer extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               IconButton(
-                onPressed: state.currentInputText.isNotEmpty
-                    ? () {
-                        controller.clear();
-                        context
-                            .read<ConversationBloc>()
-                            .add(const MessageSentEvent());
-                        context
-                            .read<ConversationBloc>()
-                            .add(const MessageTextInputChangedEvent(""));
-                      }
-                    : null,
+                onPressed:
+                    state.currentInputText.isNotEmpty || state.files.isNotEmpty
+                        ? () {
+                            controller.clear();
+                            context
+                                .read<ConversationBloc>()
+                                .add(const MessageSentEvent());
+                            context
+                                .read<ConversationBloc>()
+                                .add(const MessageTextInputChangedEvent(""));
+                          }
+                        : null,
                 icon: const Icon(Icons.send),
               ),
             ],

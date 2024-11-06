@@ -279,7 +279,7 @@ class SubjectItem extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(isTracking ? 'Theo dõi' : 'Không theo dõi'),
                     const SizedBox(height: 2),
-                    Text('Được thêm từ ngày ${addedAt}'),
+                    Text('Được thêm từ ngày $addedAt'),
                   ],
                 ),
               ),
