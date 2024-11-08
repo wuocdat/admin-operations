@@ -18,7 +18,7 @@ Message _$MessageFromJson(Map<String, dynamic> json) => Message(
       userData: Message._fromJson(json['userData']),
       type: $enumDecodeNullable(_$EMessageTypeEnumMap, json['type']) ??
           EMessageType.text,
-      media: json['Media'] as Map<String, dynamic>?,
+      media: json['media'] as Map<String, dynamic>?,
     );
 
 Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{
@@ -32,7 +32,7 @@ Map<String, dynamic> _$MessageToJson(Message instance) => <String, dynamic>{
       'updatedAt': instance.updatedAt,
       'userData': instance.userData,
       'type': _$EMessageTypeEnumMap[instance.type]!,
-      'Media': instance.media,
+      'media': instance.media,
     };
 
 const _$EMessageTypeEnumMap = {

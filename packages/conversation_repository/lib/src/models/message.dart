@@ -32,7 +32,6 @@ class Message extends Equatable {
   @JsonKey(fromJson: _fromJson)
   final Map<String, dynamic> userData;
   final EMessageType type;
-  @JsonKey(name: 'Media')
   final Map<String, dynamic>? media;
 
   factory Message.fromJson(Map<String, dynamic> json) =>

@@ -65,8 +65,10 @@ class Attachment extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (withoutTitle != true) const MediumLabelText('Tệp đính kèm'),
-            const SizedBox(height: 8),
+            if (withoutTitle != true) ...[
+              const MediumLabelText('Tệp đính kèm'),
+              const SizedBox(height: 8)
+            ],
             ...filePaths.map(
               (filePath) => FileItem(path: filePath),
             ),

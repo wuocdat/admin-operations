@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/core/utils/time.dart';
+import 'package:tctt_mobile/shared/widgets/attachment/attachment.dart';
 import 'package:tctt_mobile/shared/widgets/images.dart';
 import 'package:tctt_mobile/shared/widgets/label_text.dart';
 
@@ -74,10 +75,12 @@ class ChatItem extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           ContentChatContainer(
-              screenSize: screenSize,
-              origin: otherSide ? MessageSide.otherSide : MessageSide.mySide,
-              text: message.content,
-              attachmentUrl: message.type.isMediaType ? "true" : null),
+            screenSize: screenSize,
+            origin: otherSide ? MessageSide.otherSide : MessageSide.mySide,
+            text: message.content,
+            type: message.type,
+            mediaPaths: message.mediaPaths,
+          ),
         ],
       ),
     );
@@ -89,14 +92,16 @@ class ContentChatContainer extends StatelessWidget {
     super.key,
     required this.screenSize,
     required this.origin,
+    required this.type,
     this.text,
-    this.attachmentUrl,
+    this.mediaPaths = const [],
   });
 
   final Size screenSize;
   final MessageSide origin;
+  final EMessageType type;
   final String? text;
-  final String? attachmentUrl;
+  final List<String> mediaPaths;
 
   @override
   Widget build(BuildContext context) {
@@ -123,8 +128,12 @@ class ContentChatContainer extends StatelessWidget {
             bottomRight: const Radius.circular(12),
           ),
         ),
-        child:
-            (attachmentUrl != null) ? const ChatFileItem() : Text(text ?? ''),
+        child: (type.isMediaType)
+            ? Attachment(
+                filePaths: mediaPaths,
+                withoutTitle: true,
+              )
+            : Text(text ?? ''),
       ),
     );
   }
@@ -151,5 +160,28 @@ class ChatFileItem extends StatelessWidget {
         trailing: Icon(Icons.file_download_outlined),
       ),
     );
+  }
+}
+
+extension on Message {
+  List<String> get mediaPaths {
+    if (media == null) return [];
+
+    switch (type) {
+      case EMessageType.image:
+        if (media!['images'] == null) {
+          return [];
+        } else {
+          return (media!['images'] as List).cast<String>();
+        }
+      case EMessageType.video:
+        if (media!['video'] == null) {
+          return [];
+        } else {
+          return [media!['images'] as String];
+        }
+      default:
+        return [];
+    }
   }
 }
