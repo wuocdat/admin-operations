@@ -1,5 +1,6 @@
 final class TargetUrl {
   static const overall = '/overall?subject=true';
+  static const postOverall = '/fb-posts/overall';
   static const list = '/fb-subjects';
   static const listByUnit = '/fb-subjects/unit';
   static const posts = '/fb-posts';

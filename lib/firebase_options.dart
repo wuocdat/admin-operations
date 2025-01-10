@@ -26,10 +26,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -57,7 +54,15 @@ class DefaultFirebaseOptions {
     appId: '1:351685453356:android:8a017e183fd32fa0b01389',
     messagingSenderId: '351685453356',
     projectId: 'tctt-moible',
-    storageBucket: 'tctt-moible.appspot.com',
+    storageBucket: 'tctt-moible.firebasestorage.app',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDzBtRZYCNqVg1aOWL1NnC2cejbiKpEpy0',
+    appId: '1:351685453356:ios:55a478090c4b9669b01389',
+    messagingSenderId: '351685453356',
+    projectId: 'tctt-moible',
+    storageBucket: 'tctt-moible.firebasestorage.app',
   );
 
 }

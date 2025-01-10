@@ -13,6 +13,8 @@ class DeleteTargetFailure implements Exception {}
 
 class DownloadFailure implements Exception {}
 
+class PostFailure implements Exception {}
+
 class TargetApiClient {
   TargetApiClient({Dio? dio})
       : _dio = dio ?? Dio(ApiConfig.options)
@@ -28,6 +30,17 @@ class TargetApiClient {
     if (!result.containsKey('subject')) throw TargetNotFoundFailure();
 
     return result['subject'] as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> getPostOverall() async {
+    final response = await _dio.get(TargetUrl.postOverall);
+
+    final result = Handler.parseResponse(response) as Map<String, dynamic>;
+
+    if (!result.containsKey('days')) result['days'] = [];
+    if (!result.containsKey('values')) result['values'] = [];
+
+    return result;
   }
 
   Future<List> fetchSubjects(

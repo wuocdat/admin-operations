@@ -2,6 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:tctt_mobile/core/utils/logger.dart';
 import 'package:tctt_mobile/features/login/models/models.dart';
 import 'package:tctt_mobile/core/services/firebase_service.dart';
 
@@ -55,7 +56,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             password: state.password.value,
             fcmToken: fcmToken ?? "");
         emit(state.copyWith(status: FormzSubmissionStatus.success));
-      } catch (_) {
+      } catch (e) {
+        logger.severe(e);
         emit(state.copyWith(status: FormzSubmissionStatus.failure));
       }
     }

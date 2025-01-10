@@ -48,10 +48,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final newestMail = await _mailRepository.getNewestMail();
       final targetOverall = await _targetRepository.getOverall();
+      final postOverall = await _targetRepository.getPostOverall();
 
       emit(state.copyWith(
         newestMail: newestMail,
         target: targetOverall,
+        postData: postOverall,
         status: DashboardStatus.success,
       ));
     } catch (_) {
@@ -77,10 +79,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final newestMail = await _mailRepository.getNewestMail();
       final targetOverall = await _targetRepository.getOverall();
+      final postOverall = await _targetRepository.getPostOverall();
 
       emit(state.copyWith(
         newestMail: newestMail,
         target: targetOverall,
+        postData: postOverall,
         status: DashboardStatus.success,
       ));
     } catch (_) {
