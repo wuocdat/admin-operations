@@ -13,6 +13,8 @@ class ConversationCenterCubit extends Cubit<ConversationCenterState> {
     required ConversationRepository conversationRepository,
   })  : _conversationRepository = conversationRepository,
         super(const ConversationCenterState()) {
+
+    //should have debounce
     _conversationSubscription = _conversationRepository.notification
         .listen((_) => fetchConversations(true));
   }

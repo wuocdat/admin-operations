@@ -10,7 +10,7 @@ class MailRepository {
       : _mailApiClient = mailApiClient ?? MailApiClient();
 
   final MailApiClient _mailApiClient;
-  final _controller = StreamController<MailOverall>();
+  final _controller = StreamController<MailOverall>.broadcast();
 
   Stream<MailOverall> get overall async* {
     final overall = await _mailApiClient.getOverall();

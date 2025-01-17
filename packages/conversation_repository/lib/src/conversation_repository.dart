@@ -10,7 +10,7 @@ class ConversationRepository {
       : _apiClient = conversationApiClient ?? ConversationApiClient();
 
   final ConversationApiClient _apiClient;
-  final _controller = StreamController<String>();
+  final _controller = StreamController<String>.broadcast();
 
   Stream<String> get notification async* {
     yield* _controller.stream.asBroadcastStream();

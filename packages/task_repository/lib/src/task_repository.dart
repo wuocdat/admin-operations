@@ -11,7 +11,7 @@ class TaskRepository {
       : _taskApiClient = taskApiClient ?? TaskApiClient();
 
   final TaskApiClient _taskApiClient;
-  final _controller = StreamController<Overall>();
+  final _controller = StreamController<Overall>.broadcast();
 
   Stream<Overall> get overall async* {
     final overall = await _taskApiClient.getOverall();
