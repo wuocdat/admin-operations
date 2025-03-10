@@ -59,10 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDzBtRZYCNqVg1aOWL1NnC2cejbiKpEpy0',
-    appId: '1:351685453356:ios:55a478090c4b9669b01389',
+    appId: '1:351685453356:ios:b029abda164fbd11b01389',
     messagingSenderId: '351685453356',
     projectId: 'tctt-moible',
     storageBucket: 'tctt-moible.firebasestorage.app',
+    iosBundleId: 'kirill.c3c7.mtt-mobile',
   );
 
 }

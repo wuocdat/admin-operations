@@ -15,6 +15,8 @@ void main() async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
 
+    initRootLogger();
+
     Bloc.observer = const AppBlocObserver();
     HydratedBloc.storage = await HydratedStorage.build(
       storageDirectory: kIsWeb
@@ -27,8 +29,6 @@ void main() async {
     await initializeNotifications();
 
     await dotenv.load(fileName: ".env");
-
-    initRootLogger();
 
     runApp(const App());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));

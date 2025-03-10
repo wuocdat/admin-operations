@@ -47,7 +47,16 @@ Future<void> initializeFirebaseService() async {
     sound: true,
   );
 
-  logger.info(settings.authorizationStatus.name);
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    try {
+      String? apnsToken = await messaging.getAPNSToken();
+      logger.info('APNS Token: $apnsToken');
+    } catch (e) {
+      logger.info('Lỗi khi lấy APNS token: $e');
+    }
+  }
+
+  logger.info('Auth status: ${settings.authorizationStatus.name}');
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 }
@@ -137,91 +146,98 @@ void showFlutterNotification(RemoteMessage message,
         ),
       ),
     );
+
+    return;
   }
 
-  final messType = message.data['type'];
+  try {
+    final messType = message.data['type'];
 
-  if (messType == null) return;
+    if (messType == null) return;
 
-  final typeValue = messType as String;
-  switch (typeValue.toENotificationType) {
-    case ENotificationType.mission:
-      final taskId = message.data['taskId'] as String;
-      final notificationId = int.tryParse(taskId) ?? 0;
-      final body = message.data['body'] as String;
-      const title = "Nhiệm vụ mới";
+    final typeValue = messType as String;
+    switch (typeValue.toENotificationType) {
+      case ENotificationType.mission:
+        final taskId = message.data['taskId'] as String;
+        final notificationId = int.tryParse(taskId) ?? 0;
+        final body = message.data['body'] as String;
+        const title = "Nhiệm vụ mới";
 
-      flutterLocalNotificationsPlugin.show(
-        notificationId,
-        title,
-        body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            channel.id,
-            channel.name,
-            channelDescription: channel.description,
-            icon: 'app_icon',
-            // other properties...
+        flutterLocalNotificationsPlugin.show(
+          notificationId,
+          title,
+          body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              icon: 'app_icon',
+              // other properties...
+            ),
           ),
-        ),
-        payload: jsonEncode({
-          "type": typeValue,
-          "data": taskId,
-        }),
-      );
-      break;
+          payload: jsonEncode({
+            "type": typeValue,
+            "data": taskId,
+          }),
+        );
+        break;
 
-    case ENotificationType.mail:
-      final mailId = message.data['mailId'] as String;
-      final notificationId = int.tryParse(mailId) ?? 0;
-      final body = message.data['body'] as String;
-      const title = "Thư mới";
+      case ENotificationType.mail:
+        final mailId = message.data['mailId'] as String;
+        final notificationId = int.tryParse(mailId) ?? 0;
+        final body = message.data['body'] as String;
+        const title = "Thư mới";
 
-      flutterLocalNotificationsPlugin.show(
-        notificationId,
-        title,
-        body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            channel.id,
-            channel.name,
-            channelDescription: channel.description,
-            icon: 'app_icon',
-            // other properties...
+        flutterLocalNotificationsPlugin.show(
+          notificationId,
+          title,
+          body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              icon: 'app_icon',
+              // other properties...
+            ),
           ),
-        ),
-        payload: jsonEncode({
-          "type": typeValue,
-          "data": mailId,
-        }),
-      );
-      break;
+          payload: jsonEncode({
+            "type": typeValue,
+            "data": mailId,
+          }),
+        );
+        break;
 
-    case ENotificationType.chat:
-      final senderName = message.data['title'] as String;
-      final notificationId = DateTime.now().hashCode;
-      final conversationId = message.data['conversationId'];
-      final body = message.data['body'] as String;
-      final title = "Tin nhắn mới từ $senderName";
+      case ENotificationType.chat:
+        print(message.data['body']);
+        final senderName = message.data['title'] as String;
+        final notificationId = DateTime.now().hashCode;
+        final conversationId = message.data['conversationId'];
+        final body = message.data['body'] as String;
+        final title = "Tin nhắn mới từ $senderName";
 
-      flutterLocalNotificationsPlugin.show(
-        notificationId,
-        title,
-        body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            channel.id,
-            channel.name,
-            channelDescription: channel.description,
-            icon: 'app_icon',
-            // other properties...
+        flutterLocalNotificationsPlugin.show(
+          notificationId,
+          title,
+          body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              icon: 'app_icon',
+              // other properties...
+            ),
           ),
-        ),
-        payload: jsonEncode({
-          "type": typeValue,
-          "data": conversationId,
-        }),
-      );
-      break;
+          payload: jsonEncode({
+            "type": typeValue,
+            "data": conversationId,
+          }),
+        );
+        break;
+    }
+  } catch(e) {
+    logger.severe(e);
   }
 }
