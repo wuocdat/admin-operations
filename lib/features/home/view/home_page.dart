@@ -5,13 +5,11 @@ import 'package:task_repository/task_repository.dart';
 import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/conversation/view/conversation_page.dart';
-import 'package:tctt_mobile/features/conversation_center/view/conversation_center_page.dart';
 import 'package:tctt_mobile/features/dashboard/view/dashboard_page.dart';
 import 'package:tctt_mobile/features/global/bloc/global_bloc.dart';
 import 'package:tctt_mobile/features/home/cubit/home_cubit.dart';
 import 'package:tctt_mobile/features/mail/view/mail_page.dart';
 import 'package:tctt_mobile/features/received_task_detail/view/received_task_detail_page.dart';
-import 'package:tctt_mobile/features/target/view/target_page.dart';
 import 'package:tctt_mobile/features/task/view/task_page.dart';
 import 'package:tctt_mobile/features/setting/view/setting_page.dart';
 import 'package:tctt_mobile/features/account_setting/view/account_setting_page.dart';
@@ -29,9 +27,7 @@ class HomePage extends StatelessWidget {
   static const List<Widget> _widgetOptions = [
     DashBoardPage(),
     TaskPage(),
-    TargetPage(),
     MailPage(),
-    ConversationCenter(),
   ];
 
   @override
@@ -171,11 +167,6 @@ class HomePage extends StatelessWidget {
                   ),
                   label: 'Nhiệm vụ',
                 ),
-                const NavigationDestination(
-                  selectedIcon: Icon(Icons.supervised_user_circle),
-                  icon: Icon(Icons.supervised_user_circle_outlined),
-                  label: 'Giám sát',
-                ),
                 NavigationDestination(
                   selectedIcon: Badge(
                     isLabelVisible: state.unReadMailNum > 0,
@@ -188,19 +179,6 @@ class HomePage extends StatelessWidget {
                     child: const Icon(Icons.mail_outline),
                   ),
                   label: 'Hòm thư',
-                ),
-                const NavigationDestination(
-                  selectedIcon: Badge(
-                    isLabelVisible: false,
-                    label: Text('5'),
-                    child: Icon(Icons.messenger),
-                  ),
-                  icon: Badge(
-                    isLabelVisible: false,
-                    label: Text('5'),
-                    child: Icon(Icons.messenger_outline),
-                  ),
-                  label: 'Nhắn tin',
                 ),
               ],
             ),
@@ -221,12 +199,8 @@ extension on int {
         return "Hệ thống MTTN";
       case 1:
         return "Nhiệm vụ";
-      case 2:
-        return "Giám sát";
-      case 3:
-        return "Hòm thư";
     }
-    return "Nhắn tin";
+    return "Hòm thư";
   }
 
   bool get isHome => this == 0;

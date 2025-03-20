@@ -26,19 +26,19 @@ class UnitItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 1),
+      padding: const EdgeInsetsDirectional.symmetric(vertical: 8),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: const [
-            BoxShadow(
-              blurRadius: 0,
-              color: Color(0xFFE0E3E7),
-              offset: Offset(0.0, 1),
-            )
-          ],
-          borderRadius: BorderRadius.circular(0),
+          // boxShadow: const [
+          //   BoxShadow(
+          //     blurRadius: 0,
+          //     color: Color(0xFFE0E3E7),
+          //     offset: Offset(0.0, 1),
+          //   )
+          // ],
+          border: Border.all(color: AppColors.primary, width: 1),
+          borderRadius: BorderRadius.circular(4),
           shape: BoxShape.rectangle,
         ),
         child: InkWell(
@@ -48,81 +48,21 @@ class UnitItem extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Container(
-                  width: 4,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(12, 4, 0, 4),
                     child: Text(
-                      _text,
+                      _text.trim().capitalize(),
                       style: const TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
                         letterSpacing: 0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class WhiteButton extends StatelessWidget {
-  const WhiteButton({
-    super.key,
-    required String text,
-    required IconData icon,
-    required VoidCallback? onPressed,
-  })  : _text = text,
-        _icon = icon,
-        _onPressed = onPressed;
-
-  final String _text;
-  final IconData _icon;
-  final VoidCallback? _onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-        child: ElevatedButton(
-          onPressed: _onPressed,
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            elevation: 1,
-            textStyle: const TextStyle(
-                fontSize: 13,
-                fontFamily: 'Plus Jakarta Sans',
-                letterSpacing: 0,
-                fontWeight: FontWeight.bold),
-            backgroundColor: Colors.white,
-            foregroundColor: AppColors.primary,
-            minimumSize: const Size(0, 28),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                _icon,
-                size: 16,
-              ),
-              const SizedBox(width: 6),
-              Text(_text),
-            ],
           ),
         ),
       ),
@@ -265,7 +205,6 @@ class UnitManagerPage extends StatelessWidget {
               padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   BlocSelector<UnitManagerBloc, UnitManagerState, String>(
                     selector: (state) {
@@ -273,10 +212,10 @@ class UnitManagerPage extends StatelessWidget {
                     },
                     builder: (context, unitName) {
                       return Padding(
-                        padding:
-                            const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
+                        padding: const EdgeInsetsDirectional.all(12),
                         child: Text(
-                          unitName,
+                          textAlign: TextAlign.center,
+                          unitName.trim().toUpperCase(),
                           style: const TextStyle(
                             fontFamily: 'Plus Jakarta Sans',
                             fontSize: 16,
@@ -296,9 +235,8 @@ class UnitManagerPage extends StatelessWidget {
                           return state.currentUnit;
                         },
                         builder: (context, unit) {
-                          return WhiteButton(
-                            text: 'Thành viên',
-                            icon: Icons.group,
+                          return TextButton(
+                            child: const Text('Xem thành viên'),
                             onPressed: () {
                               Navigator.push(
                                   context,

@@ -18,9 +18,9 @@ extension TaskTypeEX on TaskTypeE {
   String get name {
     switch (this) {
       case TaskTypeE.report:
-        return 'Báo xấu';
+        return 'Báo cáo';
       case TaskTypeE.investigate:
-        return 'Điều tra';
+        return 'Tìm thông tin';
       case TaskTypeE.monitor:
         return 'Giám sát';
       case TaskTypeE.other:

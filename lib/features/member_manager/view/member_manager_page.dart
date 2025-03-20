@@ -5,6 +5,7 @@ import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/features/member_manager/bloc/member_manager_bloc.dart';
 import 'package:tctt_mobile/features/new_member/view/new_member_page.dart';
 import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/widgets/images.dart';
 import 'package:tctt_mobile/shared/widgets/loader.dart';
 import 'package:tctt_mobile/shared/widgets/rich_list_view.dart';
 import 'package:user_repository/user_repository.dart';
@@ -37,15 +38,7 @@ class MemberItem extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(40),
-                child: Image.network(
-                  'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8dXNlcnN8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
-                  width: 32,
-                  height: 32,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              child: SmartAvatar(text: _name),
             ),
             Expanded(
               child: Padding(
@@ -125,12 +118,24 @@ class MemberManager extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
-          'Thành viên',
+        title:  Text(
+          currentUnitName.trim().toUpperCase(),
           style: TextStyle(
             fontFamily: 'Urbanest',
             letterSpacing: 0,
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await Navigator.push(
+              context, NewMemberPage.route(unitId, currentUnitName));
+          if (!context.mounted) return;
+          context.read<MemberManagerBloc>().add(const UserReFetchedEvent());
+        },
+        child: Icon(
+          Icons.person_add,
+          color: Colors.black,
         ),
       ),
       body: Container(
@@ -145,67 +150,16 @@ class MemberManager extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 4),
+                    padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 16),
                     child: Text(
-                      currentUnitName.capitalize(),
+                      'Danh sách thành viên',
                       style: const TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 16,
+                        fontSize: 18,
                         letterSpacing: 0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                          child: Icon(
-                            Icons.person_add_rounded,
-                            color: Color(0xFF14181B),
-                            size: 20,
-                          ),
-                        ),
-                        Expanded(
-                          child: Builder(builder: (context) {
-                            return InkWell(
-                              onTap: () async {
-                                await Navigator.push(
-                                    context,
-                                    NewMemberPage.route(
-                                        unitId, currentUnitName));
-                                if (!context.mounted) return;
-                                context
-                                    .read<MemberManagerBloc>()
-                                    .add(const UserReFetchedEvent());
-                              },
-                              child: const Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    12, 0, 12, 0),
-                                child: Text(
-                                  'Thêm thành viên',
-                                  style: TextStyle(
-                                    fontFamily: 'Plus Jakarta Sans',
-                                    color: Color(0xFF14181B),
-                                    fontSize: 14,
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Colors.grey,
                   ),
                   Expanded(
                       child: BlocBuilder<MemberManagerBloc, MemberManagerState>(
@@ -241,7 +195,7 @@ class MemberManager extends StatelessWidget {
                                       color: Colors.white),
                                 ),
                                 child: MemberItem(
-                                    name: currentUser.name,
+                                    name: currentUser.name.trim().capitalize(),
                                     role: currentUser.username,
                                     onPressed: () {}),
                               );

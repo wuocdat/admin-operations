@@ -92,24 +92,30 @@ class SettingPage extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              const Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
-                child: MediumLabelText("© 2024 c3c6"),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 0, 0),
-                child: MediumLabelText("v$appVersion"),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(14, 0, 0, 8),
-                child: CustomElevatedButton(
-                  text: 'Đăng Xuất',
-                  onPressed: () {
-                    context
-                        .read<AuthenticationBloc>()
-                        .add(AuthenticationLogoutRequested());
-                  },
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
+                    child: MediumLabelText("© 2025 c3c7"),
+                  ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 0, 0),
+                    child: MediumLabelText("v$appVersion"),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(14, 0, 0, 24),
+                    child: CustomElevatedButton(
+                      text: 'Đăng Xuất',
+                      onPressed: () {
+                        context
+                            .read<AuthenticationBloc>()
+                            .add(AuthenticationLogoutRequested());
+                      },
+                    ),
+                  )
+                ],
               )
             ],
           ),

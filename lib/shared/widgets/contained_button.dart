@@ -110,16 +110,9 @@ class CustomElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.red,
         padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
         elevation: 0,
-        side: const BorderSide(
-          color: AppColors.secondaryBackground,
-          width: 1,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
       ),
       onPressed: _onPressed,
       child: const Padding(
@@ -130,7 +123,7 @@ class CustomElevatedButton extends StatelessWidget {
               fontFamily: 'Plus Jakarta Sans',
               letterSpacing: 0,
               fontSize: 16,
-              color: Colors.black),
+              color: Colors.white,),
         ),
       ),
     );

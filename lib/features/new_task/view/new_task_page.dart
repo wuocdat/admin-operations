@@ -243,6 +243,7 @@ class FileBrowser extends StatelessWidget {
       builder: (context, state) {
         return FilePicker(
           fileNames: state.files,
+          fileType: FileType.image,
           onFilesSelected: (files) {
             context.read<NewTaskBloc>().add(FilePicked(files));
           },
