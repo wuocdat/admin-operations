@@ -30,15 +30,6 @@ class LoginForm extends StatelessWidget {
               _UsernameInput(),
               const Padding(padding: EdgeInsets.all(12)),
               _PasswordInput(),
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Row(
-                  children: [
-                    Checkbox(value: true, onChanged: (newValue) {}),
-                    const Text('Nhớ mật khẩu?')
-                  ],
-                ),
-              ),
               const Padding(padding: EdgeInsets.all(8)),
               _LoginButton(),
             ],

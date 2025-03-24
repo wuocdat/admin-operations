@@ -31,5 +31,7 @@ void main() async {
     await dotenv.load(fileName: ".env");
 
     runApp(const App());
-  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
+  },
+      (error, stack) =>
+          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true));
 }

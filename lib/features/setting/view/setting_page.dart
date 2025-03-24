@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:tctt_mobile/core/services/firebase_service.dart';
 import 'package:tctt_mobile/features/unit_manager/view/unit_manager_page.dart';
 import 'package:tctt_mobile/features/member_manager/view/member_manager_page.dart';
 import 'package:tctt_mobile/features/account_setting/view/account_setting_page.dart';
@@ -10,13 +11,40 @@ import 'package:units_repository/units_repository.dart';
 
 import '../../authentication/bloc/authentication_bloc.dart';
 
-class SettingPage extends StatelessWidget {
+class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
 
   static Route<void> route() {
     return MaterialPageRoute<void>(
       builder: (_) => const SettingPage(),
     );
+  }
+
+  @override
+  State<SettingPage> createState() => _SettingPageState();
+}
+
+class _SettingPageState extends State<SettingPage> {
+  bool _isCrashlyticsEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSetting();
+  }
+
+  Future<void> _loadSetting() async {
+    bool enabled = CrashlyticsService.isCrashlyticsEnabled();
+    setState(() {
+      _isCrashlyticsEnabled = enabled;
+    });
+  }
+
+  Future<void> _toggleCrashlytics(bool value) async {
+    await CrashlyticsService.setCrashlyticsEnabled(value);
+    setState(() {
+      _isCrashlyticsEnabled = value;
+    });
   }
 
   @override
@@ -51,27 +79,25 @@ class SettingPage extends StatelessWidget {
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
                 children: [
-                  ContentButton(
-                      text: 'Quản lí tài khoản',
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const AccountSetting()));
-                      }),
                   BlocSelector<AuthenticationBloc, AuthenticationState, Unit>(
                     selector: (state) {
                       return state.user.unit;
                     },
                     builder: (context, unit) {
-                      return ContentButton(
-                          text: 'Đơn vị',
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              UnitManagerPage.route(unit.id, unit.type["_id"]),
-                            );
-                          });
+                      return ListTile(
+                        title: const Text('Thông tin đơn vị'),
+                        trailing: const Icon(
+                          Icons.chevron_right_rounded,
+                          color: Colors.black,
+                          size: 24,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            UnitManagerPage.route(unit.id, unit.type["_id"]),
+                          );
+                        },
+                      );
                     },
                   ),
                   BlocSelector<AuthenticationBloc, AuthenticationState, Unit>(
@@ -79,17 +105,46 @@ class SettingPage extends StatelessWidget {
                       return state.user.unit;
                     },
                     builder: (context, unit) {
-                      return ContentButton(
-                          text: 'Thành viên',
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MemberManager.route(unit.id,
-                                    "${unit.type["name"]} ${unit.name}"));
-                          });
+                      return ListTile(
+                        title: const Text('Thông tin thành viên'),
+                        trailing: const Icon(
+                          Icons.chevron_right_rounded,
+                          color: Colors.black,
+                          size: 24,
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MemberManager.route(unit.id,
+                                  "${unit.type["name"]} ${unit.name}"));
+                        },
+                      );
                     },
                   ),
                 ],
+              ),
+              ListTile(
+                title: const Text('Quản lí tài khoản'),
+                trailing: const Icon(
+                  Icons.chevron_right_rounded,
+                  color: Colors.black,
+                  size: 24,
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AccountSetting()));
+                },
+              ),
+              ListTile(
+                title: const Text("Báo cáo lỗi"),
+                subtitle: const Text(
+                    "Cho phép gửi báo cáo lỗi giúp cải thiện ứng dụng"),
+                trailing: Switch(
+                  value: _isCrashlyticsEnabled,
+                  onChanged: _toggleCrashlytics,
+                ),
               ),
               const Spacer(),
               Column(

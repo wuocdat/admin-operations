@@ -5,12 +5,14 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/core/utils/logger.dart';
 import 'package:tctt_mobile/firebase_options.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 
 late FirebaseMessaging messaging;
+late FlutterSecureStorage storage;
 
 Future<void> initializeFirebaseService() async {
   await Firebase.initializeApp(
@@ -25,15 +27,20 @@ Future<void> initializeFirebaseService() async {
     return true;
   };
 
-  // if (kDebugMode) {
-  //   // Force disable Crashlytics collection while doing every day development.
-  //   // Temporarily toggle this to true if you want to test crash reporting in your app.
-  //   await FirebaseCrashlytics.instance
-  //       .setCrashlyticsCollectionEnabled(false);
-  // } else {
-  //   // Handle Crashlytics enabled status when not in Debug,
-  //   // e.g. allow your users to opt-in to crash reporting.
-  // }
+  storage = FlutterSecureStorage();
+
+  if (kDebugMode) {
+    // Force disable Crashlytics collection while doing every day development.
+    // Temporarily toggle this to true if you want to test crash reporting in your app.
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(false);
+  } else {
+    // Handle Crashlytics enabled status when not in Debug,
+    // e.g. allow your users to opt-in to crash reporting.
+    final isEnabled = await storage.read(key: CrashlyticsService._keyCrashlyticsEnabled);
+    await FirebaseCrashlytics.instance
+        .setCrashlyticsCollectionEnabled(isEnabled == 'true');
+  }
 
   messaging = FirebaseMessaging.instance;
 
@@ -239,5 +246,17 @@ void showFlutterNotification(RemoteMessage message,
     }
   } catch(e) {
     logger.severe(e);
+  }
+}
+class CrashlyticsService {
+  static const String _keyCrashlyticsEnabled = "crashlytics_enabled";
+
+  static Future<void> setCrashlyticsEnabled(bool enabled) async {
+    await storage.write(key: _keyCrashlyticsEnabled, value: enabled ? 'true' : 'false');
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(enabled);
+  }
+
+  static bool isCrashlyticsEnabled() {
+    return  FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled;
   }
 }
