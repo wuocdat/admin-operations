@@ -5,8 +5,6 @@ import 'package:tctt_mobile/core/services/firebase_service.dart';
 import 'package:tctt_mobile/features/unit_manager/view/unit_manager_page.dart';
 import 'package:tctt_mobile/features/member_manager/view/member_manager_page.dart';
 import 'package:tctt_mobile/features/account_setting/view/account_setting_page.dart';
-import 'package:tctt_mobile/shared/widgets/contained_button.dart';
-import 'package:tctt_mobile/shared/widgets/label_text.dart';
 import 'package:units_repository/units_repository.dart';
 
 import '../../authentication/bloc/authentication_bloc.dart';
@@ -146,32 +144,28 @@ class _SettingPageState extends State<SettingPage> {
                   onChanged: _toggleCrashlytics,
                 ),
               ),
-              const Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
-                    child: MediumLabelText("© 2025 c3c7"),
-                  ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 0, 0),
-                    child: MediumLabelText("v$appVersion"),
-                  ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(14, 0, 0, 24),
-                    child: CustomElevatedButton(
-                      text: 'Đăng Xuất',
-                      onPressed: () {
-                        context
-                            .read<AuthenticationBloc>()
-                            .add(AuthenticationLogoutRequested());
-                      },
-                    ),
-                  )
-                ],
-              )
+              ListTile(
+                title: const Text("Phiên bản ứng dụng"),
+                subtitle: Text("$appVersion"),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                child: TextButton(
+                    onPressed: () {
+                      context
+                          .read<AuthenticationBloc>()
+                          .add(AuthenticationLogoutRequested());
+                    },
+                    child: const Text(
+                      'Đăng Xuất',
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        letterSpacing: 0,
+                        fontSize: 16,
+                        color: Colors.red,
+                      ),
+                    )),
+              ),
             ],
           ),
         ));

@@ -19,6 +19,7 @@ final class FileHelper {
     try {
       if (Platform.isIOS) {
         dir = await getApplicationDocumentsDirectory(); // for iOS
+        return "${dir.path}/$filename";
       } else {
         dir = Directory('/storage/emulated/0/Download/'); // for android
         if (!await dir.exists()) dir = (await getExternalStorageDirectory())!;

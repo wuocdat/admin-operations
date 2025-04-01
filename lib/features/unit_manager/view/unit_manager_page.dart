@@ -318,11 +318,11 @@ class UnitManagerPage extends StatelessWidget {
                                       // ),
                                     ],
                                   ),
-                                  child: UnitItem(
-                                    text:
-                                        "${currentUnit.type["name"]} ${currentUnit.name}"
-                                            .capitalize(),
-                                    onPressed: () {
+                                  child: ListTile(
+                                    title: Text("${currentUnit.type["name"]} ${currentUnit.name}"
+                                        .capitalize()),
+                                    leading: const Icon(Icons.maps_home_work),
+                                    onTap: () {
                                       context
                                           .read<UnitManagerBloc>()
                                           .add(ChildUnitsFetchedEvent(
