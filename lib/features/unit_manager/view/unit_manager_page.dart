@@ -205,48 +205,37 @@ class UnitManagerPage extends StatelessWidget {
               padding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BlocSelector<UnitManagerBloc, UnitManagerState, String>(
+                  BlocSelector<UnitManagerBloc, UnitManagerState, Unit>(
                     selector: (state) {
-                      return state.currentUnit.name;
+                      return state.currentUnit;
                     },
-                    builder: (context, unitName) {
-                      return Padding(
-                        padding: const EdgeInsetsDirectional.all(12),
-                        child: Text(
-                          textAlign: TextAlign.center,
-                          unitName.trim().toUpperCase(),
-                          style: const TextStyle(
-                            fontFamily: 'Plus Jakarta Sans',
-                            fontSize: 16,
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    builder: (context, unit) {
+                      return ListTile(
+                        title: Text(unit.name.capitalize()),
+                        subtitle: Text(
+                            "Cấp: ${(unit.type['name'] as String?)?.noBlank ?? "Khác"}"),
+                        trailing: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MemberManager.route(
+                                unit.id,
+                                "${unit.type["name"]} ${unit.name}",
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.group),
                         ),
                       );
                     },
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      BlocSelector<UnitManagerBloc, UnitManagerState, Unit>(
-                        selector: (state) {
-                          return state.currentUnit;
-                        },
-                        builder: (context, unit) {
-                          return TextButton(
-                            child: const Text('Xem thành viên'),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MemberManager.route(unit.id,
-                                      "${unit.type["name"]} ${unit.name}"));
-                            },
-                          );
-                        },
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    child: Text('Danh sách đơn vị trực thuộc',
+                        textAlign: TextAlign.start,
+                        style: Theme.of(context).textTheme.bodyLarge),
                   ),
                   Expanded(
                     child: BlocBuilder<UnitManagerBloc, UnitManagerState>(
@@ -318,19 +307,30 @@ class UnitManagerPage extends StatelessWidget {
                                       // ),
                                     ],
                                   ),
-                                  child: ListTile(
-                                    title: Text("${currentUnit.type["name"]} ${currentUnit.name}"
-                                        .capitalize()),
-                                    leading: const Icon(Icons.maps_home_work),
-                                    onTap: () {
-                                      context
-                                          .read<UnitManagerBloc>()
-                                          .add(ChildUnitsFetchedEvent(
-                                            parentUnitId: currentUnit.id,
-                                            parentUnitTypeId:
-                                                currentUnit.type["_id"],
-                                          ));
-                                    },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Colors.grey.shade300,
+                                          width: 1,
+                                        ),
+                                      ),
+                                    ),
+                                    child: ListTile(
+                                      title: Text(
+                                          "${currentUnit.type["name"]} ${currentUnit.name}"
+                                              .capitalize()),
+                                      leading: const Icon(Icons.apartment_rounded),
+                                      onTap: () {
+                                        context
+                                            .read<UnitManagerBloc>()
+                                            .add(ChildUnitsFetchedEvent(
+                                              parentUnitId: currentUnit.id,
+                                              parentUnitTypeId:
+                                                  currentUnit.type["_id"],
+                                            ));
+                                      },
+                                    ),
                                   ),
                                 );
                               },
