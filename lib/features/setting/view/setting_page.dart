@@ -5,9 +5,13 @@ import 'package:tctt_mobile/core/services/firebase_service.dart';
 import 'package:tctt_mobile/features/unit_manager/view/unit_manager_page.dart';
 import 'package:tctt_mobile/features/member_manager/view/member_manager_page.dart';
 import 'package:tctt_mobile/features/account_setting/view/account_setting_page.dart';
+import 'package:tctt_mobile/shared/enums.dart';
+import 'package:tctt_mobile/shared/widgets/has_permission.dart';
 import 'package:units_repository/units_repository.dart';
 
 import '../../authentication/bloc/authentication_bloc.dart';
+
+const unitAndMemberManagementRoles = [ERole.superadmin, ERole.admin];
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -77,47 +81,57 @@ class _SettingPageState extends State<SettingPage> {
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
                 children: [
-                  BlocSelector<AuthenticationBloc, AuthenticationState, Unit>(
-                    selector: (state) {
-                      return state.user.unit;
-                    },
-                    builder: (context, unit) {
-                      return ListTile(
-                        title: const Text('Thông tin đơn vị'),
-                        trailing: const Icon(
-                          Icons.chevron_right_rounded,
-                          color: Colors.black,
-                          size: 24,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            UnitManagerPage.route(unit.id, unit.type["_id"]),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  BlocSelector<AuthenticationBloc, AuthenticationState, Unit>(
-                    selector: (state) {
-                      return state.user.unit;
-                    },
-                    builder: (context, unit) {
-                      return ListTile(
-                        title: const Text('Thông tin thành viên'),
-                        trailing: const Icon(
-                          Icons.chevron_right_rounded,
-                          color: Colors.black,
-                          size: 24,
-                        ),
-                        onTap: () {
-                          Navigator.push(
+                  HasPermission(
+                    allowedRoles: unitAndMemberManagementRoles,
+                    otherwise: Container(),
+                    child: BlocSelector<AuthenticationBloc, AuthenticationState,
+                        Unit>(
+                      selector: (state) {
+                        return state.user.unit;
+                      },
+                      builder: (context, unit) {
+                        return ListTile(
+                          title: const Text('Thông tin đơn vị'),
+                          trailing: const Icon(
+                            Icons.chevron_right_rounded,
+                            color: Colors.black,
+                            size: 24,
+                          ),
+                          onTap: () {
+                            Navigator.push(
                               context,
-                              MemberManager.route(unit.id,
-                                  "${unit.type["name"]} ${unit.name}"));
-                        },
-                      );
-                    },
+                              UnitManagerPage.route(unit.id, unit.type["_id"]),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  HasPermission(
+                    allowedRoles: unitAndMemberManagementRoles,
+                    otherwise: Container(),
+                    child: BlocSelector<AuthenticationBloc, AuthenticationState,
+                        Unit>(
+                      selector: (state) {
+                        return state.user.unit;
+                      },
+                      builder: (context, unit) {
+                        return ListTile(
+                          title: const Text('Thông tin thành viên'),
+                          trailing: const Icon(
+                            Icons.chevron_right_rounded,
+                            color: Colors.black,
+                            size: 24,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MemberManager.route(unit.id,
+                                    "${unit.type["name"]} ${unit.name}"));
+                          },
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),

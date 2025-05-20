@@ -29,18 +29,18 @@ class MainParameter extends StatelessWidget {
             title: "Hòm thư",
             themeColor: Colors.amber[700],
           ),
-          ParameterItem(
-            parameterValue: context
-                .select((DashboardBloc bloc) => bloc.state.target.reactionary),
-            title: "Đối tượng",
-            themeColor: Colors.redAccent,
-          ),
-          ParameterItem(
-            parameterValue: context
-                .select((DashboardBloc bloc) => bloc.state.target.subject_35),
-            title: "Trang truyền thông",
-            themeColor: Colors.blueAccent,
-          ),
+          // ParameterItem(
+          //   parameterValue: context
+          //       .select((DashboardBloc bloc) => bloc.state.target.reactionary),
+          //   title: "Đối tượng",
+          //   themeColor: Colors.redAccent,
+          // ),
+          // ParameterItem(
+          //   parameterValue: context
+          //       .select((DashboardBloc bloc) => bloc.state.target.subject_35),
+          //   title: "Trang truyền thông",
+          //   themeColor: Colors.blueAccent,
+          // ),
         ],
       ),
     );
