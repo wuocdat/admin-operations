@@ -1,6 +1,5 @@
 import 'package:conversation_repository/conversation_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tctt_mobile/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tctt_mobile/features/conversation/view/conversation_page.dart';
@@ -35,7 +34,15 @@ class ConversationCenter extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   InkWell(
-                    onTap: () => Navigator.of(context).push(SearchUser.route()),
+                    onTap: () async {
+                      await Navigator.of(context).push(SearchUser.route());
+
+                      if (!context.mounted) return;
+
+                      context
+                          .read<ConversationCenterCubit>()
+                          .fetchConversations();
+                    },
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       color: theme.primaryColor.withOpacity(0.1),
@@ -58,7 +65,8 @@ class ConversationCenter extends StatelessWidget {
                         itemCount: state.conversations.length,
                         itemBuilder: (_, index) {
                           final conversation = state.conversations[index];
-                          return conversation.lastestMessage != null
+                          return conversation.lastestMessage != null ||
+                                  conversation.conversationUsers.length > 2
                               ? ConversationItem(
                                   conversation: conversation,
                                   onTap: () async {
@@ -164,7 +172,14 @@ class ConversationItem extends StatelessWidget {
 }
 
 extension on Conversation {
-  String get lastMessageContent => lastestMessage?['content'] ?? "";
+  String get lastMessageContent {
+    return switch (lastestMessage?.type) {
+      EMessageType.text => lastestMessage?.content ?? '',
+      EMessageType.image => 'Tin nhắn hình ảnh',
+      EMessageType.video => 'Tin nhắn video',
+      _ => 'Chưa có tin nhắn nào',
+    };
+  }
 
   String get lastMessageTime => lastMessageCreatedAt != null
       ? TimeUtils.convertTimeToReadableFormat(lastMessageCreatedAt!)

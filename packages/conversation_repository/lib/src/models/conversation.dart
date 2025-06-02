@@ -1,4 +1,4 @@
-import 'package:conversation_repository/src/models/conversation_user.dart';
+import 'package:conversation_repository/conversation_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -18,7 +18,7 @@ class Conversation extends Equatable {
   final String id;
   final String? name;
   final List<ConversationUser> conversationUsers;
-  final Map<String, dynamic>? lastestMessage;
+  final Message? lastestMessage;
   final String? lastMessageCreatedAt;
 
   static const empty = Conversation(id: "", conversationUsers: []);

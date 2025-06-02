@@ -13,7 +13,9 @@ Conversation _$ConversationFromJson(Map<String, dynamic> json) => Conversation(
           .map((e) => ConversationUser.fromJson(e as Map<String, dynamic>))
           .toList(),
       lastMessageCreatedAt: json['lastMessageCreatedAt'] as String?,
-      lastestMessage: json['lastestMessage'] as Map<String, dynamic>?,
+      lastestMessage: json['lastestMessage'] == null
+          ? null
+          : Message.fromJson(json['lastestMessage'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ConversationToJson(Conversation instance) =>

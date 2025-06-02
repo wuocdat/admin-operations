@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:tctt_mobile/core/utils/logger.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -29,5 +30,6 @@ class AppBlocObserver extends BlocObserver {
   void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
     super.onError(bloc, error, stackTrace);
     logger.severe('onError $error');
+    FirebaseCrashlytics.instance.recordError(error, stackTrace);
   }
 }

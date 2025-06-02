@@ -1,3 +1,4 @@
+import 'package:conversation_repository/src/models/enums.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -11,28 +12,33 @@ class Message extends Equatable {
     required this.createdAt,
     required this.createdBy,
     required this.conversationId,
-    required this.content,
+    this.content,
     required this.updatedAt,
     required this.updatedBy,
     required this.userData,
+    this.type = EMessageType.text,
+    this.media,
   });
 
   @JsonKey(name: "_id")
   final String id;
   final bool isActive;
-  final String content;
+  final String? content;
   final String conversationId;
   final String createdBy;
   final String createdAt;
   final String updatedBy;
   final String updatedAt;
-  final Map<String, String> userData;
+  @JsonKey(fromJson: _fromJson)
+  final Map<String, dynamic> userData;
+  final EMessageType type;
+  final Map<String, dynamic>? media;
 
   factory Message.fromJson(Map<String, dynamic> json) =>
       _$MessageFromJson(json);
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         id,
         isActive,
         content,
@@ -42,5 +48,9 @@ class Message extends Equatable {
         updatedBy,
         conversationId,
         userData,
+        type,
+        media,
       ];
+
+  static dynamic _fromJson(dynamic value) => value ?? {'name': 'No name'};
 }

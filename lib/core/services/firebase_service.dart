@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:tctt_mobile/core/utils/extensions.dart';
 import 'package:tctt_mobile/core/utils/logger.dart';
@@ -14,6 +16,24 @@ Future<void> initializeFirebaseService() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Pass all uncaught "fatal" errors from the framework to Crashlytics
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
+  // if (kDebugMode) {
+  //   // Force disable Crashlytics collection while doing every day development.
+  //   // Temporarily toggle this to true if you want to test crash reporting in your app.
+  //   await FirebaseCrashlytics.instance
+  //       .setCrashlyticsCollectionEnabled(false);
+  // } else {
+  //   // Handle Crashlytics enabled status when not in Debug,
+  //   // e.g. allow your users to opt-in to crash reporting.
+  // }
 
   messaging = FirebaseMessaging.instance;
 
@@ -71,9 +91,12 @@ Future<void> initializeNotifications() async {
 
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('app_icon');
+  final DarwinInitializationSettings initializationSettingsDarwin =
+  DarwinInitializationSettings();
 
-  const InitializationSettings initializationSettings = InitializationSettings(
+  final InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
+    iOS: initializationSettingsDarwin,
   );
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);

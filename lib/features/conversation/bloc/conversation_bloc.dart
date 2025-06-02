@@ -3,11 +3,16 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:conversation_repository/conversation_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:tctt_mobile/core/services/socket_service.dart';
+import 'package:tctt_mobile/core/utils/constants.dart';
+import 'package:tctt_mobile/core/utils/extensions.dart';
+import 'package:tctt_mobile/core/utils/logger.dart';
 import 'package:tctt_mobile/shared/debounce.dart';
 import 'package:tctt_mobile/shared/enums.dart';
 
 part 'conversation_event.dart';
+
 part 'conversation_state.dart';
 
 class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
@@ -27,6 +32,8 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     on<MessageTextInputChangedEvent>(_onMessageTextInputChanged);
     on<_NewMessageReceivedEvent>(_onNewMessageReceived);
     on<ConversationInfoFetchedEvent>(_onConversationInfoFetched);
+    on<FilePicked>(_onFilesPicked);
+    on<FilesCleared>(_onFilesCleared);
 
     _socketIOService.connect();
 
@@ -59,7 +66,8 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       emit(state.copyWith(
           conversationInfo: conversation,
           headerStatus: FetchDataStatus.success));
-    } catch (_) {
+    } catch (e) {
+      logger.severe(e);
       emit(state.copyWith(headerStatus: FetchDataStatus.failure));
     }
   }
@@ -86,16 +94,39 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
               status: FetchDataStatus.success,
               messages: List.of(state.messages)..addAll(messages),
             ));
-    } catch (_) {
+    } catch (e) {
+      logger.severe(e);
       emit(state.copyWith(status: FetchDataStatus.failure));
     }
   }
 
-  void _onMessageSent(
+  Future<void> _onMessageSent(
     MessageSentEvent event,
     Emitter<ConversationState> emit,
-  ) {
-    _socketIOService.sendMessage(state.currentInputText);
+  ) async {
+    if (state.files.isNotEmpty) {
+      emit(state.copyWith(showUploadingMessage: true));
+
+      try {
+        final uploadedUrls = await _conversationRepository.uploadMessageFiles(
+            state.files.map((e) => e.path!).toList(),
+            state.files[0].isImage
+                ? EMessageMediaType.image.name
+                : EMessageMediaType.video.name);
+
+        _socketIOService.sendMessage(
+            content: state.currentInputText.noBlank,
+            images: state.files[0].isImage ? uploadedUrls : null,
+            video: state.files[0].isImage ? null : uploadedUrls[0]);
+      } catch (e) {
+        logger.severe(e);
+        emit(state.copyWith(showUploadingMessage: false));
+      } finally {
+        emit(state.copyWith(files: []));
+      }
+    } else {
+      _socketIOService.sendMessage(content: state.currentInputText);
+    }
   }
 
   void _onMessageTextInputChanged(
@@ -108,6 +139,22 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     Emitter<ConversationState> emit,
   ) {
     emit(state.copyWith(
-        messages: List.of(state.messages)..insert(0, event.message)));
+      messages: List.of(state.messages)..insert(0, event.message),
+      showUploadingMessage: false,
+    ));
+  }
+
+  void _onFilesPicked(FilePicked event, Emitter<ConversationState> emit) {
+    emit(state.copyWith(files: event.files));
+  }
+
+  void _onFilesCleared(FilesCleared event, Emitter<ConversationState> emit) {
+    emit(state.copyWith(files: []));
+  }
+}
+
+extension on PlatformFile {
+  bool get isImage {
+    return allowedImageExtensions.contains(extension);
   }
 }

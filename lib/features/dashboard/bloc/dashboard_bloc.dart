@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:mail_repository/mail_repository.dart';
 import 'package:target_repository/target_repository.dart';
 import 'package:task_repository/task_repository.dart';
@@ -48,10 +49,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final newestMail = await _mailRepository.getNewestMail();
       final targetOverall = await _targetRepository.getOverall();
+      final postOverall = await _targetRepository.getPostOverall();
 
       emit(state.copyWith(
         newestMail: newestMail,
         target: targetOverall,
+        postData: postOverall,
         status: DashboardStatus.success,
       ));
     } catch (_) {
@@ -77,14 +80,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     try {
       final newestMail = await _mailRepository.getNewestMail();
       final targetOverall = await _targetRepository.getOverall();
+      final postOverall = await _targetRepository.getPostOverall();
 
       emit(state.copyWith(
         newestMail: newestMail,
         target: targetOverall,
+        postData: postOverall,
         status: DashboardStatus.success,
       ));
-    } catch (_) {
+    } catch (e, stack) {
       emit(state.copyWith(status: DashboardStatus.failure));
+      FirebaseCrashlytics.instance.recordError(e, stack);
     }
   }
 }

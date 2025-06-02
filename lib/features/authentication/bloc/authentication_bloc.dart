@@ -6,6 +6,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:tctt_mobile/core/services/firebase_service.dart';
 import 'package:user_repository/user_repository.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -72,7 +73,8 @@ class AuthenticationBloc
     try {
       final user = await _userRepository.getUser();
       return user;
-    } catch (_) {
+    } catch (e, stack) {
+      FirebaseCrashlytics.instance.recordError(e, stack);
       return null;
     }
   }

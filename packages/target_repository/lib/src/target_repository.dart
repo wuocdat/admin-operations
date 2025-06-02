@@ -1,5 +1,6 @@
 import 'package:api_client/api_client.dart';
 import 'package:target_repository/src/models/models.dart';
+import 'package:target_repository/src/models/post_overall.dart';
 
 const subjectLimit = 20;
 
@@ -13,6 +14,12 @@ class TargetRepository {
     final result = await _targetApiClient.getOverall();
 
     return TargetOverall.fromJson(result);
+  }
+
+  Future<PostOverall> getPostOverall() async {
+    final result = await _targetApiClient.getPostOverall();
+
+    return PostOverall.fromJson(result);
   }
 
   Future<List<Subject>> fetchSubjects(

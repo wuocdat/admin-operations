@@ -45,3 +45,19 @@ final class ConversationInfoFetchedEvent extends ConversationEvent {
   @override
   List<Object> get props => [];
 }
+
+final class FilePicked extends ConversationEvent {
+  const FilePicked(this.files);
+
+  final List<PlatformFile> files;
+
+  @override
+  List<Object> get props => [files];
+}
+
+final class FilesCleared extends ConversationEvent {
+  const FilesCleared();
+
+  @override
+  List<Object> get props => [];
+}

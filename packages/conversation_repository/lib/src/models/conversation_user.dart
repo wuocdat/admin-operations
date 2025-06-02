@@ -20,18 +20,30 @@ class ConversationUser extends Equatable {
   final String userId;
   final String adderId;
   final String conversationId;
-  final Map<String, String> userDetail;
+  @JsonKey(fromJson: _fromJson)
+  final Map<String, dynamic> userDetail;
 
   factory ConversationUser.fromJson(Map<String, dynamic> json) =>
       _$ConversationUserFromJson(json);
 
   @override
   List<Object> get props => [
-        id,
-        isActive,
-        userId,
-        adderId,
-        conversationId,
-        userDetail,
-      ];
+    id,
+    isActive,
+    userId,
+    adderId,
+    conversationId,
+    userDetail,
+  ];
+
+  static Map<String, dynamic> _fromJson(dynamic value) {
+    if (value == null) {
+      return {
+        "_id": "",
+        "name": "noname",
+      };
+    }
+    return value as Map<String, dynamic>;
+  }
 }
+

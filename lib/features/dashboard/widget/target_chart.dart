@@ -1,9 +1,12 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:target_repository/target_repository.dart';
 import 'package:tctt_mobile/core/theme/colors.dart';
 
 class TargetChart extends StatelessWidget {
-  const TargetChart({super.key});
+  const TargetChart({super.key, required this.postData});
+
+  final PostOverall postData;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +18,7 @@ class TargetChart extends StatelessWidget {
         barGroups: barGroups,
         gridData: const FlGridData(show: false),
         alignment: BarChartAlignment.spaceAround,
-        maxY: 20,
+        // maxY: 20,
       ),
     );
   }
@@ -25,7 +28,7 @@ class TargetChart extends StatelessWidget {
         touchTooltipData: BarTouchTooltipData(
           getTooltipColor: (group) => Colors.transparent,
           tooltipPadding: EdgeInsets.zero,
-          tooltipMargin: 8,
+          tooltipMargin: 4,
           getTooltipItem: (
             BarChartGroupData group,
             int groupIndex,
@@ -49,37 +52,10 @@ class TargetChart extends StatelessWidget {
       fontWeight: FontWeight.bold,
       fontSize: 14,
     );
-    String text;
-    switch (value.toInt()) {
-      case 0:
-        text = 'Mn';
-        break;
-      case 1:
-        text = 'Te';
-        break;
-      case 2:
-        text = 'Wd';
-        break;
-      case 3:
-        text = 'Tu';
-        break;
-      case 4:
-        text = 'Fr';
-        break;
-      case 5:
-        text = 'St';
-        break;
-      case 6:
-        text = 'Sn';
-        break;
-      default:
-        text = '';
-        break;
-    }
     return SideTitleWidget(
       axisSide: meta.axisSide,
       space: 4,
-      child: Text(text, style: style),
+      child: Text(postData.days[value.toInt()], style: style),
     );
   }
 
@@ -116,76 +92,18 @@ class TargetChart extends StatelessWidget {
         end: Alignment.topCenter,
       );
 
-  List<BarChartGroupData> get barGroups => [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(
-              toY: 8,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 2,
-          barRods: [
-            BarChartRodData(
-              toY: 14,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 3,
-          barRods: [
-            BarChartRodData(
-              toY: 15,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 4,
-          barRods: [
-            BarChartRodData(
-              toY: 13,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 5,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 6,
-          barRods: [
-            BarChartRodData(
-              toY: 16,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-      ];
+  List<BarChartGroupData> get barGroups => postData.values
+      .asMap()
+      .entries
+      .map((entry) => BarChartGroupData(
+            x: entry.key,
+            barRods: [
+              BarChartRodData(
+                toY: entry.value.toDouble(),
+                gradient: _barsGradient,
+              )
+            ],
+            showingTooltipIndicators: [0],
+          ))
+      .toList();
 }
